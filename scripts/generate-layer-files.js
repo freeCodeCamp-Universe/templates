@@ -60,7 +60,7 @@ const orderObjectKeys = (obj) => {
  */
 const generateLayerFiles = async (baseDir = defaultBaseDir()) => {
   const filesBase = join(baseDir, "files");
-  const layersDir = join(baseDir, "layers");
+  const layersDir = join(baseDir, "templates", "layers");
 
   const layerResults = await Promise.all(
     LAYER_TYPE_MAP.map(async ([jsonFile, typeName]) => {
