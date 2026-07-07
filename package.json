@@ -1,0 +1,13 @@
+{
+  "name": "app-templates",
+  "version": "0.0.1",
+  "description": "",
+  "main": "none",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "freeCodeCamp <team@freecodecamp.org>",
+  "license": "BSD-3-Clause",
+  "packageManager": "pnpm@10.32.1"
+}
