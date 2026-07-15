@@ -1,1 +1,1 @@
-export declare function generateLayerFiles(root: string): Promise<void>;
+export declare function generateLayerFiles(root?: string): Promise<void>;

@@ -4,7 +4,8 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { generateLayerFiles } from "../scripts/generate-layer-files.js";
 
-const LAYERS_SUBDIR = join("templates", "layers");
+const INPUT_LAYERS_SUBDIR = join("templates", "layers");
+const OUTPUT_LAYERS_SUBDIR = join("dist", "layers");
 
 interface FolderOpts {
   extraFiles?: Record<string, string>;
@@ -33,7 +34,7 @@ const makeFolder = async (
 };
 
 const makeBaseProject = async (root: string): Promise<void> => {
-  const layersDir = join(root, LAYERS_SUBDIR);
+  const layersDir = join(root, INPUT_LAYERS_SUBDIR);
   await mkdir(layersDir, { recursive: true });
 
   const types: [string, string, object][] = [
@@ -52,14 +53,18 @@ const makeBaseProject = async (root: string): Promise<void> => {
     }),
   );
 
+  await writeFile(join(root, "templates", "labels.json"), "{}");
   await makeFolder(root, "always", "always");
 };
 
-const readRaw = (root: string, filename: string): Promise<string> =>
-  readFile(join(root, LAYERS_SUBDIR, filename), "utf-8");
+const readOutputRaw = (root: string, filename: string): Promise<string> =>
+  readFile(join(root, OUTPUT_LAYERS_SUBDIR, filename), "utf-8");
 
-const readJson = async (root: string, filename: string): Promise<unknown> =>
-  JSON.parse(await readRaw(root, filename));
+const readOutputJson = async (root: string, filename: string): Promise<unknown> =>
+  JSON.parse(await readOutputRaw(root, filename));
+
+const readInputJson = async (root: string, filename: string): Promise<unknown> =>
+  JSON.parse(await readFile(join(root, INPUT_LAYERS_SUBDIR, filename), "utf-8"));
 
 describe(generateLayerFiles, () => {
   let root: string;
@@ -75,47 +80,47 @@ describe(generateLayerFiles, () => {
 
   it("injects file content into the files key", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ node: {} }, null, 2),
     );
     await makeFolder(root, "runtime", "node", { extraFiles: { Procfile: "web: node index.js\n" } });
 
     await generateLayerFiles(root);
 
-    const result = await readJson(root, "runtime.json");
+    const result = await readOutputJson(root, "runtime.json");
     expect(result).toMatchObject({ node: { files: { Procfile: "web: node index.js\n" } } });
   });
 
   it("excludes .gitkeep from the files map", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ node: {} }, null, 2),
     );
     await makeFolder(root, "runtime", "node", { extraFiles: { "example.txt": "hello" } });
 
     await generateLayerFiles(root);
 
-    const result = await readJson(root, "runtime.json");
+    const result = await readOutputJson(root, "runtime.json");
     expect(JSON.stringify(result)).not.toContain(".gitkeep");
     expect(result).toMatchObject({ node: { files: { "example.txt": "hello" } } });
   });
 
   it("produces empty files object when folder contains only .gitkeep", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ node: {} }, null, 2),
     );
     await makeFolder(root, "runtime", "node");
 
     await generateLayerFiles(root);
 
-    const result = await readJson(root, "runtime.json");
+    const result = await readOutputJson(root, "runtime.json");
     expect(result).toMatchObject({ node: { files: {} } });
   });
 
   it("uses relative paths for files in subdirectories", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "framework.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "framework.json"),
       JSON.stringify({ express: {} }, null, 2),
     );
     await makeFolder(root, "framework", "express", {
@@ -124,7 +129,7 @@ describe(generateLayerFiles, () => {
 
     await generateLayerFiles(root);
 
-    const result = await readJson(root, "framework.json");
+    const result = await readOutputJson(root, "framework.json");
     expect(result).toMatchObject({
       express: { files: { "src/index.ts": "export {};\n" } },
     });
@@ -132,7 +137,7 @@ describe(generateLayerFiles, () => {
 
   it("throws when a JSON entry has no corresponding folder", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ node: {} }, null, 2),
     );
 
@@ -151,7 +156,7 @@ describe(generateLayerFiles, () => {
 
   it("throws when a folder with a JSON entry has no .gitkeep", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ node: {} }, null, 2),
     );
     await makeFolder(root, "runtime", "node", { withGitkeep: false });
@@ -171,7 +176,7 @@ describe(generateLayerFiles, () => {
 
   it("does not modify any JSON when validation fails", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ missing: {}, node: {} }, null, 2),
     );
     await makeFolder(root, "runtime", "node");
@@ -180,13 +185,13 @@ describe(generateLayerFiles, () => {
       `runtime.json entry "missing" has no folder at ${root}/files/runtime/missing/`,
     );
 
-    const result = await readJson(root, "runtime.json");
+    const result = await readInputJson(root, "runtime.json");
     expect(result).toStrictEqual({ missing: {}, node: {} });
   });
 
   it("generates JSON files with consistent key ordering", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
 
       /** This deliberately has keys in a different order than the expected
       output */
@@ -199,7 +204,7 @@ describe(generateLayerFiles, () => {
 
     await generateLayerFiles(root);
 
-    const result = await readRaw(root, "runtime.json");
+    const result = await readOutputRaw(root, "runtime.json");
     expect(result).toBe(`{
   "a": {
     "files": {}
@@ -216,7 +221,7 @@ describe(generateLayerFiles, () => {
 
   it("recursively orders the JSON keys", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
 
       /** This deliberately has keys in a different order than the expected
       output */
@@ -228,7 +233,7 @@ describe(generateLayerFiles, () => {
 
     await generateLayerFiles(root);
 
-    const result = await readRaw(root, "runtime.json");
+    const result = await readOutputRaw(root, "runtime.json");
     expect(result).toBe(`{
   "node": {
     "devCopySource": "",
@@ -243,7 +248,7 @@ describe(generateLayerFiles, () => {
 
   it("handles json arrays without modification", async () => {
     await writeFile(
-      join(root, LAYERS_SUBDIR, "runtime.json"),
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ node: { watchSync: [{ path: "src", target: "/app/src" }] } }, null, 2),
     );
     await makeFolder(root, "runtime", "node", {
@@ -252,7 +257,7 @@ describe(generateLayerFiles, () => {
 
     await generateLayerFiles(root);
 
-    const result = await readJson(root, "runtime.json");
+    const result = await readOutputJson(root, "runtime.json");
     expect(result).toMatchObject({
       node: {
         files: { "src/index.ts": "export {};\n" },
