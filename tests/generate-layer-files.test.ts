@@ -1,8 +1,16 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { generateLayerFiles } from "../scripts/generate-layer-files.js";
+import {
+  AlwaysOutputSchema,
+  DatabaseOutputSchema,
+  FrameworkOutputSchema,
+  PackageManagerOutputSchema,
+  RuntimeOutputSchema,
+  ServiceOutputSchema,
+} from "../src/schemas/layers.js";
 
 const INPUT_LAYERS_SUBDIR = join("templates", "layers");
 const OUTPUT_LAYERS_SUBDIR = join("dist", "layers");
@@ -265,4 +273,48 @@ describe(generateLayerFiles, () => {
       },
     });
   });
+});
+
+describe("schema validation", () => {
+  const projectRoot = resolve(import.meta.dirname, "..");
+
+  const readJson = async (...segments: string[]): Promise<unknown> =>
+    JSON.parse(await readFile(join(projectRoot, ...segments), "utf-8"));
+
+  beforeAll(async () => {
+    await generateLayerFiles(projectRoot);
+  });
+
+  describe("output schemas", () => {
+    it("always.json matches the output schema", async () => {
+      const parsed = AlwaysOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "always.json"));
+      expect(parsed.error).toBeUndefined();
+    });
+
+    it("database.json matches the output schema", async () => {
+      const parsed = DatabaseOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "database.json"));
+      expect(parsed.error).toBeUndefined();
+    });
+
+    it("framework.json matches the output schema", async () => {
+      const parsed = FrameworkOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "framework.json"));
+      expect(parsed.error).toBeUndefined();
+    });
+
+    it("package-manager.json matches the output schema", async () => {
+      const parsed = PackageManagerOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "package-manager.json"));
+      expect(parsed.error).toBeUndefined();
+    });
+
+    it("runtime.json matches the output schema", async () => {
+      const parsed = RuntimeOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "runtime.json"));
+      expect(parsed.error).toBeUndefined();
+    });
+
+    it("service.json matches the output schema", async () => {
+      const parsed = ServiceOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "service.json"));
+      expect(parsed.error).toBeUndefined();
+    });
+  });
+
 });
