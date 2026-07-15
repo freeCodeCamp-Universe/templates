@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.2.0...app-templates-v0.3.0) (2026-07-15)
+
+
+### Features
+
+* pin package manager, config in manifest ([19da063](https://github.com/freeCodeCamp-Universe/templates/commit/19da0639a4496a8add4be6d5392e0403b2888231))
+
 ## [0.2.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.1.0...app-templates-v0.2.0) (2026-07-07)
 
 
