@@ -63,8 +63,6 @@ const readOutputRaw = (root: string, filename: string): Promise<string> =>
 const readOutputJson = async (root: string, filename: string): Promise<unknown> =>
   JSON.parse(await readOutputRaw(root, filename));
 
-const readInputJson = async (root: string, filename: string): Promise<unknown> =>
-  JSON.parse(await readFile(join(root, INPUT_LAYERS_SUBDIR, filename), "utf-8"));
 
 describe(generateLayerFiles, () => {
   let root: string;
@@ -174,7 +172,7 @@ describe(generateLayerFiles, () => {
     );
   });
 
-  it("does not modify any JSON when validation fails", async () => {
+  it("does not write any output when validation fails", async () => {
     await writeFile(
       join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ missing: {}, node: {} }, null, 2),
@@ -185,8 +183,9 @@ describe(generateLayerFiles, () => {
       `runtime.json entry "missing" has no folder at ${root}/files/runtime/missing/`,
     );
 
-    const result = await readInputJson(root, "runtime.json");
-    expect(result).toStrictEqual({ missing: {}, node: {} });
+    await expect(
+      readOutputRaw(root, "runtime.json"),
+    ).rejects.toThrow();
   });
 
   it("generates JSON files with consistent key ordering", async () => {
@@ -226,7 +225,7 @@ describe(generateLayerFiles, () => {
       /** This deliberately has keys in a different order than the expected
       output */
       // oxlint-disable-next-line sort-keys
-      JSON.stringify({ node: { files: { b: "", a: "" }, devCopySource: "" } }, null, 2),
+      JSON.stringify({ node: { b: "second", a: "first" } }, null, 2),
     );
     // oxlint-disable-next-line sort-keys
     await makeFolder(root, "runtime", "node", { extraFiles: { b: "", a: "" } });
@@ -236,7 +235,8 @@ describe(generateLayerFiles, () => {
     const result = await readOutputRaw(root, "runtime.json");
     expect(result).toBe(`{
   "node": {
-    "devCopySource": "",
+    "a": "first",
+    "b": "second",
     "files": {
       "a": "",
       "b": ""
