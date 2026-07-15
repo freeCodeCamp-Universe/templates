@@ -5,10 +5,6 @@
       "run",
       "dev"
     ],
-    "files": {
-      ".dockerignore": "node_modules\ndist\n",
-      "bunfig.toml": "[install]\n# Only install package versions published at least 3 days ago\nminimumReleaseAge = 259200 # seconds\n"
-    },
     "lockfile": "bun.lock",
     "manifests": [
       "package.json"
@@ -21,10 +17,6 @@
       "run",
       "dev"
     ],
-    "files": {
-      ".dockerignore": "node_modules\ndist\n",
-      "pnpm-workspace.yaml": "blockExoticSubdeps: true\nminimumReleaseAge: 4320 # packages under 3 days old are simply rejected.\ntrustPolicy: no-downgrade\ntrustPolicyIgnoreAfter: 20160 # packages between 3 and 14 days old with no signature are also rejected.\nengineStrict: true\n"
-    },
     "lockfile": "pnpm-lock.yaml",
     "manifests": [
       "package.json"

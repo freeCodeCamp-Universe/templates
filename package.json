@@ -3,6 +3,10 @@
   "version": "0.2.0",
   "description": "",
   "main": "none",
+  "exports": {
+    "./layers/*.json": "./dist/layers/*.json",
+    "./labels.json": "./dist/labels.json"
+  },
   "type": "module",
   "scripts": {
     "build": "node ./scripts/generate-layer-files.js",

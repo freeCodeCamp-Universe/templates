@@ -33,7 +33,7 @@ jobs:
         run: npm run build
         
       - name: Create tarball
-        run: tar -czf app-templates-${{ needs.release-please.outputs.version }}.tar.gz -C templates .
+        run: tar -czf app-templates-${{ needs.release-please.outputs.version }}.tar.gz -C dist .
 
       - name: Upload release asset
         env:

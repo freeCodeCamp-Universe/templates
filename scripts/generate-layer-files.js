@@ -1,4 +1,4 @@
-import { readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { join, relative, resolve } from "node:path";
 
@@ -61,6 +61,8 @@ const orderObjectKeys = (obj) => {
 const generateLayerFiles = async (baseDir = defaultBaseDir()) => {
   const filesBase = join(baseDir, "files");
   const layersDir = join(baseDir, "templates", "layers");
+  const outputDir = join(baseDir, "dist", "layers");
+  await mkdir(outputDir, { recursive: true });
 
   const layerResults = await Promise.all(
     LAYER_TYPE_MAP.map(async ([jsonFile, typeName]) => {
@@ -133,7 +135,7 @@ const generateLayerFiles = async (baseDir = defaultBaseDir()) => {
   }
 
   await Promise.all(
-    layerResults.map(async ({ json, jsonPath, typeDir }) => {
+    layerResults.map(async ({ json, jsonFile, typeDir }) => {
       await Promise.all(
         Object.keys(json).map(async (key) => {
           const keyDir = join(typeDir, key);
@@ -147,11 +149,16 @@ const generateLayerFiles = async (baseDir = defaultBaseDir()) => {
         }),
       );
       await writeFile(
-        jsonPath,
+        join(outputDir, jsonFile),
         `${JSON.stringify(orderObjectKeys(json), null, 2)}\n`,
         "utf-8",
       );
     }),
+  );
+
+  await copyFile(
+    join(baseDir, "templates", "labels.json"),
+    join(baseDir, "dist", "labels.json"),
   );
 };
 
