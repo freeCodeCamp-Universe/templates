@@ -2,28 +2,26 @@ import { z } from "zod";
 
 const filesField = z.record(z.string(), z.string());
 
-const AlwaysInputSchema = z.record(
-  z.literal("always"),
-  z.strictObject({}),
-);
+const AlwaysShape = z.strictObject({});
+
+const AlwaysInputSchema = z.record(z.literal("always"), AlwaysShape);
 
 const AlwaysOutputSchema = z.record(
   z.literal("always"),
-  z.strictObject({ files: filesField }),
+  AlwaysShape.extend({ files: filesField }),
 );
 type Always = z.infer<typeof AlwaysOutputSchema>;
 
 const DatabaseOptionSchema = z.literal(["postgresql", "redis"]);
 type DatabaseOption = z.infer<typeof DatabaseOptionSchema>;
 
-const DatabaseInputSchema = z.record(
-  DatabaseOptionSchema,
-  z.strictObject({}),
-);
+const DatabaseShape = z.strictObject({});
+
+const DatabaseInputSchema = z.record(DatabaseOptionSchema, DatabaseShape);
 
 const DatabaseOutputSchema = z.record(
   DatabaseOptionSchema,
-  z.strictObject({ files: filesField }),
+  DatabaseShape.extend({ files: filesField }),
 );
 type Database = z.infer<typeof DatabaseOutputSchema>;
 
@@ -31,68 +29,55 @@ const RUNTIME_OPTIONS = { NODE: "node", STATIC_WEB: "static_web" } as const;
 const RuntimeOptionSchema = z.literal(Object.values(RUNTIME_OPTIONS));
 type RuntimeOption = z.infer<typeof RuntimeOptionSchema>;
 
-const RuntimeInputSchema = z.record(
-  RuntimeOptionSchema,
-  z.strictObject({
-    baseImage: z.string(),
-    databases: z.array(z.string()),
-    frameworks: z.array(z.string()),
-    packageManagers: z.array(z.string()),
-    services: z.array(z.string()),
-  }),
-);
+const RuntimeShape = z.strictObject({
+  baseImage: z.string(),
+  databases: z.array(z.string()),
+  frameworks: z.array(z.string()),
+  packageManagers: z.array(z.string()),
+  services: z.array(z.string()),
+});
+
+const RuntimeInputSchema = z.record(RuntimeOptionSchema, RuntimeShape);
 
 const RuntimeOutputSchema = z.record(
   RuntimeOptionSchema,
-  z.strictObject({
-    baseImage: z.string(),
-    databases: z.array(z.string()),
-    files: filesField,
-    frameworks: z.array(z.string()),
-    packageManagers: z.array(z.string()),
-    services: z.array(z.string()),
-  }),
+  RuntimeShape.extend({ files: filesField }),
 );
 type Runtime = z.infer<typeof RuntimeOutputSchema>;
 
 const PackageManagerOptionSchema = z.literal(["bun", "pnpm"]);
 type PackageManagerOption = z.infer<typeof PackageManagerOptionSchema>;
 
+const PackageManagerShape = z.strictObject({
+  devCmd: z.array(z.string()),
+  lockfile: z.string(),
+  manifests: z.array(z.string()),
+  pmInstall: z.string(),
+  pmVersion: z.string(),
+  preinstall: z.string().optional(),
+});
+
 const PackageManagerInputSchema = z.record(
   PackageManagerOptionSchema,
-  z.strictObject({
-    devCmd: z.array(z.string()),
-    lockfile: z.string(),
-    manifests: z.array(z.string()),
-    pmInstall: z.string(),
-    preinstall: z.string().optional(),
-  }),
+  PackageManagerShape,
 );
 
 const PackageManagerOutputSchema = z.record(
   PackageManagerOptionSchema,
-  z.strictObject({
-    devCmd: z.array(z.string()),
-    files: filesField,
-    lockfile: z.string(),
-    manifests: z.array(z.string()),
-    pmInstall: z.string(),
-    preinstall: z.string().optional(),
-  }),
+  PackageManagerShape.extend({ files: filesField }),
 );
 type PackageManager = z.infer<typeof PackageManagerOutputSchema>;
 
 const ServiceOptionSchema = z.literal(["analytics", "auth", "email"]);
 type ServiceOption = z.infer<typeof ServiceOptionSchema>;
 
-const ServiceInputSchema = z.record(
-  ServiceOptionSchema,
-  z.strictObject({}),
-);
+const ServiceShape = z.strictObject({});
+
+const ServiceInputSchema = z.record(ServiceOptionSchema, ServiceShape);
 
 const ServiceOutputSchema = z.record(
   ServiceOptionSchema,
-  z.strictObject({ files: filesField }),
+  ServiceShape.extend({ files: filesField }),
 );
 type Service = z.infer<typeof ServiceOutputSchema>;
 
@@ -105,23 +90,17 @@ const FrameworkOptionSchema = z.literal([
 ]);
 type FrameworkOption = z.infer<typeof FrameworkOptionSchema>;
 
-const FrameworkInputSchema = z.record(
-  FrameworkOptionSchema,
-  z.strictObject({
-    devCopySource: z.string(),
-    port: z.number(),
-    watchSync: z.array(z.strictObject({ path: z.string(), target: z.string() })),
-  }),
-);
+const FrameworkShape = z.strictObject({
+  devCopySource: z.string(),
+  port: z.number(),
+  watchSync: z.array(z.strictObject({ path: z.string(), target: z.string() })),
+});
+
+const FrameworkInputSchema = z.record(FrameworkOptionSchema, FrameworkShape);
 
 const FrameworkOutputSchema = z.record(
   FrameworkOptionSchema,
-  z.strictObject({
-    devCopySource: z.string(),
-    files: filesField,
-    port: z.number(),
-    watchSync: z.array(z.strictObject({ path: z.string(), target: z.string() })),
-  }),
+  FrameworkShape.extend({ files: filesField }),
 );
 type Framework = z.infer<typeof FrameworkOutputSchema>;
 
