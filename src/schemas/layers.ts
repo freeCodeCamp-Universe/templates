@@ -93,6 +93,7 @@ type FrameworkOption = z.infer<typeof FrameworkOptionSchema>;
 const FrameworkShape = z.strictObject({
   devCopySource: z.string(),
   port: z.number(),
+  skills: z.array(z.string()),
   watchSync: z.array(z.strictObject({ path: z.string(), target: z.string() })),
 });
 
