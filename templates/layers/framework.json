@@ -2,6 +2,12 @@
   "express": {
     "devCopySource": "COPY src/ ./src/\nCOPY tsconfig.json ./",
     "port": 3000,
+    "skills": [
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "command-line-chic"
+      }
+    ],
     "watchSync": [
       {
         "path": "./src",
@@ -12,6 +18,13 @@
   "html-css-js": {
     "devCopySource": "COPY public public",
     "port": 3000,
+    "skills": [
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "command-line-chic"
+      }
+    ],
+
     "watchSync": [
       {
         "path": "./public",
@@ -22,6 +35,13 @@
   "react-vite": {
     "devCopySource": "COPY src src\nCOPY index.html .\nCOPY vite.config.ts .\nCOPY tsconfig*.json .",
     "port": 5173,
+    "skills": [
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "command-line-chic"
+      }
+    ],
+
     "watchSync": [
       {
         "path": "./src",
@@ -32,6 +52,13 @@
   "tanstack-shadcn": {
     "devCopySource": "COPY client ./client/\nCOPY index.html .\nCOPY vite.config.ts .\nCOPY tsconfig*.json .\nCOPY components.json .",
     "port": 5173,
+    "skills": [
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "command-line-chic"
+      }
+    ],
+
     "watchSync": [
       {
         "path": "client",
@@ -46,6 +73,13 @@
   "typescript": {
     "devCopySource": "COPY src/ ./src/\nCOPY tsconfig.json ./",
     "port": 3000,
+    "skills": [
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "command-line-chic"
+      }
+    ],
+
     "watchSync": [
       {
         "path": "./src",
