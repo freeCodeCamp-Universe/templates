@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.3.0...app-templates-v0.4.0) (2026-07-17)
+
+
+### Features
+
+* add skills to framework config ([#8](https://github.com/freeCodeCamp-Universe/templates/issues/8)) ([37ec9fa](https://github.com/freeCodeCamp-Universe/templates/commit/37ec9fa616af2bb8776699524d4a1a440b6c709e))
+
 ## [0.3.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.2.0...app-templates-v0.3.0) (2026-07-15)
 
 
