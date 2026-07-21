@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.4.0...app-templates-v0.4.1) (2026-07-21)
+
+
+### Bug Fixes
+
+* CHOKIDAR_USEPOLLING to ensure watch continues to update ([#12](https://github.com/freeCodeCamp-Universe/templates/issues/12)) ([6dbb931](https://github.com/freeCodeCamp-Universe/templates/commit/6dbb93108be0c2db7cf30dbac3449a631e6d7b80))
+* pnpm pnpm store location ([#10](https://github.com/freeCodeCamp-Universe/templates/issues/10)) ([faf0982](https://github.com/freeCodeCamp-Universe/templates/commit/faf09827820514b6b0b0ce80b010504ba004ff5b))
+
 ## [0.4.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.3.0...app-templates-v0.4.0) (2026-07-17)
 
 
