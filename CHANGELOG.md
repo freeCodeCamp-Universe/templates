@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.4.1...app-templates-v0.5.0) (2026-07-22)
+
+
+### Features
+
+* add recommended property to runtime, framework + pm layers ([#13](https://github.com/freeCodeCamp-Universe/templates/issues/13)) ([37d4365](https://github.com/freeCodeCamp-Universe/templates/commit/37d4365d4e72b1d23c00d5fdde457002c664ff0a))
+
 ## [0.4.1](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.4.0...app-templates-v0.4.1) (2026-07-21)
 
 
