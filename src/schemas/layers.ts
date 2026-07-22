@@ -34,6 +34,7 @@ const RuntimeShape = z.strictObject({
   databases: z.array(z.string()),
   frameworks: z.array(z.string()),
   packageManagers: z.array(z.string()),
+  recommended: z.boolean(),
   services: z.array(z.string()),
 });
 
@@ -55,6 +56,7 @@ const PackageManagerShape = z.strictObject({
   pmInstall: z.string(),
   pmVersion: z.string(),
   preinstall: z.string().optional(),
+  recommended: z.boolean(),
 });
 
 const PackageManagerInputSchema = z.record(
@@ -93,6 +95,7 @@ type FrameworkOption = z.infer<typeof FrameworkOptionSchema>;
 const FrameworkShape = z.strictObject({
   devCopySource: z.string(),
   port: z.number(),
+  recommended: z.boolean(),
   skills: z.array(z.strictObject({ repo: z.string(), skill: z.string() })),
   watchSync: z.array(z.strictObject({ path: z.string(), target: z.string() })),
 });
