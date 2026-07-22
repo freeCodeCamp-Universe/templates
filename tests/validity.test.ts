@@ -96,6 +96,26 @@ describe("service layers", () => {
   });
 });
 
+describe("recommended", () => {
+  it("should have at least one recommended runtime", () => {
+    const runtimes = Object.values(runtimeJson);
+    const recommended = runtimes.filter((r) => r.recommended);
+    expect(recommended.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("should have at least one recommended framework", () => {
+    const frameworks = Object.values(frameworkJson);
+    const recommended = frameworks.filter((f) => f.recommended);
+    expect(recommended.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("should have at least one recommended package manager", () => {
+    const packageManagers = Object.values(packageManagersJson);
+    const recommended = packageManagers.filter((pm) => pm.recommended);
+    expect(recommended.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
 describe("labels", () => {
   it("should have a label for each runtime", () => {
     const runtimes = Object.keys(runtimeJson);
