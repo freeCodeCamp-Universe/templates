@@ -36,7 +36,7 @@
   "react-vite": {
     "devCopySource": "COPY src src\nCOPY index.html .\nCOPY vite.config.ts .\nCOPY tsconfig*.json .",
     "port": 5173,
-    "recommended": true,
+    "recommended": false,
     "skills": [
       {
         "repo": "freeCodeCamp-Universe/marketplace",
@@ -75,6 +75,23 @@
     "devCopySource": "COPY src/ ./src/\nCOPY tsconfig.json ./",
     "port": 3000,
     "recommended": false,
+    "skills": [
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "command-line-chic"
+      }
+    ],
+    "watchSync": [
+      {
+        "path": "./src",
+        "target": "/app/src"
+      }
+    ]
+  },
+  "astro-react": {
+    "devCopySource": "COPY . .",
+    "port": 4321,
+    "recommended": true,
     "skills": [
       {
         "repo": "freeCodeCamp-Universe/marketplace",

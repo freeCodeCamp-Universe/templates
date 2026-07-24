@@ -83,14 +83,7 @@ const ServiceOutputSchema = z.record(
 );
 type Service = z.infer<typeof ServiceOutputSchema>;
 
-const FrameworkOptionSchema = z.literal([
-  "express",
-  "html-css-js",
-  "react-vite",
-  "tanstack-shadcn",
-  "typescript",
-]);
-type FrameworkOption = z.infer<typeof FrameworkOptionSchema>;
+const FrameworkOptionSchema = z.string();
 
 const FrameworkShape = z.strictObject({
   devCopySource: z.string(),
@@ -108,7 +101,7 @@ const FrameworkOutputSchema = z.record(
 );
 type Framework = z.infer<typeof FrameworkOutputSchema>;
 
-type FrameworkLayerData = Framework[FrameworkOption];
+type FrameworkLayerData = Framework["string"];
 type PackageManagerLayerData = PackageManager[PackageManagerOption];
 type RuntimeLayerData = Pick<Runtime[RuntimeOption], "baseImage" | "files">;
 
@@ -133,7 +126,6 @@ export type {
   DatabaseOption,
   Framework,
   FrameworkLayerData,
-  FrameworkOption,
   PackageManager,
   PackageManagerLayerData,
   PackageManagerOption,
