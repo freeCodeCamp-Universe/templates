@@ -10,7 +10,9 @@ type LessonPageProps = {
 export function LessonPage({ section, module, lesson }: LessonPageProps) {
   return (
     <main className="page">
-      <p><a href="/learn">← Back to Learn</a></p>
+      <p>
+        <a href="/learn">← Back to Learn</a>
+      </p>
 
       <section className="card">
         <p>{section.title}</p>

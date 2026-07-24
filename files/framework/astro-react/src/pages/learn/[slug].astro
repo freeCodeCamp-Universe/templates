@@ -40,7 +40,9 @@ export async function getStaticPaths() {
 ---
 
 <Layout title={`${lesson?.title ?? 'Lesson'} — Learn`}>
-  {section && module && lesson ? (
-    <LessonPage section={section} module={module} lesson={lesson} client:load />
-  ) : null}
+  {
+    section && module && lesson ? (
+      <LessonPage section={section} module={module} lesson={lesson} client:load />
+    ) : null
+  }
 </Layout>

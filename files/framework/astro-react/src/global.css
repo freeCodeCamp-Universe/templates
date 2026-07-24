@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Inconsolata:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Inconsolata:wght@400;700&display=swap');
 
 *,
 *::before,
@@ -51,8 +51,8 @@
   --purple-dark: #5a01a7;
 
   /* Typography */
-  --font-body: "Lato", sans-serif;
-  --font-mono: "Inconsolata", monospace;
+  --font-body: 'Lato', sans-serif;
+  --font-mono: 'Inconsolata', monospace;
 
   /* Borders */
   --border-focus: 2px solid var(--blue-mid);
