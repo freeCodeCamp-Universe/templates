@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.5.0...app-templates-v0.6.0) (2026-07-24)
+
+
+### Features
+
+* astro boilerplate ([#15](https://github.com/freeCodeCamp-Universe/templates/issues/15)) ([cc98407](https://github.com/freeCodeCamp-Universe/templates/commit/cc98407e80aa845b300ccc349d89189ddaf805c7))
+
 ## [0.5.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.4.1...app-templates-v0.5.0) (2026-07-22)
 
 
