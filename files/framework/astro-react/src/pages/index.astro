@@ -1,0 +1,20 @@
+---
+import { Landing } from '../components/landing';
+import { loadCurriculum } from '../lib/load-curriculum';
+
+const curriculum = await loadCurriculum();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{curriculum.title}</title>
+  </head>
+  <body>
+    <Landing curriculum={curriculum} client:load />
+  </body>
+</html>

@@ -1,0 +1,52 @@
+---
+import { LessonPage } from '../../components/lesson-page';
+import { loadCurriculum } from '../../lib/load-curriculum';
+import { buildLessonRouteSlug } from '../../lib/route-utils';
+
+const curriculum = await loadCurriculum();
+const slug = Astro.params.slug ?? '';
+
+const lessonMatch = curriculum.sections
+  .flatMap((section) =>
+    section.modules.flatMap((module) =>
+      module.lessons.map((lesson) => ({
+        section,
+        module,
+        lesson,
+        slug: buildLessonRouteSlug(section, module, lesson),
+      })),
+    ),
+  )
+  .find((item) => item.slug === slug);
+
+const section = lessonMatch?.section;
+const module = lessonMatch?.module;
+const lesson = lessonMatch?.lesson;
+
+export async function getStaticPaths() {
+  const curriculum = await loadCurriculum();
+
+  return curriculum.sections.flatMap((sectionItem) =>
+    sectionItem.modules.flatMap((moduleItem) =>
+      moduleItem.lessons.map((lessonItem) => ({
+        params: {
+          slug: buildLessonRouteSlug(sectionItem, moduleItem, lessonItem),
+        },
+      })),
+    ),
+  );
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{lesson?.title ?? 'Lesson'} — Learn</title>
+  </head>
+  <body>
+    {section && module && lesson ? (
+      <LessonPage section={section} module={module} lesson={lesson} client:load />
+    ) : null}
+  </body>
+</html>
