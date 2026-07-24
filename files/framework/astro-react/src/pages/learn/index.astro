@@ -1,0 +1,17 @@
+---
+import { Learn } from '../../components/learn';
+import { loadCurriculum } from '../../lib/load-curriculum';
+
+const curriculum = await loadCurriculum();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{curriculum.title} — Learn</title>
+  </head>
+  <body>
+    <Learn curriculum={curriculum} client:load />
+  </body>
+</html>

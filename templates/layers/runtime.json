@@ -26,7 +26,8 @@
     "frameworks": [
       "html-css-js",
       "react-vite",
-      "tanstack-shadcn"
+      "tanstack-shadcn",
+      "astro-react"
     ],
     "packageManagers": [
       "pnpm",
