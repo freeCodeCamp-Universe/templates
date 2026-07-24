@@ -1,6 +1,6 @@
 import './learn.css';
 import type { Curriculum } from '../lib/curriculum-types';
-import { LearnNavigation } from './learn-navigation';
+import { CurriculumMap } from './curriculum-map';
 
 type LearnPageProps = {
   curriculum: Curriculum;
@@ -14,7 +14,7 @@ export function Learn({ curriculum }: LearnPageProps) {
         <h1>{curriculum.title}</h1>
       </header>
 
-      <LearnNavigation curriculum={curriculum} />
+      <CurriculumMap curriculum={curriculum} />
     </main>
   );
 }

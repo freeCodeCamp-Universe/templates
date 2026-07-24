@@ -2,7 +2,7 @@ import './sidebar.css';
 import { useEffect, useState } from 'react';
 import type { Curriculum } from '../lib/curriculum-types';
 import { onSidebarToggle } from '../lib/sidebar';
-import { LearnNavigation } from './learn-navigation';
+import { CurriculumMap } from './curriculum-map';
 
 type SidebarProps = {
   curriculum: Curriculum;
@@ -16,7 +16,7 @@ export function Sidebar({ curriculum }: SidebarProps) {
   return (
     <div className={open ? 'sidebar' : 'sidebar closed'}>
       <div className="sidebarInner">
-        <LearnNavigation curriculum={curriculum} />
+        <CurriculumMap curriculum={curriculum} />
       </div>
     </div>
   );

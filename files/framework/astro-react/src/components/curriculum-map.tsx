@@ -1,12 +1,12 @@
-import './learn-navigation.css';
+import './curriculum-map.css';
 import type { Curriculum } from '../lib/curriculum-types';
 import { buildLearnPath } from '../lib/route-utils';
 
-type LearnNavigationProps = {
+type CurriculumMapProps = {
   curriculum: Curriculum;
 };
 
-export function LearnNavigation({ curriculum }: LearnNavigationProps) {
+export function CurriculumMap({ curriculum }: CurriculumMapProps) {
   return (
     <nav aria-label="Curriculum sections" className="navigation">
       {curriculum.sections.map((section) => (
