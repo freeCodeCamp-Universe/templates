@@ -1,4 +1,5 @@
 ---
+import Layout from '../../layouts/layout.astro';
 import { LessonPage } from '../../components/lesson-page';
 import { loadCurriculum } from '../../lib/load-curriculum';
 import { buildLessonRouteSlug } from '../../lib/route-utils';
@@ -38,15 +39,8 @@ export async function getStaticPaths() {
 }
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{lesson?.title ?? 'Lesson'} — Learn</title>
-  </head>
-  <body>
-    {section && module && lesson ? (
-      <LessonPage section={section} module={module} lesson={lesson} client:load />
-    ) : null}
-  </body>
-</html>
+<Layout title={`${lesson?.title ?? 'Lesson'} — Learn`}>
+  {section && module && lesson ? (
+    <LessonPage section={section} module={module} lesson={lesson} client:load />
+  ) : null}
+</Layout>
