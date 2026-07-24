@@ -13,5 +13,5 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--gray-45);
 }

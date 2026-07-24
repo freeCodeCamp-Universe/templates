@@ -6,6 +6,6 @@ import { loadCurriculum } from '../../lib/load-curriculum';
 const curriculum = await loadCurriculum();
 ---
 
-<Layout title={`${curriculum.title} — Learn`}>
+<Layout title={`${curriculum.title} — Learn`} brand={curriculum.title}>
   <Learn curriculum={curriculum} client:load />
 </Layout>

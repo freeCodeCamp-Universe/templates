@@ -9,7 +9,7 @@ type LessonPageProps = {
 
 export function LessonPage({ section, module, lesson }: LessonPageProps) {
   return (
-    <main className="page">
+    <main id="main-content" className="page" tabIndex={-1}>
       <p>
         <a href="/learn">← Back to Learn</a>
       </p>

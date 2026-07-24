@@ -1,0 +1,46 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-site-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding: 0 1rem;
+  background: var(--gray-90);
+  color: var(--gray-00);
+}
+
+.brand {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.themeToggle {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.themeToggle:hover {
+  text-decoration: underline;
+}
+
+.donateLink {
+  color: var(--yellow-gold);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.donateLink:hover {
+  text-decoration: underline;
+}

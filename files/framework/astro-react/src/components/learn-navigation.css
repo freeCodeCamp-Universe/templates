@@ -4,8 +4,8 @@
 }
 
 .sectionCard {
-  background: #ffffff;
-  border: 1px solid #dbe2ea;
+  background: var(--tertiary-background);
+  border: 1px solid var(--quaternary-background);
   border-radius: 12px;
   padding: 1rem;
 }
@@ -24,7 +24,7 @@
 }
 
 .link {
-  color: #0f172a;
+  color: var(--primary-color);
   text-decoration: none;
 }
 

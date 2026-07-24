@@ -56,6 +56,12 @@
 
   /* Borders */
   --border-focus: 2px solid var(--blue-mid);
+
+  /* Layout */
+  --header-height: 38px;
+
+  /* Z-index */
+  --z-index-site-header: 200;
 }
 
 .dark-palette {
@@ -135,4 +141,18 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  z-index: var(--z-index-site-header);
+  background: var(--gray-90);
+  color: var(--gray-00);
+  padding: 0.5rem 1rem;
+}
+
+.skip-link:focus {
+  top: 0;
 }

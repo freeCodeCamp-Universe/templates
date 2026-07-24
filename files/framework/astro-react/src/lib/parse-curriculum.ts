@@ -6,25 +6,8 @@ const LESSON_HEADING = /^###\s+/;
 const TEXT_MARKER = /^--text--\s*$/;
 const TASK_MARKER = /^--task--\s*$/;
 
-function getFrontmatterTitle(markdown: string): string {
-  const frontmatterMatch = markdown.match(/^---\n([\s\S]*?)\n---/);
-
-  if (!frontmatterMatch) {
-    return 'Untitled Curriculum';
-  }
-
-  const titleMatch = frontmatterMatch[1].match(/^title:\s*(.+)$/m);
-  return titleMatch?.[1]?.trim() ?? 'Untitled Curriculum';
-}
-
-function stripFrontmatter(markdown: string): string {
-  return markdown.replace(/^---\n[\s\S]*?\n---\n?/, '').trim();
-}
-
-export function parseCurriculum(markdown: string): Curriculum {
-  const title = getFrontmatterTitle(markdown);
-  const body = stripFrontmatter(markdown);
-  const lines = body.split(/\r?\n/);
+export function parseCurriculum(markdown: string, title: string): Curriculum {
+  const lines = markdown.trim().split(/\r?\n/);
 
   const sections: Section[] = [];
   let currentSection: Section | null = null;

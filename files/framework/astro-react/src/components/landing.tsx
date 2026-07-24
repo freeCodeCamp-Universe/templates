@@ -7,7 +7,7 @@ type LandingProps = {
 
 export function Landing({ curriculum }: LandingProps) {
   return (
-    <main className="page">
+    <main id="main-content" className="page" tabIndex={-1}>
       <header className="header">
         <h1>{curriculum.title}</h1>
       </header>
