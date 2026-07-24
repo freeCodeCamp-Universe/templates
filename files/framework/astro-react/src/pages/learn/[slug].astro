@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/layout.astro';
 import { LessonPage } from '../../components/lesson-page';
+import { Sidebar } from '../../components/sidebar';
 import { loadCurriculum } from '../../lib/load-curriculum';
 import { buildLessonRouteSlug } from '../../lib/route-utils';
 
@@ -39,10 +40,20 @@ export async function getStaticPaths() {
 }
 ---
 
-<Layout title={`${lesson?.title ?? 'Lesson'} — Learn`} brand={curriculum.title}>
-  {
-    section && module && lesson ? (
-      <LessonPage section={section} module={module} lesson={lesson} client:load />
-    ) : null
-  }
+<Layout title={`${lesson?.title ?? 'Lesson'} — Learn`} brand={curriculum.title} hasSidebar>
+  <div class="lesson-layout">
+    <Sidebar curriculum={curriculum} client:load />
+    {
+      section && module && lesson ? (
+        <LessonPage section={section} module={module} lesson={lesson} client:load />
+      ) : null
+    }
+  </div>
 </Layout>
+
+<style>
+  .lesson-layout {
+    display: flex;
+    align-items: flex-start;
+  }
+</style>

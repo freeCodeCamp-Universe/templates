@@ -1,13 +1,16 @@
 import './nav.css';
 import { useEffect, useState } from 'react';
 import { getStoredTheme, setTheme, type Theme } from '../lib/theme';
+import { toggleSidebar } from '../lib/sidebar';
 
 type NavProps = {
   brand: string;
+  showSidebarToggle?: boolean;
 };
 
-export function Nav({ brand }: NavProps) {
+export function Nav({ brand, showSidebarToggle = false }: NavProps) {
   const [theme, setThemeState] = useState<Theme>('dark');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     setThemeState(getStoredTheme());
@@ -19,6 +22,11 @@ export function Nav({ brand }: NavProps) {
     setThemeState(next);
   }
 
+  function handleToggleSidebar() {
+    setSidebarOpen((open) => !open);
+    toggleSidebar();
+  }
+
   return (
     <>
       <a href="#main-content" className="skip-link">
@@ -26,9 +34,25 @@ export function Nav({ brand }: NavProps) {
       </a>
 
       <nav aria-label="Main" className="nav">
-        <a href="/" className="brand">
-          {brand}
-        </a>
+        <div className="navStart">
+          {showSidebarToggle ? (
+            <button
+              type="button"
+              className="sidebarToggle"
+              aria-expanded={sidebarOpen}
+              aria-label={sidebarOpen ? 'Hide curriculum sidebar' : 'Show curriculum sidebar'}
+              onClick={handleToggleSidebar}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          ) : null}
+
+          <a href="/" className="brand">
+            {brand}
+          </a>
+        </div>
 
         <div className="navActions">
           <button type="button" className="themeToggle" onClick={handleToggleTheme}>

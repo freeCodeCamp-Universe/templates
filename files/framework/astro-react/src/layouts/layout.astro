@@ -5,9 +5,10 @@ import { Nav } from '../components/nav';
 type Props = {
   title: string;
   brand: string;
+  hasSidebar?: boolean;
 };
 
-const { title, brand } = Astro.props;
+const { title, brand, hasSidebar = false } = Astro.props;
 ---
 
 <html lang="en">
@@ -29,7 +30,7 @@ const { title, brand } = Astro.props;
         }
       })();
     </script>
-    <Nav brand={brand} client:load />
+    <Nav brand={brand} showSidebarToggle={hasSidebar} client:load />
     <slot />
   </body>
 </html>
