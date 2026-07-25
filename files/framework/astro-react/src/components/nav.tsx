@@ -2,6 +2,7 @@ import './nav.css';
 import { useEffect, useState } from 'react';
 import { getStoredTheme, setTheme, type Theme } from '../lib/theme';
 import { toggleSidebar } from '../lib/sidebar';
+import { Button } from './button';
 
 type NavProps = {
   brand: string;
@@ -55,13 +56,13 @@ export function Nav({ brand, showSidebarToggle = false }: NavProps) {
         </div>
 
         <div className="navActions">
-          <button type="button" className="themeToggle" onClick={handleToggleTheme}>
+          <Button variant="secondary" onClick={handleToggleTheme}>
             {theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          </button>
+          </Button>
 
-          <a href="/donate" className="donateLink">
+          <Button variant="primary" href="/donate">
             Donate
-          </a>
+          </Button>
         </div>
       </nav>
     </>

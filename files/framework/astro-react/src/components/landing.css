@@ -1,9 +1,9 @@
 .page {
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem 1.25rem 3rem;
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
 }
 
 .header {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-lg);
 }

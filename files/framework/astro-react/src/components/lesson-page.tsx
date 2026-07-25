@@ -23,14 +23,12 @@ export function LessonPage({ section, module, lesson }: LessonPageProps) {
         {lesson.task ? (
           <section>
             <h2>Task</h2>
-            <pre className="pre">{lesson.task}</pre>
+            <pre>{lesson.task}</pre>
           </section>
         ) : null}
 
         <p>
-          <a href="/learn" className="link">
-            Back to Learn
-          </a>
+          <a href="/learn">Back to Learn</a>
         </p>
       </section>
     </main>

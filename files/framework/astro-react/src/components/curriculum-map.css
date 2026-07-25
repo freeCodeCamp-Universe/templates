@@ -1,33 +1,24 @@
 .navigation {
   display: grid;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 .sectionCard {
   background: var(--tertiary-background);
   border: 1px solid var(--quaternary-background);
-  border-radius: 12px;
-  padding: 1rem;
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
 }
 
 .moduleBlock + .moduleBlock {
-  margin-top: 1rem;
+  margin-top: var(--space-md);
 }
 
 .list {
   margin: 0;
-  padding-left: 1.1rem;
+  padding-left: var(--space-md);
 }
 
 .item + .item {
-  margin-top: 0.4rem;
-}
-
-.link {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
+  margin-top: var(--space-sm);
 }

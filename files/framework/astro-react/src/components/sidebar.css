@@ -12,7 +12,7 @@
 
 .sidebarInner {
   width: 280px;
-  padding: 1.5rem 1rem;
+  padding: var(--space-lg) var(--space-md);
 }
 
 .sidebar.closed {

@@ -1,28 +1,12 @@
 .page {
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem 1.25rem 3rem;
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
 }
 
 .card {
   background: var(--tertiary-background);
   border: 1px solid var(--quaternary-background);
-  border-radius: 12px;
-  padding: 1rem;
-}
-
-.pre {
-  background: var(--quaternary-background);
-  padding: 0.75rem;
-  border-radius: 8px;
-  white-space: pre-wrap;
-}
-
-.link {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
 }
