@@ -1,7 +1,9 @@
+import type { Task } from './tasks';
+
 export interface Lesson {
   title: string;
   text: string;
-  task: string | null;
+  task: Task | null;
 }
 
 export interface Module {

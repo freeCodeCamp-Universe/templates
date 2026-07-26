@@ -112,9 +112,6 @@
 }
 
 .light-palette {
-  /* Piece overrides */
-  --piece-highlight: rgba(255, 255, 255, 0.8);
-
   --primary-color-translucent: var(--gray-90-translucent);
   --primary-color: var(--gray-90);
   --secondary-color: var(--gray-85);

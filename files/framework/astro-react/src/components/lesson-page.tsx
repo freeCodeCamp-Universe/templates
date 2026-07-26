@@ -1,5 +1,6 @@
 import './lesson-page.css';
 import type { Lesson, Module, Section } from '../lib/curriculum-types';
+import { MultipleChoice } from './multiple-choice';
 
 type LessonPageProps = {
   section: Section;
@@ -20,10 +21,10 @@ export function LessonPage({ section, module, lesson }: LessonPageProps) {
         <h1>{lesson.title}</h1>
         <p>{lesson.text}</p>
 
-        {lesson.task ? (
+        {lesson.task && lesson.task.type === 'multiple-choice' ? (
           <section>
             <h2>Task</h2>
-            <pre>{lesson.task}</pre>
+            <MultipleChoice task={lesson.task} />
           </section>
         ) : null}
 
