@@ -1,6 +1,7 @@
 import './lesson-page.css';
 import type { Lesson, Module, Section } from '../lib/curriculum-types';
 import { MultipleChoice } from './multiple-choice';
+import { SelectAll } from './select-all';
 
 type LessonPageProps = {
   section: Section;
@@ -25,6 +26,13 @@ export function LessonPage({ section, module, lesson }: LessonPageProps) {
           <section>
             <h2>Task</h2>
             <MultipleChoice task={lesson.task} />
+          </section>
+        ) : null}
+
+        {lesson.task && lesson.task.type === 'select-all-that-apply' ? (
+          <section>
+            <h2>Task</h2>
+            <SelectAll task={lesson.task} />
           </section>
         ) : null}
 

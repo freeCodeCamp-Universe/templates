@@ -23,6 +23,12 @@ export function parseCurriculum(markdown: string, title: string): Curriculum {
       return;
     }
 
+    if (currentLesson.task) {
+      throw new Error(
+        `Lesson "${currentLesson.title}" already has a task; only one task per lesson is supported`,
+      );
+    }
+
     const definition = TASK_DEFINITIONS[taskType];
     if (!definition) {
       throw new Error(`Unknown task type "--${taskType}--" in lesson "${currentLesson.title}"`);

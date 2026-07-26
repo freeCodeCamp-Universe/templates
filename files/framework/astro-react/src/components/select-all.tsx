@@ -8,30 +8,39 @@ type Result = 'correct' | 'incorrect' | 'unanswered';
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',
   incorrect: 'Not quite. Try again.',
-  unanswered: 'Select an option first.',
+  unanswered: 'Select at least one option first.',
 };
 
-type MultipleChoiceProps = {
+type SelectAllProps = {
   task: Task;
 };
 
-export function MultipleChoice({ task }: MultipleChoiceProps) {
-  const groupName = useId();
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+export function SelectAll({ task }: SelectAllProps) {
+  const groupId = useId();
+  const [selected, setSelected] = useState<Set<number>>(new Set());
   const [result, setResult] = useState<Result | null>(null);
 
-  function handleSelect(index: number) {
-    setSelectedIndex(index);
+  function handleToggle(index: number) {
+    setSelected((previous) => {
+      const next = new Set(previous);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
     setResult(null);
   }
 
   function handleCheck() {
-    if (selectedIndex === null) {
+    if (selected.size === 0) {
       setResult('unanswered');
       return;
     }
 
-    setResult(task.options[selectedIndex].correct ? 'correct' : 'incorrect');
+    const isCorrect = task.options.every((option, index) => option.correct === selected.has(index));
+    setResult(isCorrect ? 'correct' : 'incorrect');
   }
 
   return (
@@ -40,16 +49,15 @@ export function MultipleChoice({ task }: MultipleChoiceProps) {
         <legend className="legend">{task.question}</legend>
 
         {task.options.map((option, index) => {
-          const optionId = `${groupName}-${index}`;
+          const optionId = `${groupId}-${index}`;
 
           return (
             <div key={index} className="option">
               <input
-                type="radio"
+                type="checkbox"
                 id={optionId}
-                name={groupName}
-                checked={selectedIndex === index}
-                onChange={() => handleSelect(index)}
+                checked={selected.has(index)}
+                onChange={() => handleToggle(index)}
               />
               <label htmlFor={optionId}>{option.text}</label>
             </div>
