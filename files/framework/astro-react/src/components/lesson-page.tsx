@@ -1,5 +1,6 @@
 import './lesson-page.css';
 import type { Lesson, Module, Section } from '../lib/curriculum-types';
+import { Markdown } from './markdown';
 import { MultipleChoice } from './multiple-choice';
 import { SelectAll } from './select-all';
 
@@ -20,7 +21,7 @@ export function LessonPage({ section, module, lesson }: LessonPageProps) {
         <p>{section.title}</p>
         <p>{module.title}</p>
         <h1>{lesson.title}</h1>
-        <p>{lesson.text}</p>
+        <Markdown>{lesson.text}</Markdown>
 
         {lesson.task && lesson.task.type === 'multiple-choice' ? (
           <section>

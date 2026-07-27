@@ -2,6 +2,7 @@ import './option-task.css';
 import { useId, useState } from 'react';
 import type { Task } from '../lib/tasks';
 import { Button } from './button';
+import { Markdown } from './markdown';
 
 type Result = 'correct' | 'incorrect' | 'unanswered';
 
@@ -45,8 +46,10 @@ export function SelectAll({ task }: SelectAllProps) {
 
   return (
     <div className="optionTask">
-      <fieldset className="fieldset">
-        <legend className="legend">{task.question}</legend>
+      <fieldset className="fieldset" aria-labelledby={`${groupId}-question`}>
+        <div id={`${groupId}-question`} className="question">
+          <Markdown>{task.question}</Markdown>
+        </div>
 
         {task.options.map((option, index) => {
           const optionId = `${groupId}-${index}`;

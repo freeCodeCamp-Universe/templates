@@ -10,7 +10,7 @@
   padding: var(--space-md);
 }
 
-.legend {
+.question {
   font-weight: 700;
   padding: 0 var(--space-xs);
 }

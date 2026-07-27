@@ -12,6 +12,8 @@ title: Sample Curriculum
 
 Here's the text for module 1.1, lesson 1. No task to complete here.
 
+You can put markdown here and it will render html. Like **bold**, *italic*, and ~~strikethrough~~ text.
+
 ### Lesson 2
 
 --text--
@@ -25,7 +27,7 @@ Is this a mulitple choice question?
 - [ ] Maybe
 - [x] Yes
 - [ ] No
-- [ ] I don't know
+- [ ] I don't think so
 
 ## Module 1.2
 

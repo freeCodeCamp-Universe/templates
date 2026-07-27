@@ -21,7 +21,9 @@
     "@types/react-dom": "^19",
     "astro": "^7",
     "react": "^19",
-    "react-dom": "^19"
+    "react-dom": "^19",
+    "react-markdown": "^10",
+    "remark-gfm": "^4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
