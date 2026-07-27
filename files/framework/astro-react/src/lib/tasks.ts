@@ -1,4 +1,7 @@
 import { z } from 'astro/zod';
+import type { List, RootContent } from 'mdast';
+import { toString } from 'mdast-util-to-string';
+import { nodesToMarkdown } from './mdast-utils';
 
 const TaskOption = z.object({
   text: z.string(),
@@ -27,37 +30,26 @@ const SelectAllThatApplyTask = z
 
 export type Task = z.infer<typeof MultipleChoiceTask> | z.infer<typeof SelectAllThatApplyTask>;
 
-const OPTION_LINE = /^\s*-\s*\[([ xX])\]\s*(.+)$/;
+function isList(node: RootContent): node is List {
+  return node.type === 'list';
+}
 
-function parseOptionListContent(lines: string[]) {
-  const questionLines: string[] = [];
-  const options: { text: string; correct: boolean }[] = [];
+function parseOptionListContent(nodes: RootContent[]) {
+  const questionNode = nodes.find((node) => node.type === 'paragraph');
+  const listNode = nodes.find(isList);
 
-  for (const line of lines) {
-    const optionMatch = line.match(OPTION_LINE);
+  const question = questionNode ? nodesToMarkdown([questionNode]) : '';
+  const options = (listNode?.children ?? []).map((item) => ({
+    text: toString(item).trim(),
+    correct: item.checked,
+  }));
 
-    if (optionMatch) {
-      options.push({
-        text: optionMatch[2].trim(),
-        correct: optionMatch[1].toLowerCase() === 'x',
-      });
-      continue;
-    }
-
-    if (line.trim()) {
-      questionLines.push(line.trim());
-    }
-  }
-
-  return {
-    question: questionLines.join('\n'),
-    options,
-  };
+  return { question, options };
 }
 
 type TaskDefinition = {
   schema: { parse: (candidate: unknown) => Task };
-  parseContent: (lines: string[]) => Record<string, unknown>;
+  parseContent: (nodes: RootContent[]) => Record<string, unknown>;
 };
 
 export const TASK_DEFINITIONS: Record<string, TaskDefinition> = {

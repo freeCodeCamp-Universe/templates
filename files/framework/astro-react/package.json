@@ -20,10 +20,15 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "astro": "^7",
+    "mdast-util-gfm": "^3",
+    "mdast-util-to-markdown": "^2",
+    "mdast-util-to-string": "^4",
     "react": "^19",
     "react-dom": "^19",
     "react-markdown": "^10",
-    "remark-gfm": "^4"
+    "remark-gfm": "^4",
+    "remark-parse": "^11",
+    "unified": "^11"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
