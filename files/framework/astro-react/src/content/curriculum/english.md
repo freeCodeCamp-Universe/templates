@@ -14,21 +14,20 @@ Here's the text for the first lesson. No task to complete here.
 
 You can put markdown here and it will render HTML. Like **bold**, *italic*, and ~~strikethrough~~ text.
 
-
-| Also Tables | like this |
+| Also tables | Column 2  |
 | ----------- | --------- |
 | data        | data      |
 | data        | data      |
 
-> Blockquotes, like this,
+> Blockquotes
 
 `inline "code"`
 
-- unordered lists
-- item 2
+- Unordered lists
+- Item 2
 
-1. ordered lists
-2. item 2
+1. Ordered lists
+2. Item 2
 
 ## Module 1.2
 

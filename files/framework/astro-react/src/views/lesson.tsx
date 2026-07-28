@@ -25,7 +25,7 @@ export function Lesson({ curriculum, section, module, lesson }: LessonProps) {
           <a href="/learn">← Back to Learn</a>
         </p>
 
-        <section className="card">
+        <section>
           <p>{section.title}</p>
           <p>{module.title}</p>
           <h1>{lesson.title}</h1>

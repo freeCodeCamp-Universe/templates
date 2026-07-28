@@ -1,13 +1,6 @@
 .navigation {
   display: grid;
-  gap: var(--space-md);
-}
-
-.section-card {
-  background: var(--tertiary-background);
-  border: 1px solid var(--quaternary-background);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  gap: var(--space-xl);
 }
 
 .module-block + .module-block {

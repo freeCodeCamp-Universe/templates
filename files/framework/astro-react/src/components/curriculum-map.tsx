@@ -10,7 +10,7 @@ export function CurriculumMap({ curriculum }: CurriculumMapProps) {
   return (
     <nav aria-label="Curriculum sections" className="navigation">
       {curriculum.sections.map((section) => (
-        <section key={section.title} className="section-card">
+        <section key={section.title} className="section">
           <h2>{section.title}</h2>
 
           {section.modules.map((module) => (
