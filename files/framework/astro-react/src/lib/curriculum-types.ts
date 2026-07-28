@@ -1,22 +1,22 @@
-import type { Task } from './tasks';
+import type { Task } from './curriculum-tasks';
 
-export interface Lesson {
+export type Lesson = {
   title: string;
   text: string;
   task: Task | null;
-}
+};
 
-export interface Module {
+export type Module = {
   title: string;
   lessons: Lesson[];
-}
+};
 
-export interface Section {
+export type Section = {
   title: string;
   modules: Module[];
-}
+};
 
-export interface Curriculum {
+export type Curriculum = {
   title: string;
   sections: Section[];
-}
+};

@@ -14,6 +14,19 @@ Here's the text for module 1.1, lesson 1. No task to complete here.
 
 You can put markdown here and it will render html. Like **bold**, *italic*, and ~~strikethrough~~ text.
 
+Also tables:
+
+| Column 1 | Column 2 |
+| -------- | -------- |
+| data     | data     |
+| data     | data     |
+
+And blockquotes:
+
+> Here's a blockquote
+
+Inline code: `This is inline "code"`.
+
 ### Lesson 2
 
 --text--

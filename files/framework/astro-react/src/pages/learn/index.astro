@@ -1,11 +1,11 @@
 ---
 import Layout from '../../layouts/layout.astro';
-import { Learn } from '../../components/learn';
+import { Learn } from '../../views/learn';
 import { loadCurriculum } from '../../lib/load-curriculum';
 
 const curriculum = await loadCurriculum();
 ---
 
-<Layout title={`${curriculum.title} — Learn`} brand={curriculum.title}>
+<Layout title={`${curriculum.title}`} brand={curriculum.title}>
   <Learn curriculum={curriculum} client:load />
 </Layout>

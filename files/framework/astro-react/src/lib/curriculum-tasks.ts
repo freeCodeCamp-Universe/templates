@@ -3,32 +3,33 @@ import type { List, RootContent } from 'mdast';
 import { toString } from 'mdast-util-to-string';
 import { nodesToMarkdown } from './mdast-utils';
 
-const TaskOption = z.object({
+const TaskOptionSchema = z.object({
   text: z.string(),
   correct: z.boolean(),
 });
 
-const MultipleChoiceTask = z
+const MultipleChoiceTaskSchema = z
   .object({
     type: z.literal('multiple-choice'),
     question: z.string(),
-    options: z.array(TaskOption).min(2),
+    options: z.array(TaskOptionSchema).min(2),
   })
   .refine((task) => task.options.filter((option) => option.correct).length === 1, {
     message: 'Multiple choice must have exactly one correct option',
   });
 
-const SelectAllThatApplyTask = z
+const SelectAllThatApplyTaskSchema = z
   .object({
     type: z.literal('select-all-that-apply'),
     question: z.string(),
-    options: z.array(TaskOption).min(2),
+    options: z.array(TaskOptionSchema).min(2),
   })
   .refine((task) => task.options.some((option) => option.correct), {
     message: 'Select-all-that-apply must have at least one correct option',
   });
 
-export type Task = z.infer<typeof MultipleChoiceTask> | z.infer<typeof SelectAllThatApplyTask>;
+export type Task =
+  z.infer<typeof MultipleChoiceTaskSchema> | z.infer<typeof SelectAllThatApplyTaskSchema>;
 
 function isList(node: RootContent): node is List {
   return node.type === 'list';
@@ -54,11 +55,11 @@ type TaskDefinition = {
 
 export const TASK_DEFINITIONS: Record<string, TaskDefinition> = {
   'multiple-choice': {
-    schema: MultipleChoiceTask,
+    schema: MultipleChoiceTaskSchema,
     parseContent: parseOptionListContent,
   },
   'select-all-that-apply': {
-    schema: SelectAllThatApplyTask,
+    schema: SelectAllThatApplyTaskSchema,
     parseContent: parseOptionListContent,
   },
 };

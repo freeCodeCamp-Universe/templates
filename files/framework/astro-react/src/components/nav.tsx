@@ -1,8 +1,27 @@
 import './nav.css';
 import { useEffect, useState } from 'react';
-import { getStoredTheme, setTheme, type Theme } from '../lib/theme';
-import { toggleSidebar } from '../lib/sidebar';
+import { toggleSidebar, useSidebarOpen } from '../hooks/use-sidebar-open';
 import { Button } from './button';
+
+type Theme = 'dark' | 'light';
+
+const THEME_STORAGE_KEY = 'theme';
+
+const THEME_CLASS: Record<Theme, string> = {
+  dark: 'dark-palette',
+  light: 'light-palette',
+};
+
+function getStoredTheme(): Theme {
+  const stored = localStorage.getItem(THEME_STORAGE_KEY);
+  return stored === 'light' ? 'light' : 'dark';
+}
+
+function setTheme(theme: Theme): void {
+  localStorage.setItem(THEME_STORAGE_KEY, theme);
+  document.body.classList.remove(THEME_CLASS.dark, THEME_CLASS.light);
+  document.body.classList.add(THEME_CLASS[theme]);
+}
 
 type NavProps = {
   brand: string;
@@ -11,7 +30,7 @@ type NavProps = {
 
 export function Nav({ brand, showSidebarToggle = false }: NavProps) {
   const [theme, setThemeState] = useState<Theme>('dark');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarOpen = useSidebarOpen();
 
   useEffect(() => {
     setThemeState(getStoredTheme());
@@ -23,11 +42,6 @@ export function Nav({ brand, showSidebarToggle = false }: NavProps) {
     setThemeState(next);
   }
 
-  function handleToggleSidebar() {
-    setSidebarOpen((open) => !open);
-    toggleSidebar();
-  }
-
   return (
     <>
       <a href="#main-content" className="skip-link">
@@ -35,14 +49,14 @@ export function Nav({ brand, showSidebarToggle = false }: NavProps) {
       </a>
 
       <nav aria-label="Main" className="nav">
-        <div className="navStart">
+        <div className="nav-start">
           {showSidebarToggle ? (
             <button
               type="button"
-              className="sidebarToggle"
+              className="sidebar-toggle"
               aria-expanded={sidebarOpen}
               aria-label={sidebarOpen ? 'Hide curriculum sidebar' : 'Show curriculum sidebar'}
-              onClick={handleToggleSidebar}
+              onClick={toggleSidebar}
             >
               <span></span>
               <span></span>
@@ -55,7 +69,7 @@ export function Nav({ brand, showSidebarToggle = false }: NavProps) {
           </a>
         </div>
 
-        <div className="navActions">
+        <div className="nav-actions">
           <Button variant="secondary" onClick={handleToggleTheme}>
             {theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           </Button>

@@ -15,7 +15,7 @@
   border-bottom: 1px solid var(--gray-75);
 }
 
-.navStart {
+.nav-start {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
@@ -35,7 +35,7 @@
   color: inherit;
 }
 
-.sidebarToggle {
+.sidebar-toggle {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,11 +51,11 @@
   cursor: pointer;
 }
 
-.sidebarToggle:hover {
+.sidebar-toggle:hover {
   background: var(--gray-80);
 }
 
-.sidebarToggle span {
+.sidebar-toggle span {
   display: block;
   width: 18px;
   height: 2px;
@@ -63,7 +63,7 @@
   border-radius: 1px;
 }
 
-.navActions {
+.nav-actions {
   display: flex;
   align-items: center;
   gap: var(--space-sm);

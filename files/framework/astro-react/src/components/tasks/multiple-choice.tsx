@@ -1,51 +1,42 @@
 import './option-task.css';
 import { useId, useState } from 'react';
-import type { Task } from '../lib/tasks';
-import { Button } from './button';
-import { Markdown } from './markdown';
+import type { Task } from '../../lib/curriculum-tasks';
+import { Button } from '../button';
+import { Markdown } from '../markdown';
 
 type Result = 'correct' | 'incorrect' | 'unanswered';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',
   incorrect: 'Not quite. Try again.',
-  unanswered: 'Select at least one option first.',
+  unanswered: 'Select an option first.',
 };
 
-type SelectAllProps = {
+type MultipleChoiceProps = {
   task: Task;
 };
 
-export function SelectAll({ task }: SelectAllProps) {
+export function MultipleChoice({ task }: MultipleChoiceProps) {
   const groupId = useId();
-  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
 
-  function handleToggle(index: number) {
-    setSelected((previous) => {
-      const next = new Set(previous);
-      if (next.has(index)) {
-        next.delete(index);
-      } else {
-        next.add(index);
-      }
-      return next;
-    });
+  function handleSelect(index: number) {
+    setSelectedIndex(index);
     setResult(null);
   }
 
   function handleCheck() {
-    if (selected.size === 0) {
+    if (selectedIndex === null) {
       setResult('unanswered');
       return;
     }
 
-    const isCorrect = task.options.every((option, index) => option.correct === selected.has(index));
-    setResult(isCorrect ? 'correct' : 'incorrect');
+    setResult(task.options[selectedIndex].correct ? 'correct' : 'incorrect');
   }
 
   return (
-    <div className="optionTask">
+    <div className="option-task">
       <fieldset className="fieldset" aria-labelledby={`${groupId}-question`}>
         <div id={`${groupId}-question`} className="question">
           <Markdown>{task.question}</Markdown>
@@ -57,10 +48,11 @@ export function SelectAll({ task }: SelectAllProps) {
           return (
             <div key={index} className="option">
               <input
-                type="checkbox"
+                type="radio"
                 id={optionId}
-                checked={selected.has(index)}
-                onChange={() => handleToggle(index)}
+                name={groupId}
+                checked={selectedIndex === index}
+                onChange={() => handleSelect(index)}
               />
               <label htmlFor={optionId}>{option.text}</label>
             </div>

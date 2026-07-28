@@ -1,7 +1,6 @@
 import './sidebar.css';
-import { useEffect, useState } from 'react';
 import type { Curriculum } from '../lib/curriculum-types';
-import { onSidebarToggle } from '../lib/sidebar';
+import { useSidebarOpen } from '../hooks/use-sidebar-open';
 import { CurriculumMap } from './curriculum-map';
 
 type SidebarProps = {
@@ -9,13 +8,11 @@ type SidebarProps = {
 };
 
 export function Sidebar({ curriculum }: SidebarProps) {
-  const [open, setOpen] = useState(true);
-
-  useEffect(() => onSidebarToggle(() => setOpen((isOpen) => !isOpen)), []);
+  const open = useSidebarOpen();
 
   return (
     <div className={open ? 'sidebar' : 'sidebar closed'}>
-      <div className="sidebarInner">
+      <div className="sidebar-inner">
         <CurriculumMap curriculum={curriculum} />
       </div>
     </div>

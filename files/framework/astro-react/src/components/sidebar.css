@@ -10,7 +10,7 @@
   transition: width 200ms ease;
 }
 
-.sidebarInner {
+.sidebar-inner {
   width: 280px;
   padding: var(--space-lg) var(--space-md);
 }

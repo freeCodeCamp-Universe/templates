@@ -5,7 +5,7 @@ import { toString } from 'mdast-util-to-string';
 import type { Heading, Root, RootContent } from 'mdast';
 import type { Curriculum, Lesson, Module, Section } from './curriculum-types';
 import { nodesToMarkdown } from './mdast-utils';
-import { TASK_DEFINITIONS } from './tasks';
+import { TASK_DEFINITIONS } from './curriculum-tasks';
 
 const processor = unified().use(remarkParse).use(remarkGfm);
 

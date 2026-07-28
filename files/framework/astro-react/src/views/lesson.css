@@ -1,7 +1,6 @@
-.page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+.lesson-layout {
+  display: flex;
+  align-items: flex-start;
 }
 
 .card {
