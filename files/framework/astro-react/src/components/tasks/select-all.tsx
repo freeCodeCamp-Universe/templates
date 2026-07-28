@@ -15,9 +15,10 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 
 type SelectAllProps = {
   task: Extract<Task, { type: 'select-all-that-apply' }>;
+  onCorrect: () => void;
 };
 
-export function SelectAll({ task }: SelectAllProps) {
+export function SelectAll({ task, onCorrect }: SelectAllProps) {
   const groupId = useId();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [result, setResult] = useState<Result | null>(null);
@@ -43,6 +44,9 @@ export function SelectAll({ task }: SelectAllProps) {
 
     const isCorrect = task.options.every((option, index) => option.correct === selected.has(index));
     setResult(isCorrect ? 'correct' : 'incorrect');
+    if (isCorrect) {
+      onCorrect();
+    }
   }
 
   return (
@@ -69,9 +73,11 @@ export function SelectAll({ task }: SelectAllProps) {
         })}
       </fieldset>
 
-      <Button variant="primary" onClick={handleCheck}>
-        Check answer
-      </Button>
+      {result !== 'correct' ? (
+        <Button variant="primary" onClick={handleCheck}>
+          Check answer
+        </Button>
+      ) : null}
 
       <p className={`feedback ${result ?? ''}`} role="status" aria-live="polite">
         {result ? FEEDBACK_MESSAGES[result] : ''}

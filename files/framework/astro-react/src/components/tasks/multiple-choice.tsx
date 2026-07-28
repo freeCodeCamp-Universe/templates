@@ -15,9 +15,10 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 
 type MultipleChoiceProps = {
   task: Extract<Task, { type: 'multiple-choice' }>;
+  onCorrect: () => void;
 };
 
-export function MultipleChoice({ task }: MultipleChoiceProps) {
+export function MultipleChoice({ task, onCorrect }: MultipleChoiceProps) {
   const groupId = useId();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
@@ -33,7 +34,11 @@ export function MultipleChoice({ task }: MultipleChoiceProps) {
       return;
     }
 
-    setResult(task.options[selectedIndex].correct ? 'correct' : 'incorrect');
+    const isCorrect = task.options[selectedIndex].correct;
+    setResult(isCorrect ? 'correct' : 'incorrect');
+    if (isCorrect) {
+      onCorrect();
+    }
   }
 
   return (
@@ -61,9 +66,11 @@ export function MultipleChoice({ task }: MultipleChoiceProps) {
         })}
       </fieldset>
 
-      <Button variant="primary" onClick={handleCheck}>
-        Check answer
-      </Button>
+      {result !== 'correct' ? (
+        <Button variant="primary" onClick={handleCheck}>
+          Check answer
+        </Button>
+      ) : null}
 
       <p className={`feedback ${result ?? ''}`} role="status" aria-live="polite">
         {result ? FEEDBACK_MESSAGES[result] : ''}

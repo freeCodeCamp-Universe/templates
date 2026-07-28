@@ -18,7 +18,8 @@
   opacity: 0.6;
 }
 
-.btn-primary {
+.btn-primary,
+.btn-primary:visited {
   background: var(--yellow-gold);
   color: var(--gray-90);
   border: none;
@@ -38,7 +39,8 @@
   background: var(--secondary-background);
 }
 
-.btn-danger {
+.btn-danger,
+.btn-danger:visited {
   background: var(--danger-background);
   color: var(--danger-color);
   border: none;
@@ -48,7 +50,8 @@
   opacity: 0.85;
 }
 
-.btn-link {
+.btn-link,
+.btn-link:visited {
   background: none;
   border: none;
   padding: 0;

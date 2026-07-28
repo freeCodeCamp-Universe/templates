@@ -3,28 +3,52 @@ import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import Layout from '../../layouts/layout.astro';
 import { Lesson } from '../../views/lesson';
 import { loadCurriculum } from '../../lib/load-curriculum';
-import { buildLessonRouteSlug } from '../../lib/curriculum-route-utils';
+import { buildLearnPath, buildLessonRouteSlug } from '../../lib/curriculum-route-utils';
 
 export const getStaticPaths = (async () => {
   const curriculum = await loadCurriculum();
 
-  return curriculum.sections.flatMap((sectionItem) =>
+  const entries = curriculum.sections.flatMap((sectionItem) =>
     sectionItem.modules.flatMap((moduleItem) =>
       moduleItem.lessons.map((lessonItem) => ({
-        params: {
-          slug: buildLessonRouteSlug(sectionItem, moduleItem, lessonItem),
-        },
-        props: { lesson: lessonItem, curriculum },
+        section: sectionItem,
+        module: moduleItem,
+        lesson: lessonItem,
       })),
     ),
   );
+
+  return entries.map((entry, index) => {
+    const nextEntry = entries[index + 1];
+    const isLastLesson = nextEntry === undefined;
+
+    return {
+      params: {
+        slug: buildLessonRouteSlug(entry.section, entry.module, entry.lesson),
+      },
+      props: {
+        curriculum,
+        lesson: entry.lesson,
+        isLastLesson,
+        nextHref: isLastLesson
+          ? '/learn'
+          : buildLearnPath(nextEntry.section, nextEntry.module, nextEntry.lesson),
+      },
+    };
+  });
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { curriculum, lesson } = Astro.props;
+const { curriculum, lesson, isLastLesson, nextHref } = Astro.props;
 ---
 
 <Layout title={lesson.title} brand={curriculum.title} hasSidebar>
-  <Lesson curriculum={curriculum} lesson={lesson} client:load />
+  <Lesson
+    curriculum={curriculum}
+    lesson={lesson}
+    isLastLesson={isLastLesson}
+    nextHref={nextHref}
+    client:load
+  />
 </Layout>
