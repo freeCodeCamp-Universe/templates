@@ -2,6 +2,7 @@ import './nav.css';
 import { useEffect, useState } from 'react';
 import { toggleSidebar, useSidebarOpen } from '../hooks/use-sidebar-open';
 import { Button } from './button';
+import cfg from '../../donation-config.json';
 
 type Theme = 'dark' | 'light';
 
@@ -74,7 +75,7 @@ export function Nav({ brand, showSidebarToggle = false }: NavProps) {
             {theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           </Button>
 
-          <Button variant="primary" href="/donate">
+          <Button variant="primary" href={`https://donate.freecodecamp.org?source=${cfg.donationId}&campaign=test-2026&medium=web`}>
             Donate
           </Button>
         </div>
