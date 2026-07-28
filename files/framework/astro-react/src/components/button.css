@@ -1,0 +1,60 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-md);
+  font: inherit;
+  font-size: var(--text-size-xs);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-primary {
+  background: var(--yellow-gold);
+  color: var(--gray-90);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: var(--yellow-light);
+}
+
+.btn-secondary {
+  background: none;
+  border: 1px solid var(--quaternary-background);
+  color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background: var(--secondary-background);
+}
+
+.btn-danger {
+  background: var(--danger-background);
+  color: var(--danger-color);
+  border: none;
+}
+
+.btn-danger:hover {
+  opacity: 0.85;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--highlight-color);
+  font-weight: 400;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}

@@ -1,77 +1,125 @@
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import { toString } from 'mdast-util-to-string';
+import type { Heading, Root, RootContent } from 'mdast';
 import type { Curriculum, Lesson, Module, Section } from './curriculum-types';
+import { nodesToMarkdown } from './mdast-utils';
+import { TASK_DEFINITIONS } from './curriculum-tasks';
 
-const SECTION_HEADING = /^#\s+/;
-const MODULE_HEADING = /^##\s+/;
-const LESSON_HEADING = /^###\s+/;
-const TEXT_MARKER = /^--text--\s*$/;
-const TASK_MARKER = /^--task--\s*$/;
+const processor = unified().use(remarkParse).use(remarkGfm);
 
-function getFrontmatterTitle(markdown: string): string {
-  const frontmatterMatch = markdown.match(/^---\n([\s\S]*?)\n---/);
+const MARKER = /^--([a-z][a-z-]*)--$/;
 
-  if (!frontmatterMatch) {
-    return 'Untitled Curriculum';
+function isHeadingDepth(node: RootContent, depth: number): node is Heading {
+  return node.type === 'heading' && node.depth === depth;
+}
+
+function matchMarker(node: RootContent): string | null {
+  if (node.type !== 'paragraph') {
+    return null;
   }
 
-  const titleMatch = frontmatterMatch[1].match(/^title:\s*(.+)$/m);
-  return titleMatch?.[1]?.trim() ?? 'Untitled Curriculum';
+  const match = toString(node).trim().match(MARKER);
+  return match ? match[1] : null;
 }
 
-function stripFrontmatter(markdown: string): string {
-  return markdown.replace(/^---\n[\s\S]*?\n---\n?/, '').trim();
+type Block = {
+  markerType: string;
+  nodes: RootContent[];
+};
+
+function splitIntoBlocks(nodes: RootContent[]): Block[] {
+  const blocks: Block[] = [];
+  let current: Block | null = null;
+
+  for (const node of nodes) {
+    const markerType = matchMarker(node);
+
+    if (markerType) {
+      current = { markerType, nodes: [] };
+      blocks.push(current);
+      continue;
+    }
+
+    current?.nodes.push(node);
+  }
+
+  return blocks;
 }
 
-export function parseCurriculum(markdown: string): Curriculum {
-  const title = getFrontmatterTitle(markdown);
-  const body = stripFrontmatter(markdown);
-  const lines = body.split(/\r?\n/);
+function finalizeLessonContent(lesson: Lesson, nodes: RootContent[]): void {
+  for (const block of splitIntoBlocks(nodes)) {
+    if (block.markerType === 'text') {
+      lesson.text = nodesToMarkdown(block.nodes);
+      continue;
+    }
+
+    if (lesson.task) {
+      throw new Error(
+        `Lesson "${lesson.title}" already has a task; only one task per lesson is supported`,
+      );
+    }
+
+    const definition = TASK_DEFINITIONS[block.markerType];
+    if (!definition) {
+      throw new Error(`Unknown task type "--${block.markerType}--" in lesson "${lesson.title}"`);
+    }
+
+    const candidate = { type: block.markerType, ...definition.parseContent(block.nodes) };
+
+    try {
+      lesson.task = definition.schema.parse(candidate);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(
+        `Invalid "--${block.markerType}--" task in lesson "${lesson.title}": ${message}`,
+        { cause: error },
+      );
+    }
+  }
+}
+
+export function parseCurriculum(markdown: string, title: string): Curriculum {
+  const tree = processor.parse(markdown) as Root;
 
   const sections: Section[] = [];
   let currentSection: Section | null = null;
   let currentModule: Module | null = null;
   let currentLesson: Lesson | null = null;
-  let captureMode: 'text' | 'task' | null = null;
+  let lessonNodes: RootContent[] = [];
 
   const flushLesson = () => {
     if (!currentLesson || !currentModule) {
       return;
     }
 
+    finalizeLessonContent(currentLesson, lessonNodes);
     currentModule.lessons.push(currentLesson);
     currentLesson = null;
-    captureMode = null;
+    lessonNodes = [];
   };
 
-  for (const line of lines) {
-    if (SECTION_HEADING.test(line)) {
+  for (const node of tree.children) {
+    if (isHeadingDepth(node, 1)) {
       flushLesson();
-      currentSection = {
-        title: line.replace(/^#\s+/, '').trim(),
-        modules: [],
-      };
+      currentSection = { title: toString(node).trim(), modules: [] };
       sections.push(currentSection);
       currentModule = null;
       continue;
     }
 
-    if (MODULE_HEADING.test(line)) {
+    if (isHeadingDepth(node, 2)) {
       flushLesson();
-      currentModule = {
-        title: line.replace(/^##\s+/, '').trim(),
-        lessons: [],
-      };
+      currentModule = { title: toString(node).trim(), lessons: [] };
       currentSection?.modules.push(currentModule);
       continue;
     }
 
-    if (LESSON_HEADING.test(line)) {
+    if (isHeadingDepth(node, 3)) {
       flushLesson();
-      currentLesson = {
-        title: line.replace(/^###\s+/, '').trim(),
-        text: '',
-        task: null,
-      };
-      captureMode = null;
+      currentLesson = { title: toString(node).trim(), text: '', task: null };
+      lessonNodes = [];
       continue;
     }
 
@@ -79,25 +127,7 @@ export function parseCurriculum(markdown: string): Curriculum {
       continue;
     }
 
-    if (TEXT_MARKER.test(line)) {
-      captureMode = 'text';
-      continue;
-    }
-
-    if (TASK_MARKER.test(line)) {
-      captureMode = 'task';
-      continue;
-    }
-
-    if (captureMode === 'text') {
-      currentLesson.text += `${currentLesson.text ? '\n' : ''}${line}`.trim();
-      continue;
-    }
-
-    if (captureMode === 'task') {
-      currentLesson.task ??= '';
-      currentLesson.task += `${currentLesson.task ? '\n' : ''}${line}`.trim();
-    }
+    lessonNodes.push(node);
   }
 
   flushLesson();

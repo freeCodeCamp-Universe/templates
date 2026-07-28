@@ -1,27 +1,25 @@
-import './learn-navigation.css';
+import './curriculum-map.css';
 import type { Curriculum } from '../lib/curriculum-types';
-import { buildLearnPath } from '../lib/route-utils';
+import { buildLearnPath } from '../lib/curriculum-route-utils';
 
-type LearnNavigationProps = {
+type CurriculumMapProps = {
   curriculum: Curriculum;
 };
 
-export function LearnNavigation({ curriculum }: LearnNavigationProps) {
+export function CurriculumMap({ curriculum }: CurriculumMapProps) {
   return (
     <nav aria-label="Curriculum sections" className="navigation">
       {curriculum.sections.map((section) => (
-        <section key={section.title} className="sectionCard">
+        <section key={section.title} className="section-card">
           <h2>{section.title}</h2>
 
           {section.modules.map((module) => (
-            <div key={module.title} className="moduleBlock">
+            <div key={module.title} className="module-block">
               <h3>{module.title}</h3>
               <ul className="list">
                 {module.lessons.map((lesson) => (
                   <li key={lesson.title} className="item">
-                    <a href={buildLearnPath(section, module, lesson)} className="link">
-                      {lesson.title}
-                    </a>
+                    <a href={buildLearnPath(section, module, lesson)}>{lesson.title}</a>
                   </li>
                 ))}
               </ul>

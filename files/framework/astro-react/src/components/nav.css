@@ -1,0 +1,70 @@
+.nav {
+  --primary-color: var(--gray-00);
+  --secondary-background: var(--gray-80);
+  --quaternary-background: var(--gray-75);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-site-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--header-height);
+  padding: 0 var(--space-md);
+  background: var(--gray-90);
+  color: var(--gray-00);
+  border-bottom: 1px solid var(--gray-75);
+}
+
+.nav-start {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.brand {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.brand:hover {
+  color: var(--yellow-gold);
+}
+
+.brand:visited {
+  color: inherit;
+}
+
+.sidebar-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+  background: var(--gray-80);
+}
+
+.sidebar-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}

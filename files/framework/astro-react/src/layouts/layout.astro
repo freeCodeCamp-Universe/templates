@@ -1,0 +1,36 @@
+---
+import '../global.css';
+import { Nav } from '../components/nav';
+
+type Props = {
+  title: string;
+  brand: string;
+  hasSidebar?: boolean;
+};
+
+const { title, brand, hasSidebar = false } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="dark-palette">
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'light') {
+          document.body.classList.remove('dark-palette');
+          document.body.classList.add('light-palette');
+        }
+      })();
+    </script>
+    <Nav brand={brand} showSidebarToggle={hasSidebar} client:load />
+    <slot />
+  </body>
+</html>

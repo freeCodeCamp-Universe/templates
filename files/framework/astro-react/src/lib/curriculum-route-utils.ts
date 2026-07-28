@@ -21,6 +21,10 @@ export function buildLessonRouteSlug(
   return [sectionSlug, moduleSlug, lessonSlug].join('-');
 }
 
-export function buildLearnPath(section: Section | string, module: Module | string, lesson: Lesson | string): string {
+export function buildLearnPath(
+  section: Section | string,
+  module: Module | string,
+  lesson: Lesson | string,
+): string {
   return `/learn/${buildLessonRouteSlug(section, module, lesson)}`;
 }

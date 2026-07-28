@@ -1,0 +1,11 @@
+.lesson-layout {
+  display: flex;
+  align-items: flex-start;
+}
+
+.card {
+  background: var(--tertiary-background);
+  border: 1px solid var(--quaternary-background);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+}
