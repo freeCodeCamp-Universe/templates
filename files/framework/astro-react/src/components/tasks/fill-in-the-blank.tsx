@@ -2,9 +2,7 @@ import './task.css';
 import './fill-in-the-blank.css';
 import { useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
-import { Button } from '../button';
-
-type Result = 'correct' | 'incorrect' | 'unanswered';
+import { TaskActions, type Result } from './task-actions';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',
@@ -14,10 +12,11 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 
 type FillInTheBlankProps = {
   task: Extract<Task, { type: 'fill-in-the-blank' }>;
-  onCorrect: () => void;
+  nextHref: string;
+  isLastLesson: boolean;
 };
 
-export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
+export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankProps) {
   const blankCount = task.segments.filter((segment) => segment.kind === 'blank').length;
   const [answers, setAnswers] = useState<string[]>(() => Array(blankCount).fill(''));
   const [result, setResult] = useState<Result | null>(null);
@@ -48,9 +47,6 @@ export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
     });
 
     setResult(isCorrect ? 'correct' : 'incorrect');
-    if (isCorrect) {
-      onCorrect();
-    }
   }
 
   let blankIndex = 0;
@@ -79,15 +75,13 @@ export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
         })}
       </p>
 
-      {result !== 'correct' ? (
-        <Button variant="primary" onClick={handleCheck}>
-          Check answer
-        </Button>
-      ) : null}
-
-      <p className={`feedback ${result ?? ''}`} role="status" aria-live="polite">
-        {result ? FEEDBACK_MESSAGES[result] : ''}
-      </p>
+      <TaskActions
+        result={result}
+        message={result ? FEEDBACK_MESSAGES[result] : ''}
+        onCheck={handleCheck}
+        nextHref={nextHref}
+        nextLabel={isLastLesson ? 'Finish' : 'Next lesson'}
+      />
     </div>
   );
 }

@@ -42,7 +42,7 @@ This lesson has a multiple choice question.
 Is this a mulitple choice question?
 
 - [ ] Maybe.
-- [x] Yes. The correct option has an x in the box
+- [x] Yes.
 - [ ] No.
 - [ ] I don't think so.
 
@@ -58,7 +58,7 @@ Select the valid options:
 
 - [ ] No. 
 - [ ] No. 
-- [x] Yes. The correct options have an x in the box
+- [x] Yes.
 - [x] Yes.
 
 ### Lesson 3

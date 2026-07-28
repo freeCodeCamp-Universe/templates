@@ -2,10 +2,8 @@ import './task.css';
 import './option-task.css';
 import { useId, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
-import { Button } from '../button';
 import { Markdown } from '../markdown';
-
-type Result = 'correct' | 'incorrect' | 'unanswered';
+import { TaskActions, type Result } from './task-actions';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',
@@ -15,10 +13,11 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 
 type SelectAllProps = {
   task: Extract<Task, { type: 'select-all-that-apply' }>;
-  onCorrect: () => void;
+  nextHref: string;
+  isLastLesson: boolean;
 };
 
-export function SelectAll({ task, onCorrect }: SelectAllProps) {
+export function SelectAll({ task, nextHref, isLastLesson }: SelectAllProps) {
   const groupId = useId();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [result, setResult] = useState<Result | null>(null);
@@ -44,9 +43,6 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
 
     const isCorrect = task.options.every((option, index) => option.correct === selected.has(index));
     setResult(isCorrect ? 'correct' : 'incorrect');
-    if (isCorrect) {
-      onCorrect();
-    }
   }
 
   return (
@@ -73,15 +69,13 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
         })}
       </fieldset>
 
-      {result !== 'correct' ? (
-        <Button variant="primary" onClick={handleCheck}>
-          Check answer
-        </Button>
-      ) : null}
-
-      <p className={`feedback ${result ?? ''}`} role="status" aria-live="polite">
-        {result ? FEEDBACK_MESSAGES[result] : ''}
-      </p>
+      <TaskActions
+        result={result}
+        message={result ? FEEDBACK_MESSAGES[result] : ''}
+        onCheck={handleCheck}
+        nextHref={nextHref}
+        nextLabel={isLastLesson ? 'Finish' : 'Next lesson'}
+      />
     </div>
   );
 }

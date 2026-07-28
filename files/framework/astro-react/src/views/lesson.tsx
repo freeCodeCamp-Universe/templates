@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { Curriculum, Lesson } from '../lib/curriculum-types';
 import { Markdown } from '../components/markdown';
 import { Sidebar } from '../components/sidebar';
@@ -18,8 +17,7 @@ type LessonProps = {
 };
 
 export function Lesson({ curriculum, lesson, nextHref, isLastLesson }: LessonProps) {
-  const [taskPassed, setTaskPassed] = useState(false);
-  const canProceed = !lesson.task || taskPassed;
+  const nextLabel = isLastLesson ? 'Finish' : 'Next lesson';
 
   return (
     <div className="lesson-layout">
@@ -31,30 +29,23 @@ export function Lesson({ curriculum, lesson, nextHref, isLastLesson }: LessonPro
           <Markdown>{lesson.text}</Markdown>
 
           {lesson.task && lesson.task.type === 'multiple-choice' ? (
-            <section>
-              <h2>Task</h2>
-              <MultipleChoice task={lesson.task} onCorrect={() => setTaskPassed(true)} />
-            </section>
+            <MultipleChoice task={lesson.task} nextHref={nextHref} isLastLesson={isLastLesson} />
           ) : null}
 
           {lesson.task && lesson.task.type === 'select-all-that-apply' ? (
-            <section>
-              <h2>Task</h2>
-              <SelectAll task={lesson.task} onCorrect={() => setTaskPassed(true)} />
-            </section>
+            <SelectAll task={lesson.task} nextHref={nextHref} isLastLesson={isLastLesson} />
           ) : null}
 
           {lesson.task && lesson.task.type === 'fill-in-the-blank' ? (
-            <section>
-              <h2>Task</h2>
-              <FillInTheBlank task={lesson.task} onCorrect={() => setTaskPassed(true)} />
-            </section>
+            <FillInTheBlank task={lesson.task} nextHref={nextHref} isLastLesson={isLastLesson} />
           ) : null}
 
-          {canProceed ? (
-            <Button variant="primary" href={nextHref}>
-              {isLastLesson ? 'Finish' : 'Next lesson'}
-            </Button>
+          {!lesson.task ? (
+            <div className="lesson-next">
+              <Button variant="primary" href={nextHref}>
+                {nextLabel}
+              </Button>
+            </div>
           ) : null}
         </section>
       </main>

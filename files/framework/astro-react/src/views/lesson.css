@@ -2,3 +2,14 @@
   display: flex;
   align-items: flex-start;
 }
+
+.lesson-layout > .main {
+  flex: 1;
+  min-width: 0;
+  max-width: 720px;
+}
+
+.lesson-next {
+  display: flex;
+  justify-content: flex-end;
+}
