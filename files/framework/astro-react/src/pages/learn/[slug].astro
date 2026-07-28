@@ -14,7 +14,7 @@ export const getStaticPaths = (async () => {
         params: {
           slug: buildLessonRouteSlug(sectionItem, moduleItem, lessonItem),
         },
-        props: { section: sectionItem, module: moduleItem, lesson: lessonItem, curriculum },
+        props: { lesson: lessonItem, curriculum },
       })),
     ),
   );
@@ -22,9 +22,9 @@ export const getStaticPaths = (async () => {
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { curriculum, lesson, module, section } = Astro.props;
+const { curriculum, lesson } = Astro.props;
 ---
 
 <Layout title={lesson.title} brand={curriculum.title} hasSidebar>
-  <Lesson curriculum={curriculum} section={section} module={module} lesson={lesson} client:load />
+  <Lesson curriculum={curriculum} lesson={lesson} client:load />
 </Layout>
