@@ -1,3 +1,4 @@
+import './task.css';
 import './option-task.css';
 import { useId, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
@@ -13,7 +14,7 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 };
 
 type MultipleChoiceProps = {
-  task: Task;
+  task: Extract<Task, { type: 'multiple-choice' }>;
 };
 
 export function MultipleChoice({ task }: MultipleChoiceProps) {
@@ -36,7 +37,7 @@ export function MultipleChoice({ task }: MultipleChoiceProps) {
   }
 
   return (
-    <div className="option-task">
+    <div className="task">
       <fieldset className="fieldset" aria-labelledby={`${groupId}-question`}>
         <div id={`${groupId}-question`} className="question">
           <Markdown>{task.question}</Markdown>

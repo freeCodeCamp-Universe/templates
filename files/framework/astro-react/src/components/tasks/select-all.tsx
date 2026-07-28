@@ -1,3 +1,4 @@
+import './task.css';
 import './option-task.css';
 import { useId, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
@@ -13,7 +14,7 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 };
 
 type SelectAllProps = {
-  task: Task;
+  task: Extract<Task, { type: 'select-all-that-apply' }>;
 };
 
 export function SelectAll({ task }: SelectAllProps) {
@@ -45,7 +46,7 @@ export function SelectAll({ task }: SelectAllProps) {
   }
 
   return (
-    <div className="option-task">
+    <div className="task">
       <fieldset className="fieldset" aria-labelledby={`${groupId}-question`}>
         <div id={`${groupId}-question`} className="question">
           <Markdown>{task.question}</Markdown>

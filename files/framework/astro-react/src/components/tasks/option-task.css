@@ -1,9 +1,3 @@
-.option-task {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
 .fieldset {
   border: 1px solid var(--quaternary-background);
   border-radius: var(--radius-md);
@@ -24,17 +18,4 @@
 
 .option label {
   cursor: pointer;
-}
-
-.feedback {
-  font-weight: 700;
-  min-height: 1.5em;
-}
-
-.feedback.correct {
-  color: var(--success-color);
-}
-
-.feedback.incorrect {
-  color: var(--danger-color);
 }

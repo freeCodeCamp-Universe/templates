@@ -10,37 +10,25 @@ title: Sample Curriculum
 
 --text--
 
-Here's the text for module 1.1, lesson 1. No task to complete here.
+Here's the text for the first lesson. No task to complete here.
 
-You can put markdown here and it will render html. Like **bold**, *italic*, and ~~strikethrough~~ text.
+You can put markdown here and it will render HTML. Like **bold**, *italic*, and ~~strikethrough~~ text.
 
-Also tables:
 
-| Column 1 | Column 2 |
-| -------- | -------- |
-| data     | data     |
-| data     | data     |
+| Also Tables | like this |
+| ----------- | --------- |
+| data        | data      |
+| data        | data      |
 
-And blockquotes:
+> Blockquotes, like this,
 
-> Here's a blockquote
+`inline "code"`
 
-Inline code: `This is inline "code"`.
+- unordered lists
+- item 2
 
-### Lesson 2
-
---text--
-
-Here's the text for module 1.1, lesson 2. It has a multiple choice question.
-
---multiple-choice--
-
-Is this a mulitple choice question?
-
-- [ ] Maybe
-- [x] Yes
-- [ ] No
-- [ ] I don't think so
+1. ordered lists
+2. item 2
 
 ## Module 1.2
 
@@ -48,22 +36,41 @@ Is this a mulitple choice question?
 
 --text--
 
-Here's the text for module 1.2, lesson 1. It has a select all that apply task.
+This lesson has a multiple choice question.
 
---select-all-that-apply--
+--multiple-choice--
 
-Select the valid options:
+Is this a mulitple choice question?
 
-- [x] Yes
-- [ ] No
-- [x] Yes
-- [ ] No
+- [ ] Maybe.
+- [x] Yes. The correct option has an x in the box
+- [ ] No.
+- [ ] I don't think so.
 
 ### Lesson 2
 
 --text--
 
-Here's the text for module 1.2, lesson 2.
+This lesson has a select all that apply task.
+
+--select-all-that-apply--
+
+Select the valid options:
+
+- [ ] No. 
+- [ ] No. 
+- [x] Yes. The correct options have an x in the box
+- [x] Yes.
+
+### Lesson 3
+
+--text--
+
+This lesson has a fill in the blank task.
+
+--fill-in-the-blank--
+
+This sentence has a {{blank}}. So does {{this}} one.
 
 ## Module 2.1
 
@@ -78,3 +85,11 @@ This is placeholder lesson text for section 2, module 2.1.
 --text--
 
 This is placeholder lesson text for section 2, module 2.1.
+
+# Section 2
+
+## Module 1.1
+
+### Lesson 1
+
+A section 2 lesson.
