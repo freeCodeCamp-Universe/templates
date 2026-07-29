@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.7.0...app-templates-v0.8.0) (2026-07-29)
+
+
+### Features
+
+* allow (and test for) dependency ranges like ^0.n. ([#22](https://github.com/freeCodeCamp-Universe/templates/issues/22)) ([303ed19](https://github.com/freeCodeCamp-Universe/templates/commit/303ed199bc0f6169172fc7deef073fea758020e7))
+* more astro react template ([#20](https://github.com/freeCodeCamp-Universe/templates/issues/20)) ([b6a00f8](https://github.com/freeCodeCamp-Universe/templates/commit/b6a00f8cf2e39ad007358a7a8176eb83850a2f0e))
+* remove services from runtimes ([#21](https://github.com/freeCodeCamp-Universe/templates/issues/21)) ([6f74087](https://github.com/freeCodeCamp-Universe/templates/commit/6f740874deaa587ea9c99f19ba4f35276194e414))
+* **template:** prune curriculum data + include astro skill ([#24](https://github.com/freeCodeCamp-Universe/templates/issues/24)) ([1605ad8](https://github.com/freeCodeCamp-Universe/templates/commit/1605ad88d25184373ca4a120360bd30729f2f421))
+
 ## [0.7.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.6.0...app-templates-v0.7.0) (2026-07-28)
 
 
