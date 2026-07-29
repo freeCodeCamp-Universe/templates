@@ -10,6 +10,7 @@ import { TASK_DEFINITIONS } from './curriculum-tasks';
 const processor = unified().use(remarkParse).use(remarkGfm);
 
 const MARKER = /^--([a-z][a-z-]*)--$/;
+const END_MARKER = 'end';
 
 function isHeadingDepth(node: RootContent, depth: number): node is Heading {
   return node.type === 'heading' && node.depth === depth;
@@ -24,60 +25,83 @@ function matchMarker(node: RootContent): string | null {
   return match ? match[1] : null;
 }
 
-type Block = {
-  markerType: string;
-  nodes: RootContent[];
-};
+function finalizeTaskBlock(lesson: Lesson, markerType: string, nodes: RootContent[]): void {
+  const definition = TASK_DEFINITIONS[markerType];
+  if (!definition) {
+    throw new Error(`Unknown task type "--${markerType}--" in lesson "${lesson.title}"`);
+  }
 
-function splitIntoBlocks(nodes: RootContent[]): Block[] {
-  const blocks: Block[] = [];
-  let current: Block | null = null;
+  const candidate = { type: markerType, ...definition.parseContent(nodes) };
+
+  try {
+    const task = definition.schema.parse(candidate);
+    lesson.content.push({ type: 'task', task });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Invalid "--${markerType}--" task in lesson "${lesson.title}": ${message}`, {
+      cause: error,
+    });
+  }
+}
+
+function finalizeLessonContent(lesson: Lesson, nodes: RootContent[]): void {
+  let textRun: RootContent[] = [];
+  let openMarker: string | null = null;
+  let openNodes: RootContent[] = [];
+
+  const flushText = () => {
+    if (textRun.length === 0) {
+      return;
+    }
+
+    const markdown = nodesToMarkdown(textRun);
+    if (markdown) {
+      lesson.content.push({ type: 'text', markdown });
+    }
+    textRun = [];
+  };
 
   for (const node of nodes) {
     const markerType = matchMarker(node);
 
+    if (markerType === END_MARKER) {
+      if (!openMarker) {
+        throw new Error(`Stray "--end--" marker in lesson "${lesson.title}"`);
+      }
+
+      finalizeTaskBlock(lesson, openMarker, openNodes);
+      openMarker = null;
+      openNodes = [];
+      continue;
+    }
+
     if (markerType) {
-      current = { markerType, nodes: [] };
-      blocks.push(current);
+      if (openMarker) {
+        throw new Error(
+          `Task "--${openMarker}--" in lesson "${lesson.title}" is missing a closing "--end--" before "--${markerType}--" starts`,
+        );
+      }
+
+      flushText();
+      openMarker = markerType;
+      openNodes = [];
       continue;
     }
 
-    current?.nodes.push(node);
-  }
-
-  return blocks;
-}
-
-function finalizeLessonContent(lesson: Lesson, nodes: RootContent[]): void {
-  for (const block of splitIntoBlocks(nodes)) {
-    if (block.markerType === 'text') {
-      lesson.text = nodesToMarkdown(block.nodes);
-      continue;
-    }
-
-    if (lesson.task) {
-      throw new Error(
-        `Lesson "${lesson.title}" already has a task; only one task per lesson is supported`,
-      );
-    }
-
-    const definition = TASK_DEFINITIONS[block.markerType];
-    if (!definition) {
-      throw new Error(`Unknown task type "--${block.markerType}--" in lesson "${lesson.title}"`);
-    }
-
-    const candidate = { type: block.markerType, ...definition.parseContent(block.nodes) };
-
-    try {
-      lesson.task = definition.schema.parse(candidate);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      throw new Error(
-        `Invalid "--${block.markerType}--" task in lesson "${lesson.title}": ${message}`,
-        { cause: error },
-      );
+    if (openMarker) {
+      openNodes.push(node);
+    } else {
+      textRun.push(node);
     }
   }
+
+  if (openMarker) {
+    throw new Error(
+      `Task "--${openMarker}--" in lesson "${lesson.title}" is missing a closing "--end--"`,
+    );
+  }
+
+  flushText();
 }
 
 export function parseCurriculum(markdown: string, title: string): Curriculum {
@@ -118,7 +142,7 @@ export function parseCurriculum(markdown: string, title: string): Curriculum {
 
     if (isHeadingDepth(node, 3)) {
       flushLesson();
-      currentLesson = { title: toString(node).trim(), text: '', task: null };
+      currentLesson = { title: toString(node).trim(), content: [] };
       lessonNodes = [];
       continue;
     }

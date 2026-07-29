@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { CurriculumNav, Lesson } from '../lib/curriculum-types';
 import { Markdown } from '../components/markdown';
 import { Sidebar } from '../components/sidebar';
@@ -17,7 +18,13 @@ type LessonProps = {
 };
 
 export function Lesson({ curriculum, lesson, nextHref, isLastLesson }: LessonProps) {
-  const nextLabel = isLastLesson ? 'Finish' : 'Next lesson';
+  const taskCount = lesson.content.filter((block) => block.type === 'task').length;
+  const [passedCount, setPassedCount] = useState(0);
+  const canProceed = passedCount >= taskCount;
+
+  function handleTaskPassed() {
+    setPassedCount((count) => count + 1);
+  }
 
   return (
     <div className="lesson-layout">
@@ -26,24 +33,27 @@ export function Lesson({ curriculum, lesson, nextHref, isLastLesson }: LessonPro
       <main id="main-content" className="main" tabIndex={-1}>
         <section>
           <h1>{lesson.title}</h1>
-          <Markdown>{lesson.text}</Markdown>
 
-          {lesson.task && lesson.task.type === 'multiple-choice' ? (
-            <MultipleChoice task={lesson.task} nextHref={nextHref} isLastLesson={isLastLesson} />
-          ) : null}
+          {lesson.content.map((block, index) => {
+            if (block.type === 'text') {
+              return <Markdown key={index}>{block.markdown}</Markdown>;
+            }
 
-          {lesson.task && lesson.task.type === 'select-all-that-apply' ? (
-            <SelectAll task={lesson.task} nextHref={nextHref} isLastLesson={isLastLesson} />
-          ) : null}
+            if (block.task.type === 'multiple-choice') {
+              return <MultipleChoice key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
 
-          {lesson.task && lesson.task.type === 'fill-in-the-blank' ? (
-            <FillInTheBlank task={lesson.task} nextHref={nextHref} isLastLesson={isLastLesson} />
-          ) : null}
+            if (block.task.type === 'select-all-that-apply') {
+              return <SelectAll key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
 
-          {!lesson.task ? (
+            return <FillInTheBlank key={index} task={block.task} onCorrect={handleTaskPassed} />;
+          })}
+
+          {canProceed ? (
             <div className="lesson-next">
               <Button variant="primary" href={nextHref}>
-                {nextLabel}
+                {isLastLesson ? 'Finish' : 'Next lesson'}
               </Button>
             </div>
           ) : null}

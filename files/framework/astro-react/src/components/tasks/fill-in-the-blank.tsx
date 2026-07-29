@@ -12,11 +12,10 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 
 type FillInTheBlankProps = {
   task: Extract<Task, { type: 'fill-in-the-blank' }>;
-  nextHref: string;
-  isLastLesson: boolean;
+  onCorrect: () => void;
 };
 
-export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankProps) {
+export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
   const blankCount = task.segments.filter((segment) => segment.kind === 'blank').length;
   const [answers, setAnswers] = useState<string[]>(() => Array(blankCount).fill(''));
   const [result, setResult] = useState<Result | null>(null);
@@ -47,6 +46,9 @@ export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankP
     });
 
     setResult(isCorrect ? 'correct' : 'incorrect');
+    if (isCorrect) {
+      onCorrect();
+    }
   }
 
   let blankIndex = 0;
@@ -79,8 +81,6 @@ export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankP
         result={result}
         message={result ? FEEDBACK_MESSAGES[result] : ''}
         onCheck={handleCheck}
-        nextHref={nextHref}
-        nextLabel={isLastLesson ? 'Finish' : 'Next lesson'}
       />
     </div>
   );
