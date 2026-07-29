@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 
@@ -23,6 +23,24 @@ describe("framework package.json dependency versions", () => {
         const major = /^\^\d+$/;
         const zeroMinor = /^\^0\.\d+$/;
         expect(version).toMatch(new RegExp(major.source + "|" + zeroMinor.source));
+      });
+    }
+  }
+});
+
+const lockfiles = [
+  "package-lock.json",
+  "pnpm-lock.yaml",
+  "yarn.lock",
+  "bun.lock",
+];
+
+describe("framework directories should not contain lockfiles", () => {
+  for (const framework of frameworks) {
+    for (const lockfile of lockfiles) {
+      test(`${framework} should not contain ${lockfile}`, () => {
+        const lockfilePath = join(frameworkDir, framework, lockfile);
+        expect(existsSync(lockfilePath)).toBe(false);
       });
     }
   }
