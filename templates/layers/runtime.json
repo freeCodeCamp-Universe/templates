@@ -14,11 +14,7 @@
       "bun"
     ],
     "recommended": false,
-    "services": [
-      "analytics",
-      "auth",
-      "email"
-    ]
+    "services": []
   },
   "static_web": {
     "baseImage": "node:22-alpine",
@@ -34,10 +30,6 @@
       "bun"
     ],
     "recommended": true,
-    "services": [
-      "analytics",
-      "auth",
-      "email"
-    ]
+    "services": []
   }
 }
