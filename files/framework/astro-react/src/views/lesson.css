@@ -3,9 +3,13 @@
   align-items: flex-start;
 }
 
-.card {
-  background: var(--tertiary-background);
-  border: 1px solid var(--quaternary-background);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
+.lesson-layout > .main {
+  flex: 1;
+  min-width: 0;
+  max-width: 720px;
+}
+
+.lesson-next {
+  display: flex;
+  justify-content: flex-end;
 }

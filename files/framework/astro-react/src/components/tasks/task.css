@@ -2,9 +2,23 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+  background: var(--tertiary-background);
+  border: 1px solid var(--quaternary-background);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
 }
 
 .feedback {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
   font-weight: 700;
   min-height: 1.5em;
 }

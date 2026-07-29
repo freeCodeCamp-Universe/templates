@@ -1,7 +1,7 @@
 .fieldset {
-  border: 1px solid var(--quaternary-background);
-  border-radius: var(--radius-md);
-  padding: var(--space-md);
+  border: none;
+  margin: 0;
+  padding: 0;
 }
 
 .question {
