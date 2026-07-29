@@ -19,8 +19,10 @@ describe("framework package.json dependency versions", () => {
     };
 
     for (const [name, version] of Object.entries(allDeps)) {
-      test(`${framework}: ${name} should just specify the major version e.g. ^42.`, () => {
-        expect(version).toMatch(/^\^\d+$/);
+      test(`${framework}: ${name} should just specify the major version, or 0.minor e.g. ^42 or ^0.4`, () => {
+        const major = /^\^\d+$/;
+        const zeroMinor = /^\^0\.\d+$/;
+        expect(version).toMatch(new RegExp(major.source + "|" + zeroMinor.source));
       });
     }
   }
