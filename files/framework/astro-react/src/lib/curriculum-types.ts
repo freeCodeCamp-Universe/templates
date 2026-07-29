@@ -20,3 +20,14 @@ export type Curriculum = {
   title: string;
   sections: Section[];
 };
+
+export type CurriculumNav = {
+  title: string;
+  sections: {
+    title: string;
+    modules: {
+      title: string;
+      lessons: { title: string }[];
+    }[];
+  }[];
+};

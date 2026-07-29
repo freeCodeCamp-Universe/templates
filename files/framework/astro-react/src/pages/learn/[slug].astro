@@ -27,7 +27,16 @@ export const getStaticPaths = (async () => {
         slug: buildLessonRouteSlug(entry.section, entry.module, entry.lesson),
       },
       props: {
-        curriculum,
+        curriculum: {
+          title: curriculum.title,
+          sections: curriculum.sections.map((s) => ({
+            title: s.title,
+            modules: s.modules.map((m) => ({
+              title: m.title,
+              lessons: m.lessons.map((l) => ({ title: l.title })),
+            })),
+          })),
+        },
         lesson: entry.lesson,
         isLastLesson,
         nextHref: isLastLesson

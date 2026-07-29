@@ -1,10 +1,10 @@
 import './sidebar.css';
-import type { Curriculum } from '../lib/curriculum-types';
+import type { CurriculumNav } from '../lib/curriculum-types';
 import { useSidebarOpen } from '../hooks/use-sidebar-open';
 import { CurriculumMap } from './curriculum-map';
 
 type SidebarProps = {
-  curriculum: Curriculum;
+  curriculum: CurriculumNav;
 };
 
 export function Sidebar({ curriculum }: SidebarProps) {

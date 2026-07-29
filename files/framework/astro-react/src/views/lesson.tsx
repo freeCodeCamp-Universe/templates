@@ -1,4 +1,4 @@
-import type { Curriculum, Lesson } from '../lib/curriculum-types';
+import type { CurriculumNav, Lesson } from '../lib/curriculum-types';
 import { Markdown } from '../components/markdown';
 import { Sidebar } from '../components/sidebar';
 import { Button } from '../components/button';
@@ -10,7 +10,7 @@ import './views.css';
 import './lesson.css';
 
 type LessonProps = {
-  curriculum: Curriculum;
+  curriculum: CurriculumNav;
   lesson: Lesson;
   nextHref: string;
   isLastLesson: boolean;
