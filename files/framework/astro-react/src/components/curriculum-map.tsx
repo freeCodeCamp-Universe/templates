@@ -1,9 +1,9 @@
 import './curriculum-map.css';
-import type { Curriculum } from '../lib/curriculum-types';
+import type { CurriculumNav } from '../lib/curriculum-types';
 import { buildLearnPath } from '../lib/curriculum-route-utils';
 
 type CurriculumMapProps = {
-  curriculum: Curriculum;
+  curriculum: CurriculumNav;
 };
 
 export function CurriculumMap({ curriculum }: CurriculumMapProps) {
@@ -19,7 +19,9 @@ export function CurriculumMap({ curriculum }: CurriculumMapProps) {
               <ul className="list">
                 {module.lessons.map((lesson) => (
                   <li key={lesson.title} className="item">
-                    <a href={buildLearnPath(section, module, lesson)}>{lesson.title}</a>
+                    <a href={buildLearnPath(section.title, module.title, lesson.title)}>
+                      {lesson.title}
+                    </a>
                   </li>
                 ))}
               </ul>
