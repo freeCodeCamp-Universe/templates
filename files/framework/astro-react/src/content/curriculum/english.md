@@ -42,7 +42,7 @@ Is this a mulitple choice question?
 - [ ] No.
 - [ ] I don't think so.
 
---end--
+--end-multiple-choice--
 
 ### Lesson 2
 
@@ -57,7 +57,7 @@ Select the valid options:
 - [x] Yes.
 - [x] Yes.
 
---end--
+--end-select-all-that-apply--
 
 ### Lesson 3
 
@@ -67,7 +67,7 @@ This lesson has a fill in the blank task.
 
 This sentence has a {{blank}}. So does {{this}} one.
 
---end--
+--end-fill-in-the-blank--
 
 ### Lesson 4
 
@@ -80,7 +80,7 @@ Pick the correct one.
 - [ ] Wrong.
 - [x] Right.
 
---end--
+--end-multiple-choice--
 
 Here's some text between the two tasks.
 
@@ -92,7 +92,7 @@ Pick all the correct ones.
 - [ ] Wrong one.
 - [x] Another right one.
 
---end--
+--end-select-all-that-apply--
 
 Here's some text after the last task.
 

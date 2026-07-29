@@ -10,7 +10,7 @@ import { TASK_DEFINITIONS } from './curriculum-tasks';
 const processor = unified().use(remarkParse).use(remarkGfm);
 
 const MARKER = /^--([a-z][a-z-]*)--$/;
-const END_MARKER = 'end';
+const END_PREFIX = 'end-';
 
 function isHeadingDepth(node: RootContent, depth: number): node is Heading {
   return node.type === 'heading' && node.depth === depth;
@@ -64,9 +64,17 @@ function finalizeLessonContent(lesson: Lesson, nodes: RootContent[]): void {
   for (const node of nodes) {
     const markerType = matchMarker(node);
 
-    if (markerType === END_MARKER) {
+    if (markerType?.startsWith(END_PREFIX)) {
+      const closedType = markerType.slice(END_PREFIX.length);
+
       if (!openMarker) {
-        throw new Error(`Stray "--end--" marker in lesson "${lesson.title}"`);
+        throw new Error(`Stray "--${markerType}--" marker in lesson "${lesson.title}"`);
+      }
+
+      if (closedType !== openMarker) {
+        throw new Error(
+          `Expected "--end-${openMarker}--" but found "--${markerType}--" in lesson "${lesson.title}"`,
+        );
       }
 
       finalizeTaskBlock(lesson, openMarker, openNodes);
@@ -78,7 +86,7 @@ function finalizeLessonContent(lesson: Lesson, nodes: RootContent[]): void {
     if (markerType) {
       if (openMarker) {
         throw new Error(
-          `Task "--${openMarker}--" in lesson "${lesson.title}" is missing a closing "--end--" before "--${markerType}--" starts`,
+          `Task "--${openMarker}--" in lesson "${lesson.title}" is missing a closing "--end-${openMarker}--" before "--${markerType}--" starts`,
         );
       }
 
@@ -97,7 +105,7 @@ function finalizeLessonContent(lesson: Lesson, nodes: RootContent[]): void {
 
   if (openMarker) {
     throw new Error(
-      `Task "--${openMarker}--" in lesson "${lesson.title}" is missing a closing "--end--"`,
+      `Task "--${openMarker}--" in lesson "${lesson.title}" is missing a closing "--end-${openMarker}--"`,
     );
   }
 
