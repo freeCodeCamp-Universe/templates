@@ -10,12 +10,12 @@ title: Sample Curriculum
 
 Here's the text for the first lesson. No task to complete here.
 
-You can put markdown here and it will render HTML. Like **bold**, *italic*, and ~~strikethrough~~ text.
+You can put markdown here and it will render HTML. Like **bold**, _italic_, and ~~strikethrough~~ text.
 
-| Also tables | Column 2  |
-| ----------- | --------- |
-| data        | data      |
-| data        | data      |
+| Also tables | Column 2 |
+| ----------- | -------- |
+| data        | data     |
+| data        | data     |
 
 > Blockquotes
 
@@ -52,8 +52,8 @@ This lesson has a select all that apply task.
 
 Select the valid options:
 
-- [ ] No. 
-- [ ] No. 
+- [ ] No.
+- [ ] No.
 - [x] Yes.
 - [x] Yes.
 
