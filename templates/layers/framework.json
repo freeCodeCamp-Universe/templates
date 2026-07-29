@@ -96,6 +96,10 @@
       {
         "repo": "freeCodeCamp-Universe/marketplace",
         "skill": "command-line-chic"
+      },
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "astro"
       }
     ],
     "watchSync": [
