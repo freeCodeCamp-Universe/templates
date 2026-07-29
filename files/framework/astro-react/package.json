@@ -33,14 +33,14 @@
     "unified": "^11"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9",
     "@eslint/js": "^10",
     "eslint": "^10",
     "eslint-config-prettier": "^10",
     "eslint-plugin-astro": "^1",
     "eslint-plugin-jsx-a11y": "^6",
     "prettier": "^3",
-    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-astro": "^0.14",
     "typescript": "^6",
     "typescript-eslint": "^8"
   }
