@@ -16,25 +16,23 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@astrojs/mdx": "^7",
     "@astrojs/react": "^6",
     "@nanostores/react": "^1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "astro": "^7",
-    "mdast-util-gfm": "^3",
-    "mdast-util-to-markdown": "^2",
-    "mdast-util-to-string": "^4",
     "nanostores": "^1",
     "react": "^19",
     "react-dom": "^19",
     "react-markdown": "^10",
     "remark-gfm": "^4",
-    "remark-parse": "^11",
-    "unified": "^11"
+    "yaml": "^2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9",
     "@eslint/js": "^10",
+    "@types/mdast": "^4",
     "eslint": "^10",
     "eslint-config-prettier": "^10",
     "eslint-plugin-astro": "^1",

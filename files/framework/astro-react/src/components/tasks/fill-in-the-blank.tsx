@@ -1,7 +1,7 @@
 import './task.css';
 import './fill-in-the-blank.css';
 import { useState } from 'react';
-import type { Task } from '../../lib/curriculum-tasks';
+import { taskPassed } from '../../stores/lesson-store';
 import { TaskActions, type Result } from './task-actions';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
@@ -10,14 +10,14 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
   unanswered: 'Fill in every blank first.',
 };
 
+type Segment = { kind: 'text'; value: string } | { kind: 'blank'; answer: string };
+
 type FillInTheBlankProps = {
-  task: Extract<Task, { type: 'fill-in-the-blank' }>;
-  nextHref: string;
-  isLastLesson: boolean;
+  segments: Segment[];
 };
 
-export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankProps) {
-  const blankCount = task.segments.filter((segment) => segment.kind === 'blank').length;
+export function FillInTheBlank({ segments }: FillInTheBlankProps) {
+  const blankCount = segments.filter((segment) => segment.kind === 'blank').length;
   const [answers, setAnswers] = useState<string[]>(() => Array(blankCount).fill(''));
   const [result, setResult] = useState<Result | null>(null);
 
@@ -35,7 +35,7 @@ export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankP
     }
 
     let blankIndex = 0;
-    const isCorrect = task.segments.every((segment) => {
+    const isCorrect = segments.every((segment) => {
       if (segment.kind !== 'blank') {
         return true;
       }
@@ -47,6 +47,9 @@ export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankP
     });
 
     setResult(isCorrect ? 'correct' : 'incorrect');
+    if (isCorrect) {
+      taskPassed();
+    }
   }
 
   let blankIndex = 0;
@@ -54,7 +57,7 @@ export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankP
   return (
     <div className="task">
       <p className="prompt">
-        {task.segments.map((segment, index) => {
+        {segments.map((segment, index) => {
           if (segment.kind === 'text') {
             return <span key={index}>{segment.value}</span>;
           }
@@ -79,8 +82,6 @@ export function FillInTheBlank({ task, nextHref, isLastLesson }: FillInTheBlankP
         result={result}
         message={result ? FEEDBACK_MESSAGES[result] : ''}
         onCheck={handleCheck}
-        nextHref={nextHref}
-        nextLabel={isLastLesson ? 'Finish' : 'Next lesson'}
       />
     </div>
   );

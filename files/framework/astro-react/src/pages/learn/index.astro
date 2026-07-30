@@ -1,11 +1,29 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../../layouts/layout.astro';
 import { Learn } from '../../views/learn';
-import { loadCurriculum } from '../../lib/load-curriculum';
+import { loadManifest } from '../../lib/load-manifest';
+import type { CurriculumNav } from '../../lib/curriculum-types';
 
-const curriculum = await loadCurriculum();
+const manifest = await loadManifest();
+const allLessons = await getCollection('lessons');
+const lessonTitleMap = new Map(allLessons.map((l) => [l.id, l.data.title]));
+
+const nav: CurriculumNav = {
+  title: manifest.title,
+  sections: manifest.sections.map((s) => ({
+    title: s.title,
+    modules: s.modules.map((m) => ({
+      title: m.title,
+      lessons: m.lessons.map((l) => ({
+        title: lessonTitleMap.get(l.id) ?? l.id,
+        id: l.id,
+      })),
+    })),
+  })),
+};
 ---
 
-<Layout title={`${curriculum.title}`} brand={curriculum.title}>
-  <Learn curriculum={curriculum} client:load />
+<Layout title={manifest.title} brand={manifest.title}>
+  <Learn curriculum={nav} client:load />
 </Layout>
