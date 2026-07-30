@@ -1,6 +1,6 @@
 import type { Root } from 'mdast';
 
-const TASK_COMPONENTS = new Set(['MultipleChoice', 'SelectAll', 'FillInTheBlank']);
+const TASK_COMPONENTS = new Set(['MultipleChoice', 'SelectAll', 'FillInTheBlank', 'MatchPairs']);
 
 function visit(node: unknown, fn: (node: unknown) => void): void {
   fn(node);
