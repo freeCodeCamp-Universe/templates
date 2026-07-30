@@ -1,9 +1,10 @@
 import type { Task } from './curriculum-tasks';
 
+export type LessonContentBlock = { type: 'text'; markdown: string } | { type: 'task'; task: Task };
+
 export type Lesson = {
   title: string;
-  text: string;
-  task: Task | null;
+  content: LessonContentBlock[];
 };
 
 export type Module = {

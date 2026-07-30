@@ -8,16 +8,14 @@ title: Sample Curriculum
 
 ### Lesson 1
 
---text--
-
 Here's the text for the first lesson. No task to complete here.
 
-You can put markdown here and it will render HTML. Like **bold**, *italic*, and ~~strikethrough~~ text.
+You can put markdown here and it will render HTML. Like **bold**, _italic_, and ~~strikethrough~~ text.
 
-| Also tables | Column 2  |
-| ----------- | --------- |
-| data        | data      |
-| data        | data      |
+| Also tables | Column 2 |
+| ----------- | -------- |
+| data        | data     |
+| data        | data     |
 
 > Blockquotes
 
@@ -33,8 +31,6 @@ You can put markdown here and it will render HTML. Like **bold**, *italic*, and 
 
 ### Lesson 1
 
---text--
-
 This lesson has a multiple choice question.
 
 --multiple-choice--
@@ -46,9 +42,9 @@ Is this a mulitple choice question?
 - [ ] No.
 - [ ] I don't think so.
 
-### Lesson 2
+--end-multiple-choice--
 
---text--
+### Lesson 2
 
 This lesson has a select all that apply task.
 
@@ -56,14 +52,14 @@ This lesson has a select all that apply task.
 
 Select the valid options:
 
-- [ ] No. 
-- [ ] No. 
+- [ ] No.
+- [ ] No.
 - [x] Yes.
 - [x] Yes.
+
+--end-select-all-that-apply--
 
 ### Lesson 3
-
---text--
 
 This lesson has a fill in the blank task.
 
@@ -71,17 +67,42 @@ This lesson has a fill in the blank task.
 
 This sentence has a {{blank}}. So does {{this}} one.
 
+--end-fill-in-the-blank--
+
+### Lesson 4
+
+Here's some text before the first task.
+
+--multiple-choice--
+
+Pick the correct one.
+
+- [ ] Wrong.
+- [x] Right.
+
+--end-multiple-choice--
+
+Here's some text between the two tasks.
+
+--select-all-that-apply--
+
+Pick all the correct ones.
+
+- [x] Right one.
+- [ ] Wrong one.
+- [x] Another right one.
+
+--end-select-all-that-apply--
+
+Here's some text after the last task.
+
 ## Module 2.1
 
 ### Lesson 1
 
---text--
-
 This is placeholder lesson text for section 2, module 2.1.
 
 ### Lesson 2
-
---text--
 
 This is placeholder lesson text for section 2, module 2.1.
 

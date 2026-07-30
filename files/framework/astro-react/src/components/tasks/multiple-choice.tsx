@@ -13,11 +13,10 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 
 type MultipleChoiceProps = {
   task: Extract<Task, { type: 'multiple-choice' }>;
-  nextHref: string;
-  isLastLesson: boolean;
+  onCorrect: () => void;
 };
 
-export function MultipleChoice({ task, nextHref, isLastLesson }: MultipleChoiceProps) {
+export function MultipleChoice({ task, onCorrect }: MultipleChoiceProps) {
   const groupId = useId();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
@@ -33,7 +32,11 @@ export function MultipleChoice({ task, nextHref, isLastLesson }: MultipleChoiceP
       return;
     }
 
-    setResult(task.options[selectedIndex].correct ? 'correct' : 'incorrect');
+    const isCorrect = task.options[selectedIndex].correct;
+    setResult(isCorrect ? 'correct' : 'incorrect');
+    if (isCorrect) {
+      onCorrect();
+    }
   }
 
   return (
@@ -65,8 +68,6 @@ export function MultipleChoice({ task, nextHref, isLastLesson }: MultipleChoiceP
         result={result}
         message={result ? FEEDBACK_MESSAGES[result] : ''}
         onCheck={handleCheck}
-        nextHref={nextHref}
-        nextLabel={isLastLesson ? 'Finish' : 'Next lesson'}
       />
     </div>
   );

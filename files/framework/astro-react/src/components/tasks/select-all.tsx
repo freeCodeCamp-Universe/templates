@@ -13,11 +13,10 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 
 type SelectAllProps = {
   task: Extract<Task, { type: 'select-all-that-apply' }>;
-  nextHref: string;
-  isLastLesson: boolean;
+  onCorrect: () => void;
 };
 
-export function SelectAll({ task, nextHref, isLastLesson }: SelectAllProps) {
+export function SelectAll({ task, onCorrect }: SelectAllProps) {
   const groupId = useId();
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [result, setResult] = useState<Result | null>(null);
@@ -43,6 +42,9 @@ export function SelectAll({ task, nextHref, isLastLesson }: SelectAllProps) {
 
     const isCorrect = task.options.every((option, index) => option.correct === selected.has(index));
     setResult(isCorrect ? 'correct' : 'incorrect');
+    if (isCorrect) {
+      onCorrect();
+    }
   }
 
   return (
@@ -73,8 +75,6 @@ export function SelectAll({ task, nextHref, isLastLesson }: SelectAllProps) {
         result={result}
         message={result ? FEEDBACK_MESSAGES[result] : ''}
         onCheck={handleCheck}
-        nextHref={nextHref}
-        nextLabel={isLastLesson ? 'Finish' : 'Next lesson'}
       />
     </div>
   );
