@@ -70,10 +70,23 @@ const OrderSchema = z
     message: 'Order items must be unique',
   });
 
+const MatchPairsSchema = z.object({
+  type: z.literal('MatchPairs'),
+  pairs: z
+    .array(
+      z.object({
+        left: z.string(),
+        right: z.string(),
+      }),
+    )
+    .min(2),
+});
+
 export const ExtractedTaskSchema = z.union([
   MultipleChoiceSchema,
   SelectAllSchema,
   FillInTheBlankSchema,
   CategorizeSchema,
   OrderSchema,
+  MatchPairsSchema,
 ]);

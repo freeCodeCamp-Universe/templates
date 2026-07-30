@@ -19,7 +19,7 @@ export function LessonNav({ taskCount, lessonSlug, nextHref, isLastLesson }: Les
   const passedCount = useStore($passedCount);
   const canProceed = passedCount >= taskCount;
 
-  if (!canProceed) return null;
+  if (!canProceed) return <></>;
 
   return (
     <div className="lesson-next">

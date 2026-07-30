@@ -6,6 +6,7 @@ const TASK_COMPONENTS = new Set([
   'FillInTheBlank',
   'Categorize',
   'Order',
+  'MatchPairs',
 ]);
 
 function visit(node: unknown, fn: (node: unknown) => void): void {

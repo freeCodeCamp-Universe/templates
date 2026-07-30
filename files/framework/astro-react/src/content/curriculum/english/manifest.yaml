@@ -11,6 +11,7 @@ sections:
           - id: s1-m2-l2
           - id: s1-m2-l3
           - id: s1-m2-l4
+          - id: s1-m2-l5
           - id: s1-m2-l6
           - id: s1-m2-l7
       - title: Module 2.1
