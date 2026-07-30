@@ -15,3 +15,10 @@
 .item + .item {
   margin-top: var(--space-sm);
 }
+
+.completed-badge {
+  display: none;
+  margin-left: var(--space-xs);
+  color: var(--success-color);
+  font-weight: 700;
+}

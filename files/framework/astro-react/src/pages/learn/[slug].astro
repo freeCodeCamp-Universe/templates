@@ -1,6 +1,7 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import Layout from '../../layouts/layout.astro';
+import { Sidebar } from '../../components/sidebar';
 import { Lesson } from '../../views/lesson';
 import { loadCurriculum } from '../../lib/load-curriculum';
 import { buildLearnPath, buildLessonRouteSlug } from '../../lib/curriculum-route-utils';
@@ -21,10 +22,11 @@ export const getStaticPaths = (async () => {
   return entries.map((entry, index) => {
     const nextEntry = entries[index + 1];
     const isLastLesson = nextEntry === undefined;
+    const lessonSlug = buildLessonRouteSlug(entry.section, entry.module, entry.lesson);
 
     return {
       params: {
-        slug: buildLessonRouteSlug(entry.section, entry.module, entry.lesson),
+        slug: lessonSlug,
       },
       props: {
         curriculum: {
@@ -38,6 +40,7 @@ export const getStaticPaths = (async () => {
           })),
         },
         lesson: entry.lesson,
+        lessonSlug,
         isLastLesson,
         nextHref: isLastLesson
           ? '/learn'
@@ -49,15 +52,25 @@ export const getStaticPaths = (async () => {
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { curriculum, lesson, isLastLesson, nextHref } = Astro.props;
+const { curriculum, lesson, lessonSlug, isLastLesson, nextHref } = Astro.props;
 ---
 
 <Layout title={lesson.title} brand={curriculum.title} hasSidebar>
-  <Lesson
-    curriculum={curriculum}
-    lesson={lesson}
-    isLastLesson={isLastLesson}
-    nextHref={nextHref}
-    client:load
-  />
+  <div class="lesson-layout">
+    <Sidebar curriculum={curriculum} client:load />
+    <Lesson
+      lesson={lesson}
+      lessonSlug={lessonSlug}
+      isLastLesson={isLastLesson}
+      nextHref={nextHref}
+      client:load
+    />
+  </div>
 </Layout>
+
+<style>
+  .lesson-layout {
+    display: flex;
+    align-items: flex-start;
+  }
+</style>

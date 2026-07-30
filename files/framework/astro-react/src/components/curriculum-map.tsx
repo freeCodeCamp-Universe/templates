@@ -1,6 +1,6 @@
 import './curriculum-map.css';
 import type { CurriculumNav } from '../lib/curriculum-types';
-import { buildLearnPath } from '../lib/curriculum-route-utils';
+import { buildLearnPath, buildLessonRouteSlug } from '../lib/curriculum-route-utils';
 
 type CurriculumMapProps = {
   curriculum: CurriculumNav;
@@ -17,13 +17,21 @@ export function CurriculumMap({ curriculum }: CurriculumMapProps) {
             <div key={module.title} className="module-block">
               <h3>{module.title}</h3>
               <ul className="list">
-                {module.lessons.map((lesson) => (
-                  <li key={lesson.title} className="item">
-                    <a href={buildLearnPath(section.title, module.title, lesson.title)}>
-                      {lesson.title}
-                    </a>
-                  </li>
-                ))}
+                {module.lessons.map((lesson) => {
+                  const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
+
+                  return (
+                    <li key={lesson.title} className="item">
+                      <a href={buildLearnPath(section.title, module.title, lesson.title)}>
+                        {lesson.title}
+                      </a>
+                      <span className="completed-badge" data-lesson-slug={slug}>
+                        <span aria-hidden="true">✓</span>
+                        <span className="sr-only"> Completed</span>
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

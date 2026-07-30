@@ -1,8 +1,3 @@
-.lesson-layout {
-  display: flex;
-  align-items: flex-start;
-}
-
 .lesson-layout > .main {
   flex: 1;
   min-width: 0;
@@ -15,7 +10,7 @@
 }
 
 @media (max-width: 700px) {
-  .lesson-layout.sidebar-open .main {
+  .main.sidebar-open {
     visibility: hidden;
   }
 }
