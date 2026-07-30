@@ -1,3 +1,8 @@
+.lesson-layout {
+  display: flex;
+  align-items: flex-start;
+}
+
 .lesson-layout > .main {
   flex: 1;
   min-width: 0;
