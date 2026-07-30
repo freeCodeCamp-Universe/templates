@@ -49,6 +49,25 @@ IGNORE_PATTERNS=(
   skills-lock.json
 )
 
+truncate_deps() {
+  local file="$1"
+  local filter='
+    def truncate_version:
+      if test("^\\^?[0-9]+\\.[0-9]+\\.[0-9]+$") then
+        ltrimstr("^") | split(".") |
+        if .[0] == "0" then "^" + .[0] + "." + .[1]
+        else "^" + .[0] end
+      else . end;
+    def process: map_values(truncate_version);
+    (if .dependencies then .dependencies |= process else . end) |
+    (if .devDependencies then .devDependencies |= process else . end) |
+    (if .peerDependencies then .peerDependencies |= process else . end) |
+    (if .optionalDependencies then .optionalDependencies |= process else . end)
+  '
+  local tmp
+  tmp=$(jq "$filter" "$file") && printf '%s\n' "$tmp" > "$file"
+}
+
 should_ignore() {
   local file="$1"
   for pattern in "${IGNORE_PATTERNS[@]}"; do
@@ -79,6 +98,9 @@ while IFS= read -r file; do
   dst="$dest_dir/$file"
   mkdir -p "$(dirname "$dst")"
   cp "$src" "$dst"
+  if [[ "$(basename "$file")" == "package.json" ]]; then
+    truncate_deps "$dst"
+  fi
   count=$((count + 1))
 done <<< "$files"
 
