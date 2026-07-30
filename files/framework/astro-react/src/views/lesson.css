@@ -13,3 +13,9 @@
   display: flex;
   justify-content: flex-end;
 }
+
+@media (max-width: 700px) {
+  .lesson-layout.sidebar-open .main {
+    visibility: hidden;
+  }
+}

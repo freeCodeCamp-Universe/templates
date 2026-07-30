@@ -59,9 +59,9 @@ export function Nav({ brand, showSidebarToggle = false }: NavProps) {
               aria-label={sidebarOpen ? 'Hide curriculum sidebar' : 'Show curriculum sidebar'}
               onClick={toggleSidebar}
             >
-              <span></span>
-              <span></span>
-              <span></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
             </button>
           ) : null}
 

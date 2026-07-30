@@ -35,5 +35,6 @@
   .sidebar.closed {
     width: 280px;
     transform: translateX(-100%);
+    visibility: hidden;
   }
 }

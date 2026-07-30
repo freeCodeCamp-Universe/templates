@@ -6,6 +6,7 @@ import { Button } from '../components/button';
 import { MultipleChoice } from '../components/tasks/multiple-choice';
 import { SelectAll } from '../components/tasks/select-all';
 import { FillInTheBlank } from '../components/tasks/fill-in-the-blank';
+import { useSidebarOpen } from '../hooks/use-sidebar-open';
 
 import './views.css';
 import './lesson.css';
@@ -21,13 +22,14 @@ export function Lesson({ curriculum, lesson, nextHref, isLastLesson }: LessonPro
   const taskCount = lesson.content.filter((block) => block.type === 'task').length;
   const [passedCount, setPassedCount] = useState(0);
   const canProceed = passedCount >= taskCount;
+  const sidebarOpen = useSidebarOpen();
 
   function handleTaskPassed() {
     setPassedCount((count) => count + 1);
   }
 
   return (
-    <div className="lesson-layout">
+    <div className={sidebarOpen ? 'lesson-layout sidebar-open' : 'lesson-layout'}>
       <Sidebar curriculum={curriculum} />
 
       <main id="main-content" className="main" tabIndex={-1}>
