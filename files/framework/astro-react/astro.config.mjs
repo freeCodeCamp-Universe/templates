@@ -10,9 +10,4 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkExtractTasks],
   },
-  vite: {
-    resolve: {
-      dedupe: ['react', 'react-dom'],
-    },
-  },
 });
