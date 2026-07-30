@@ -31,9 +31,4 @@ export default defineConfig({
     defaultStrategy: 'viewport',
     prefetchAll: true,
   },
-  vite: {
-    resolve: {
-      dedupe: ['react', 'react-dom'],
-    },
-  },
 });
