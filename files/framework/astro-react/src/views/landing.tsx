@@ -1,17 +1,15 @@
-import type { Curriculum } from '../lib/curriculum-types';
-
 import './views.css';
 import './landing.css';
 
 type LandingProps = {
-  curriculum: Curriculum;
+  title: string;
 };
 
-export function Landing({ curriculum }: LandingProps) {
+export function Landing({ title }: LandingProps) {
   return (
     <main id="main-content" className="main" tabIndex={-1}>
       <header className="header">
-        <h1>{curriculum.title}</h1>
+        <h1>{title}</h1>
       </header>
 
       <p>

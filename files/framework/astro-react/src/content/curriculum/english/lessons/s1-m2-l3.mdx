@@ -1,0 +1,18 @@
+---
+title: Lesson 3
+id: s1-m2-l3
+---
+import { FillInTheBlank } from '@components/tasks/fill-in-the-blank';
+
+This lesson has a fill in the blank task.
+
+<FillInTheBlank
+  client:load
+  segments={[
+    { kind: "text", value: "This sentence has a " },
+    { kind: "blank", answer: "blank" },
+    { kind: "text", value: ". So does " },
+    { kind: "blank", answer: "this" },
+    { kind: "text", value: " one." },
+  ]}
+/>

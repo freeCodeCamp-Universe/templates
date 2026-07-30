@@ -1,7 +1,7 @@
 import './task.css';
 import './option-task.css';
 import { useId, useState } from 'react';
-import type { Task } from '../../lib/curriculum-tasks';
+import { taskPassed } from '../../stores/lesson-store';
 import { Markdown } from '../markdown';
 import { TaskActions, type Result } from './task-actions';
 
@@ -12,12 +12,11 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 };
 
 type MultipleChoiceProps = {
-  task: Extract<Task, { type: 'multiple-choice' }>;
-  nextHref: string;
-  isLastLesson: boolean;
+  question: string;
+  options: { text: string; correct: boolean }[];
 };
 
-export function MultipleChoice({ task, nextHref, isLastLesson }: MultipleChoiceProps) {
+export function MultipleChoice({ question, options }: MultipleChoiceProps) {
   const groupId = useId();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
@@ -33,17 +32,21 @@ export function MultipleChoice({ task, nextHref, isLastLesson }: MultipleChoiceP
       return;
     }
 
-    setResult(task.options[selectedIndex].correct ? 'correct' : 'incorrect');
+    const isCorrect = options[selectedIndex].correct;
+    setResult(isCorrect ? 'correct' : 'incorrect');
+    if (isCorrect) {
+      taskPassed();
+    }
   }
 
   return (
     <div className="task">
       <fieldset className="fieldset" aria-labelledby={`${groupId}-question`}>
         <div id={`${groupId}-question`} className="question">
-          <Markdown>{task.question}</Markdown>
+          <Markdown>{question}</Markdown>
         </div>
 
-        {task.options.map((option, index) => {
+        {options.map((option, index) => {
           const optionId = `${groupId}-${index}`;
 
           return (
@@ -65,8 +68,6 @@ export function MultipleChoice({ task, nextHref, isLastLesson }: MultipleChoiceP
         result={result}
         message={result ? FEEDBACK_MESSAGES[result] : ''}
         onCheck={handleCheck}
-        nextHref={nextHref}
-        nextLabel={isLastLesson ? 'Finish' : 'Next lesson'}
       />
     </div>
   );

@@ -1,11 +1,11 @@
 ---
 import Layout from '../layouts/layout.astro';
 import { Landing } from '../views/landing';
-import { loadCurriculum } from '../lib/load-curriculum';
+import { loadManifest } from '../lib/load-manifest';
 
-const curriculum = await loadCurriculum();
+const manifest = await loadManifest();
 ---
 
-<Layout title={curriculum.title} brand={curriculum.title}>
-  <Landing curriculum={curriculum} client:load />
+<Layout title={manifest.title} brand={manifest.title}>
+  <Landing title={manifest.title} client:load />
 </Layout>

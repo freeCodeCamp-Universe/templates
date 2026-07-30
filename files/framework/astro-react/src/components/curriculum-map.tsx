@@ -19,7 +19,7 @@ export function CurriculumMap({ curriculum }: CurriculumMapProps) {
               <ul className="list">
                 {module.lessons.map((lesson) => (
                   <li key={lesson.title} className="item">
-                    <a href={buildLearnPath(section.title, module.title, lesson.title)}>
+                    <a href={buildLearnPath(section.title, module.title, lesson.id)}>
                       {lesson.title}
                     </a>
                   </li>
