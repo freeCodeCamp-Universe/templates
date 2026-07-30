@@ -1,0 +1,18 @@
+---
+title: Lesson 6
+id: s1-m2-l6
+---
+
+import { Categorize } from '@components/tasks/categorize';
+
+This lesson has a categorize task.
+
+<Categorize
+  client:load
+  question="Match each animal to its class."
+  categories={[
+    { name: 'Mammal', items: ['Dog', 'Whale'] },
+    { name: 'Bird', items: ['Eagle', 'Penguin'] },
+    { name: 'Reptile', items: ['Snake'] },
+  ]}
+/>

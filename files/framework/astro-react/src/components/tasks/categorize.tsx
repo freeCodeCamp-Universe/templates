@@ -1,7 +1,7 @@
 import './task.css';
 import './categorize.css';
 import { useEffect, useId, useState } from 'react';
-import type { Task } from '../../lib/curriculum-tasks';
+import { taskPassed } from '../../stores/lesson-store';
 import { Markdown } from '../markdown';
 import { Button } from '../button';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
@@ -16,8 +16,8 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 };
 
 type CategorizeProps = {
-  task: Extract<Task, { type: 'categorize' }>;
-  onCorrect: () => void;
+  question: string;
+  categories: { name: string; items: string[] }[];
 };
 
 function shuffle<T>(items: T[]): T[] {
@@ -39,7 +39,15 @@ type ZoneProps = {
   onDrop: () => void;
 };
 
-function Zone({ label, dropLabel, items, selectedItem, disabled, onSelectItem, onDrop }: ZoneProps) {
+function Zone({
+  label,
+  dropLabel,
+  items,
+  selectedItem,
+  disabled,
+  onSelectItem,
+  onDrop,
+}: ZoneProps) {
   // A zone isn't a valid drop target for an item that's already in it.
   const canDrop = selectedItem !== null && !items.includes(selectedItem);
 
@@ -71,10 +79,10 @@ function Zone({ label, dropLabel, items, selectedItem, disabled, onSelectItem, o
   );
 }
 
-export function Categorize({ task, onCorrect }: CategorizeProps) {
+export function Categorize({ question, categories }: CategorizeProps) {
   const groupId = useId();
 
-  const allItems = task.categories.flatMap((category) =>
+  const allItems = categories.flatMap((category) =>
     category.items.map((item) => ({ item, correctCategory: category.name })),
   );
 
@@ -126,11 +134,13 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
       return;
     }
 
-    const correctByItem = Object.fromEntries(allItems.map((entry) => [entry.item, entry.correctCategory]));
+    const correctByItem = Object.fromEntries(
+      allItems.map((entry) => [entry.item, entry.correctCategory]),
+    );
     const allCorrect = order.every((item) => placements[item] === correctByItem[item]);
     setResult(allCorrect ? 'correct' : 'incorrect');
     if (allCorrect) {
-      onCorrect();
+      taskPassed();
     }
   }
 
@@ -141,7 +151,7 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
       <div className="question">
-        <Markdown>{task.question}</Markdown>
+        <Markdown>{question}</Markdown>
       </div>
 
       <p aria-live="polite" className="sr-only">
@@ -160,7 +170,7 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
         />
 
         <div className="categorize-categories">
-          {task.categories.map((category) => (
+          {categories.map((category) => (
             <Zone
               key={category.name}
               label={category.name}

@@ -1,10 +1,10 @@
 ---
 import './curriculum-map.css';
-import type { CurriculumOutline } from '../lib/curriculum-outline';
+import type { CurriculumNav } from '../lib/curriculum-types';
 import { buildLearnPath, buildLessonRouteSlug } from '../lib/curriculum-route-utils';
 
 type Props = {
-  curriculum: CurriculumOutline;
+  curriculum: CurriculumNav;
   currentLessonSlug?: string;
 };
 
@@ -14,15 +14,17 @@ const { curriculum, currentLessonSlug } = Astro.props;
 <nav aria-label="Curriculum sections" class="navigation">
   {
     curriculum.sections.map((section) => {
-      const containsCurrentLesson = (moduleTitle: string, lessons: { title: string }[]) =>
+      const containsCurrentLesson = (moduleTitle: string, lessons: { id: string }[]) =>
         lessons.some(
-          (lesson) => buildLessonRouteSlug(section.title, moduleTitle, lesson.title) === currentLessonSlug,
+          (lesson) =>
+            buildLessonRouteSlug(section.title, moduleTitle, lesson.id) === currentLessonSlug,
         );
 
       // Learn page has no current lesson -> everything it expanded
       // Lesson page has current lesson -> expand that section
       const sectionOpen =
-        !currentLessonSlug || section.modules.some((module) => containsCurrentLesson(module.title, module.lessons));
+        !currentLessonSlug ||
+        section.modules.some((module) => containsCurrentLesson(module.title, module.lessons));
 
       return (
         <details class="section" open={sectionOpen}>
@@ -31,7 +33,8 @@ const { curriculum, currentLessonSlug } = Astro.props;
           </summary>
 
           {section.modules.map((module) => {
-            const moduleOpen = !currentLessonSlug || containsCurrentLesson(module.title, module.lessons);
+            const moduleOpen =
+              !currentLessonSlug || containsCurrentLesson(module.title, module.lessons);
 
             return (
               <details class="module-block" open={moduleOpen}>
@@ -40,13 +43,13 @@ const { curriculum, currentLessonSlug } = Astro.props;
                 </summary>
                 <ul class="list">
                   {module.lessons.map((lesson) => {
-                    const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
+                    const slug = buildLessonRouteSlug(section.title, module.title, lesson.id);
                     const isCurrent = slug === currentLessonSlug;
 
                     return (
                       <li class="item">
                         <a
-                          href={buildLearnPath(section.title, module.title, lesson.title)}
+                          href={buildLearnPath(section.title, module.title, lesson.id)}
                           aria-current={isCurrent ? ('page' as const) : undefined}
                           class={isCurrent ? 'item-link current' : 'item-link'}
                         >

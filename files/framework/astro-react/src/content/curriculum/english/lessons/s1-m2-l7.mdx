@@ -1,0 +1,19 @@
+---
+title: Lesson 7
+id: s1-m2-l7
+---
+
+import { Order } from '@components/tasks/order';
+
+This lesson has an order task.
+
+<Order
+  client:load
+  question="Put these steps in the correct order."
+  items={[
+    'Preheat the oven.',
+    'Mix the batter.',
+    'Pour the batter into the pan.',
+    'Bake for 30 minutes.',
+  ]}
+/>

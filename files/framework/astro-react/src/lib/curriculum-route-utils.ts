@@ -1,4 +1,4 @@
-import type { Curriculum, Lesson, Module, Section } from './curriculum-types';
+import type { CurriculumNav } from './curriculum-types';
 
 export function slugify(value: string): string {
   return value
@@ -9,43 +9,31 @@ export function slugify(value: string): string {
     .replace(/-+/g, '-');
 }
 
-export function buildLessonRouteSlug(
-  section: Section | string,
-  module: Module | string,
-  lesson: Lesson | string,
-): string {
-  const sectionSlug = typeof section === 'string' ? slugify(section) : slugify(section.title);
-  const moduleSlug = typeof module === 'string' ? slugify(module) : slugify(module.title);
-  const lessonSlug = typeof lesson === 'string' ? slugify(lesson) : slugify(lesson.title);
-
-  return [sectionSlug, moduleSlug, lessonSlug].join('-');
+export function buildLessonRouteSlug(section: string, module: string, lessonId: string): string {
+  return [slugify(section), slugify(module), slugify(lessonId)].join('-');
 }
 
-export function buildLearnPath(
-  section: Section | string,
-  module: Module | string,
-  lesson: Lesson | string,
-): string {
-  return `/learn/${buildLessonRouteSlug(section, module, lesson)}`;
+export function buildLearnPath(section: string, module: string, lessonId: string): string {
+  return `/learn/${buildLessonRouteSlug(section, module, lessonId)}`;
 }
 
 export type OrderedLessonEntry = {
-  section: Section;
-  module: Module;
-  lesson: Lesson;
+  section: CurriculumNav['sections'][number];
+  module: CurriculumNav['sections'][number]['modules'][number];
+  lesson: CurriculumNav['sections'][number]['modules'][number]['lessons'][number];
   slug: string;
   href: string;
 };
 
-export function getOrderedLessons(curriculum: Curriculum): OrderedLessonEntry[] {
+export function getOrderedLessons(curriculum: CurriculumNav): OrderedLessonEntry[] {
   return curriculum.sections.flatMap((section) =>
     section.modules.flatMap((module) =>
       module.lessons.map((lesson) => ({
         section,
         module,
         lesson,
-        slug: buildLessonRouteSlug(section, module, lesson),
-        href: buildLearnPath(section, module, lesson),
+        slug: buildLessonRouteSlug(section.title, module.title, lesson.id),
+        href: buildLearnPath(section.title, module.title, lesson.id),
       })),
     ),
   );

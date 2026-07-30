@@ -1,7 +1,7 @@
 import './task.css';
 import './option-task.css';
 import { useId, useState } from 'react';
-import type { Task } from '../../lib/curriculum-tasks';
+import { taskPassed } from '../../stores/lesson-store';
 import { Markdown } from '../markdown';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
 import { TaskActions, type Result } from './task-actions';
@@ -13,11 +13,11 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 };
 
 type MultipleChoiceProps = {
-  task: Extract<Task, { type: 'multiple-choice' }>;
-  onCorrect: () => void;
+  question: string;
+  options: { text: string; correct: boolean }[];
 };
 
-export function MultipleChoice({ task, onCorrect }: MultipleChoiceProps) {
+export function MultipleChoice({ question, options }: MultipleChoiceProps) {
   const groupId = useId();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
@@ -33,10 +33,10 @@ export function MultipleChoice({ task, onCorrect }: MultipleChoiceProps) {
       return;
     }
 
-    const isCorrect = task.options[selectedIndex].correct;
+    const isCorrect = options[selectedIndex].correct;
     setResult(isCorrect ? 'correct' : 'incorrect');
     if (isCorrect) {
-      onCorrect();
+      taskPassed();
     }
   }
 
@@ -53,10 +53,10 @@ export function MultipleChoice({ task, onCorrect }: MultipleChoiceProps) {
         aria-describedby={result ? feedbackId : undefined}
       >
         <div id={`${groupId}-question`} className="question">
-          <Markdown>{task.question}</Markdown>
+          <Markdown>{question}</Markdown>
         </div>
 
-        {task.options.map((option, index) => (
+        {options.map((option, index) => (
           <label key={index} className="option">
             <input
               type="radio"
