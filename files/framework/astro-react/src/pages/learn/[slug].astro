@@ -2,6 +2,7 @@
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import Layout from '../../layouts/layout.astro';
 import { Sidebar } from '../../components/sidebar';
+import CurriculumMap from '../../components/curriculum-map.astro';
 import { Lesson } from '../../views/lesson';
 import { loadCurriculum } from '../../lib/load-curriculum';
 import { toCurriculumOutline } from '../../lib/curriculum-outline';
@@ -50,7 +51,9 @@ const { curriculum, lesson, lessonSlug, isLastLesson, nextHref } = Astro.props;
 
 <Layout title={lesson.title} brand={curriculum.title} hasSidebar>
   <div class="lesson-layout">
-    <Sidebar curriculum={curriculum} currentLessonSlug={lessonSlug} client:load />
+    <Sidebar client:load>
+      <CurriculumMap curriculum={curriculum} currentLessonSlug={lessonSlug} />
+    </Sidebar>
     <Lesson
       lesson={lesson}
       lessonSlug={lessonSlug}

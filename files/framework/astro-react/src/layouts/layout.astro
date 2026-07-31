@@ -31,33 +31,6 @@ const { title, brand, hasSidebar = false } = Astro.props;
         }
       })();
     </script>
-    <!-- Load checkmarks in curriculum map before paint -->
-    <script is:inline>
-      (function () {
-        try {
-          const stored = localStorage.getItem('progress');
-          const completed = stored ? JSON.parse(stored) : [];
-          if (!Array.isArray(completed)) {
-            return;
-          }
-
-          const rules = completed
-            .filter((slug) => typeof slug === 'string' && /^[a-z0-9-]+$/.test(slug))
-            .map((slug) => `.completed-badge[data-lesson-slug="${slug}"]{display:inline}`)
-            .join('');
-
-          if (!rules) {
-            return;
-          }
-
-          const style = document.createElement('style');
-          style.textContent = rules;
-          document.head.appendChild(style);
-        } catch {
-          // ignore malformed stored progress
-        }
-      })();
-    </script>
     <Nav brand={brand} showSidebarToggle={hasSidebar} client:load />
     <slot />
   </body>

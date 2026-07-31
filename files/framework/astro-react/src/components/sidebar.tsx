@@ -1,20 +1,18 @@
 import './sidebar.css';
-import type { CurriculumOutline } from '../lib/curriculum-outline';
 import { useSidebarOpen } from '../hooks/use-sidebar-open';
-import { CurriculumMap } from './curriculum-map';
+import type { ReactNode } from 'react';
 
 type SidebarProps = {
-  curriculum: CurriculumOutline;
-  currentLessonSlug?: string;
+  children: ReactNode;
 };
 
-export function Sidebar({ curriculum, currentLessonSlug }: SidebarProps) {
+export function Sidebar({ children }: SidebarProps) {
   const open = useSidebarOpen();
 
   return (
     <div className={open ? 'sidebar' : 'sidebar closed'}>
       <div className="sidebar-inner">
-        <CurriculumMap curriculum={curriculum} currentLessonSlug={currentLessonSlug} />
+        {children}
       </div>
     </div>
   );
