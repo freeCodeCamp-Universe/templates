@@ -5,6 +5,7 @@
 .lesson-layout .main {
   flex: 1;
   min-width: 0;
+  min-height: calc(100vh - var(--header-height));
   max-width: none;
   margin: 0;
   padding: 0;
