@@ -90,6 +90,7 @@ if [[ -z "$files" ]]; then
   exit 1
 fi
 
+declare -A synced_files
 count=0
 while IFS= read -r file; do
   [[ -z "$file" ]] && continue
@@ -101,7 +102,23 @@ while IFS= read -r file; do
   if [[ "$(basename "$file")" == "package.json" ]]; then
     truncate_deps "$dst"
   fi
+  synced_files["$file"]=1
   count=$((count + 1))
 done <<< "$files"
 
-echo "Copied $count files from '$source_dir' to '$dest_dir'"
+# Delete files in dest that are not in source
+deleted=0
+while IFS= read -r dst_file; do
+  rel="${dst_file#"$dest_dir"/}"
+  # Keep .gitkeep files (directory placeholders)
+  [[ "$(basename "$rel")" == ".gitkeep" ]] && continue
+  # Keep files that exist in source
+  [[ -e "$source_abs/$rel" ]] && continue
+  rm "$dst_file"
+  deleted=$((deleted + 1))
+done < <(find "$dest_dir" -type f)
+
+# Remove empty directories left after deletion
+find "$dest_dir" -mindepth 1 -type d -empty -delete 2>/dev/null || true
+
+echo "Synced $count files from '$source_dir' to '$dest_dir' ($deleted deleted)"
