@@ -1,6 +1,6 @@
 ---
 import Layout from '../../layouts/layout.astro';
-import { Learn } from '../../views/learn';
+import Learn from '../../views/learn.astro';
 import { loadCurriculum } from '../../lib/load-curriculum';
 import { toCurriculumOutline } from '../../lib/curriculum-outline';
 
@@ -9,5 +9,5 @@ const curriculumOutline = toCurriculumOutline(curriculum);
 ---
 
 <Layout title={`${curriculum.title}`} brand={curriculum.title}>
-  <Learn curriculum={curriculumOutline} client:load />
+  <Learn curriculum={curriculumOutline} />
 </Layout>

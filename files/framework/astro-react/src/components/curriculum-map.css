@@ -54,3 +54,7 @@
   color: var(--success-color);
   font-weight: 700;
 }
+
+.completed-badge.completed {
+  display: inline;
+}

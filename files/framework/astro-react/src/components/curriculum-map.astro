@@ -1,0 +1,68 @@
+---
+import './curriculum-map.css';
+import type { CurriculumOutline } from '../lib/curriculum-outline';
+import { buildLearnPath, buildLessonRouteSlug } from '../lib/curriculum-route-utils';
+
+type Props = {
+  curriculum: CurriculumOutline;
+  currentLessonSlug?: string;
+};
+
+const { curriculum, currentLessonSlug } = Astro.props;
+---
+
+<nav aria-label="Curriculum sections" class="navigation">
+  {
+    curriculum.sections.map((section) => (
+      <section class="section">
+        <h2>{section.title}</h2>
+
+        {section.modules.map((module) => (
+          <div class="module-block">
+            <h3>{module.title}</h3>
+            <ul class="list">
+              {module.lessons.map((lesson) => {
+                const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
+                const isCurrent = slug === currentLessonSlug;
+
+                return (
+                  <li class={isCurrent ? 'item current' : 'item'}>
+                    <a
+                      href={buildLearnPath(section.title, module.title, lesson.title)}
+                      aria-current={isCurrent ? ('page' as const) : undefined}
+                    >
+                      {lesson.title}
+                    </a>
+                    <span class="completed-badge" data-lesson-slug={slug}>
+                      <span aria-hidden="true">✓</span>
+                      <span class="sr-only"> Completed</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </section>
+    ))
+  }
+</nav>
+
+{/* Show/hide completed badges. Inlined to avoid FOUC. */}
+<script is:inline>
+  (function () {
+    try {
+      const stored = localStorage.getItem('progress');
+      const completed = stored ? JSON.parse(stored) : [];
+      if (!Array.isArray(completed)) return;
+
+      for (const slug of completed) {
+        if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) continue;
+        const badge = document.querySelector('.completed-badge[data-lesson-slug="' + slug + '"]');
+        if (badge) badge.classList.add('completed');
+      }
+    } catch (e) {
+      // ignore malformed stored progress
+    }
+  })();
+</script>

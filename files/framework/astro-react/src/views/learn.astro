@@ -1,0 +1,22 @@
+---
+import CurriculumMap from '../components/curriculum-map.astro';
+import type { CurriculumOutline } from '../lib/curriculum-outline';
+
+import './views.css';
+import './learn.css';
+
+type Props = {
+  curriculum: CurriculumOutline;
+};
+
+const { curriculum } = Astro.props;
+---
+
+<main id="main-content" class="main" tabindex="-1">
+  <header class="header">
+    <p class="eyebrow">Learn</p>
+    <h1>{curriculum.title}</h1>
+  </header>
+
+  <CurriculumMap curriculum={curriculum} />
+</main>
