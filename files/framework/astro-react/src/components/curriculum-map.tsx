@@ -4,9 +4,10 @@ import { buildLearnPath, buildLessonRouteSlug } from '../lib/curriculum-route-ut
 
 type CurriculumMapProps = {
   curriculum: CurriculumOutline;
+  currentLessonSlug?: string;
 };
 
-export function CurriculumMap({ curriculum }: CurriculumMapProps) {
+export function CurriculumMap({ curriculum, currentLessonSlug }: CurriculumMapProps) {
   return (
     <nav aria-label="Curriculum sections" className="navigation">
       {curriculum.sections.map((section) => (
@@ -19,10 +20,14 @@ export function CurriculumMap({ curriculum }: CurriculumMapProps) {
               <ul className="list">
                 {module.lessons.map((lesson) => {
                   const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
+                  const isCurrent = slug === currentLessonSlug;
 
                   return (
-                    <li key={lesson.title} className="item">
-                      <a href={buildLearnPath(section.title, module.title, lesson.title)}>
+                    <li key={lesson.title} className={isCurrent ? 'item current' : 'item'}>
+                      <a
+                        href={buildLearnPath(section.title, module.title, lesson.title)}
+                        aria-current={isCurrent ? 'page' : undefined}
+                      >
                         {lesson.title}
                       </a>
                       <span className="completed-badge" data-lesson-slug={slug}>

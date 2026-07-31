@@ -50,7 +50,7 @@ const { curriculum, lesson, lessonSlug, isLastLesson, nextHref } = Astro.props;
 
 <Layout title={lesson.title} brand={curriculum.title} hasSidebar>
   <div class="lesson-layout">
-    <Sidebar curriculum={curriculum} client:load />
+    <Sidebar curriculum={curriculum} currentLessonSlug={lessonSlug} client:load />
     <Lesson
       lesson={lesson}
       lessonSlug={lessonSlug}
