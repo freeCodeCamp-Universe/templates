@@ -19,3 +19,7 @@
 .option label {
   cursor: pointer;
 }
+
+.option input:disabled + label {
+  cursor: not-allowed;
+}

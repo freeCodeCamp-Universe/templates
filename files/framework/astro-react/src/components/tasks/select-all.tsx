@@ -74,6 +74,7 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
                 id={optionId}
                 checked={selected.has(index)}
                 onChange={() => handleToggle(index)}
+                disabled={result === 'correct'}
                 aria-invalid={invalid || undefined}
                 aria-describedby={result ? feedbackId : undefined}
               />

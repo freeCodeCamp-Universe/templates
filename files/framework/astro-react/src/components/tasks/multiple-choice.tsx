@@ -67,6 +67,7 @@ export function MultipleChoice({ task, onCorrect }: MultipleChoiceProps) {
                 name={groupId}
                 checked={selectedIndex === index}
                 onChange={() => handleSelect(index)}
+                disabled={result === 'correct'}
                 aria-describedby={result ? feedbackId : undefined}
               />
               <label htmlFor={optionId}>{option.text}</label>

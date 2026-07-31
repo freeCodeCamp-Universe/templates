@@ -9,6 +9,10 @@
   margin-bottom: var(--space-lg);
 }
 
+.task input:disabled {
+  cursor: not-allowed;
+}
+
 .task-actions {
   display: flex;
   align-items: center;

@@ -77,6 +77,7 @@ export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
               aria-label={`Blank ${currentBlankIndex + 1}`}
               aria-invalid={invalid || undefined}
               aria-describedby={result ? feedbackId : undefined}
+              disabled={result === 'correct'}
               value={answers[currentBlankIndex]}
               onChange={(event) => handleChange(currentBlankIndex, event.target.value)}
             />
