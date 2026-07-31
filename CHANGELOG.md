@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.8.0...app-templates-v0.9.0) (2026-07-31)
+
+
+### Features
+
+* more astro react template ([#28](https://github.com/freeCodeCamp-Universe/templates/issues/28)) ([2a53f6d](https://github.com/freeCodeCamp-Universe/templates/commit/2a53f6dfe8eef8ff77e16c2feb03807bfa17bf17))
+* more astro react template ([#31](https://github.com/freeCodeCamp-Universe/templates/issues/31)) ([e402b08](https://github.com/freeCodeCamp-Universe/templates/commit/e402b08c94850a46faf0d303595d0fe70b3fa139))
+* simplify astro template ([#32](https://github.com/freeCodeCamp-Universe/templates/issues/32)) ([6ab7170](https://github.com/freeCodeCamp-Universe/templates/commit/6ab717080c4ebbc95810a157e3272541ac1a6c44))
+
+
+### Bug Fixes
+
+* remove stray lockfile ([#26](https://github.com/freeCodeCamp-Universe/templates/issues/26)) ([2454cb5](https://github.com/freeCodeCamp-Universe/templates/commit/2454cb5edf12f3f79c9c24ecf28c1d9f17680dd3))
+
 ## [0.8.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.7.0...app-templates-v0.8.0) (2026-07-29)
 
 
