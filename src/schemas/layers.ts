@@ -86,6 +86,15 @@ type Service = z.infer<typeof ServiceOutputSchema>;
 const FrameworkOptionSchema = z.string();
 
 const FrameworkShape = z.strictObject({
+  devContainer: z
+    .strictObject({
+      customizations: z.strictObject({
+        vscode: z.strictObject({
+          extensions: z.array(z.string()),
+        }),
+      }),
+    })
+    .optional(),
   devCopySource: z.string(),
   port: z.number(),
   recommended: z.boolean(),
