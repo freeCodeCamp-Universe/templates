@@ -4,10 +4,12 @@ import Layout from '../../layouts/layout.astro';
 import { Sidebar } from '../../components/sidebar';
 import { Lesson } from '../../views/lesson';
 import { loadCurriculum } from '../../lib/load-curriculum';
+import { toCurriculumOutline } from '../../lib/curriculum-outline';
 import { buildLearnPath, buildLessonRouteSlug } from '../../lib/curriculum-route-utils';
 
 export const getStaticPaths = (async () => {
   const curriculum = await loadCurriculum();
+  const curriculumOutline = toCurriculumOutline(curriculum);
 
   const entries = curriculum.sections.flatMap((sectionItem) =>
     sectionItem.modules.flatMap((moduleItem) =>
@@ -29,16 +31,7 @@ export const getStaticPaths = (async () => {
         slug: lessonSlug,
       },
       props: {
-        curriculum: {
-          title: curriculum.title,
-          sections: curriculum.sections.map((s) => ({
-            title: s.title,
-            modules: s.modules.map((m) => ({
-              title: m.title,
-              lessons: m.lessons.map((l) => ({ title: l.title })),
-            })),
-          })),
-        },
+        curriculum: curriculumOutline,
         lesson: entry.lesson,
         lessonSlug,
         isLastLesson,

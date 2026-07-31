@@ -1,9 +1,9 @@
 import './curriculum-map.css';
-import type { CurriculumNav } from '../lib/curriculum-types';
+import type { CurriculumOutline } from '../lib/curriculum-outline';
 import { buildLearnPath, buildLessonRouteSlug } from '../lib/curriculum-route-utils';
 
 type CurriculumMapProps = {
-  curriculum: CurriculumNav;
+  curriculum: CurriculumOutline;
 };
 
 export function CurriculumMap({ curriculum }: CurriculumMapProps) {

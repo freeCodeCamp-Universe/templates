@@ -7,5 +7,5 @@ const curriculum = await loadCurriculum();
 ---
 
 <Layout title={curriculum.title} brand={curriculum.title}>
-  <Landing curriculum={curriculum} client:load />
+  <Landing title={curriculum.title} client:load />
 </Layout>

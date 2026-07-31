@@ -1,11 +1,11 @@
-import type { Curriculum } from '../lib/curriculum-types';
+import type { CurriculumOutline } from '../lib/curriculum-outline';
 import { CurriculumMap } from '../components/curriculum-map';
 
 import './views.css';
 import './learn.css';
 
 type LearnPageProps = {
-  curriculum: Curriculum;
+  curriculum: CurriculumOutline;
 };
 
 export function Learn({ curriculum }: LearnPageProps) {
