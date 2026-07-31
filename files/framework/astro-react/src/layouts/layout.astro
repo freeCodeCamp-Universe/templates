@@ -60,5 +60,21 @@ const { title, brand, hasSidebar = false } = Astro.props;
     </script>
     <Nav brand={brand} showSidebarToggle={hasSidebar} client:load />
     <slot />
+    <!-- Close the sidebar (and reveal the content behind it) before paint on narrow viewports -->
+    <script is:inline>
+      (function () {
+        if (window.innerWidth > 600) {
+          return;
+        }
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+          sidebar.classList.add('closed');
+        }
+        const main = document.querySelector('.main');
+        if (main) {
+          main.classList.remove('sidebar-open');
+        }
+      })();
+    </script>
   </body>
 </html>

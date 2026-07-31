@@ -1,7 +1,17 @@
 import { atom } from 'nanostores';
 import { useStore } from '@nanostores/react';
 
-const $sidebarOpen = atom(true);
+// Must match the breakpoint in sidebar.css's @media (max-width: 600px) block.
+const MOBILE_BREAKPOINT = 600;
+
+function getInitialSidebarOpen(): boolean {
+  if (typeof window === 'undefined') {
+    return true;
+  }
+  return window.innerWidth > MOBILE_BREAKPOINT;
+}
+
+const $sidebarOpen = atom(getInitialSidebarOpen());
 
 export function toggleSidebar(): void {
   $sidebarOpen.set(!$sidebarOpen.get());
