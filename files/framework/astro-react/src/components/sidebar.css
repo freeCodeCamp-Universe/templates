@@ -6,8 +6,7 @@
   height: calc(100vh - var(--header-height));
   overflow-x: hidden;
   overflow-y: auto;
-  background: var(--tertiary-background);
-  border-right: 1px solid var(--quaternary-background);
+  background: var(--secondary-background);
   transition: width 200ms ease;
 }
 
@@ -16,24 +15,31 @@
   padding: var(--space-lg) var(--space-md);
 }
 
-.sidebar.closed {
-  width: 0;
-  overflow: hidden;
-}
-
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .sidebar {
     position: fixed;
     top: var(--header-height);
     left: 0;
     bottom: 0;
+    width: 100%;
     z-index: var(--z-index-site-header);
+    visibility: visible;
     transform: translateX(0);
-    transition: transform 200ms ease;
+    transition:
+      transform 200ms ease,
+      visibility 0s 0s;
   }
 
   .sidebar.closed {
-    width: 280px;
+    width: 0;
+    visibility: hidden;
     transform: translateX(-100%);
+    transition:
+      transform 200ms ease,
+      visibility 0s 200ms;
+  }
+
+  .sidebar-inner {
+    width: 100%;
   }
 }

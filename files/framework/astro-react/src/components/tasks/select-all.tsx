@@ -3,6 +3,7 @@ import './option-task.css';
 import { useId, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
+import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
 import { TaskActions, type Result } from './task-actions';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
@@ -47,9 +48,18 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
     }
   }
 
+  const feedbackId = `${groupId}-feedback`;
+  const invalid = result === 'incorrect' || result === 'unanswered';
+  const taskRef = useFocusOnCorrect<HTMLDivElement>(result);
+
   return (
-    <div className="task">
-      <fieldset className="fieldset" aria-labelledby={`${groupId}-question`}>
+    <div className="task" ref={taskRef} tabIndex={-1}>
+      <fieldset
+        className="fieldset"
+        aria-labelledby={`${groupId}-question`}
+        aria-invalid={invalid || undefined}
+        aria-describedby={result ? feedbackId : undefined}
+      >
         <div id={`${groupId}-question`} className="question">
           <Markdown>{task.question}</Markdown>
         </div>
@@ -64,6 +74,9 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
                 id={optionId}
                 checked={selected.has(index)}
                 onChange={() => handleToggle(index)}
+                disabled={result === 'correct'}
+                aria-invalid={invalid || undefined}
+                aria-describedby={result ? feedbackId : undefined}
               />
               <label htmlFor={optionId}>{option.text}</label>
             </div>
@@ -75,6 +88,7 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
         result={result}
         message={result ? FEEDBACK_MESSAGES[result] : ''}
         onCheck={handleCheck}
+        feedbackId={feedbackId}
       />
     </div>
   );

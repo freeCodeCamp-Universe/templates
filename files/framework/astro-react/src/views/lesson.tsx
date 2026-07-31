@@ -1,36 +1,40 @@
 import { useState } from 'react';
-import type { CurriculumNav, Lesson } from '../lib/curriculum-types';
+import type { Lesson } from '../lib/curriculum-types';
 import { Markdown } from '../components/markdown';
-import { Sidebar } from '../components/sidebar';
 import { Button } from '../components/button';
 import { MultipleChoice } from '../components/tasks/multiple-choice';
 import { SelectAll } from '../components/tasks/select-all';
 import { FillInTheBlank } from '../components/tasks/fill-in-the-blank';
+import { useSidebarOpen } from '../hooks/use-sidebar-open';
+import { markLessonComplete } from '../lib/curriculum-progress';
 
 import './views.css';
 import './lesson.css';
 
 type LessonProps = {
-  curriculum: CurriculumNav;
   lesson: Lesson;
+  lessonSlug: string;
   nextHref: string;
   isLastLesson: boolean;
 };
 
-export function Lesson({ curriculum, lesson, nextHref, isLastLesson }: LessonProps) {
+export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonProps) {
   const taskCount = lesson.content.filter((block) => block.type === 'task').length;
   const [passedCount, setPassedCount] = useState(0);
   const canProceed = passedCount >= taskCount;
+  const sidebarOpen = useSidebarOpen();
 
   function handleTaskPassed() {
     setPassedCount((count) => count + 1);
   }
 
   return (
-    <div className="lesson-layout">
-      <Sidebar curriculum={curriculum} />
-
-      <main id="main-content" className="main" tabIndex={-1}>
+    <main
+      id="main-content"
+      className={sidebarOpen ? 'main sidebar-open' : 'main'}
+      tabIndex={-1}
+    >
+      <div className="lesson-content">
         <section>
           <h1>{lesson.title}</h1>
 
@@ -52,13 +56,13 @@ export function Lesson({ curriculum, lesson, nextHref, isLastLesson }: LessonPro
 
           {canProceed ? (
             <div className="lesson-next">
-              <Button variant="primary" href={nextHref}>
+              <Button variant="primary" href={nextHref} onClick={() => markLessonComplete(lessonSlug)}>
                 {isLastLesson ? 'Finish' : 'Next lesson'}
               </Button>
             </div>
           ) : null}
         </section>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

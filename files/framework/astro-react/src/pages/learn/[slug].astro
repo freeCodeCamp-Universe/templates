@@ -1,12 +1,15 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import Layout from '../../layouts/layout.astro';
+import { Sidebar } from '../../components/sidebar';
 import { Lesson } from '../../views/lesson';
 import { loadCurriculum } from '../../lib/load-curriculum';
+import { toCurriculumOutline } from '../../lib/curriculum-outline';
 import { buildLearnPath, buildLessonRouteSlug } from '../../lib/curriculum-route-utils';
 
 export const getStaticPaths = (async () => {
   const curriculum = await loadCurriculum();
+  const curriculumOutline = toCurriculumOutline(curriculum);
 
   const entries = curriculum.sections.flatMap((sectionItem) =>
     sectionItem.modules.flatMap((moduleItem) =>
@@ -21,23 +24,16 @@ export const getStaticPaths = (async () => {
   return entries.map((entry, index) => {
     const nextEntry = entries[index + 1];
     const isLastLesson = nextEntry === undefined;
+    const lessonSlug = buildLessonRouteSlug(entry.section, entry.module, entry.lesson);
 
     return {
       params: {
-        slug: buildLessonRouteSlug(entry.section, entry.module, entry.lesson),
+        slug: lessonSlug,
       },
       props: {
-        curriculum: {
-          title: curriculum.title,
-          sections: curriculum.sections.map((s) => ({
-            title: s.title,
-            modules: s.modules.map((m) => ({
-              title: m.title,
-              lessons: m.lessons.map((l) => ({ title: l.title })),
-            })),
-          })),
-        },
+        curriculum: curriculumOutline,
         lesson: entry.lesson,
+        lessonSlug,
         isLastLesson,
         nextHref: isLastLesson
           ? '/learn'
@@ -49,15 +45,18 @@ export const getStaticPaths = (async () => {
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { curriculum, lesson, isLastLesson, nextHref } = Astro.props;
+const { curriculum, lesson, lessonSlug, isLastLesson, nextHref } = Astro.props;
 ---
 
 <Layout title={lesson.title} brand={curriculum.title} hasSidebar>
-  <Lesson
-    curriculum={curriculum}
-    lesson={lesson}
-    isLastLesson={isLastLesson}
-    nextHref={nextHref}
-    client:load
-  />
+  <div class="lesson-layout">
+    <Sidebar curriculum={curriculum} currentLessonSlug={lessonSlug} client:load />
+    <Lesson
+      lesson={lesson}
+      lessonSlug={lessonSlug}
+      isLastLesson={isLastLesson}
+      nextHref={nextHref}
+      client:load
+    />
+  </div>
 </Layout>

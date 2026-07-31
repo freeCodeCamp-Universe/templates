@@ -2,11 +2,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  background: var(--tertiary-background);
-  border: 1px solid var(--quaternary-background);
+  background: var(--quaternary-background);
+  border: 1px solid var(--tertiary-background);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
   margin-bottom: var(--space-lg);
+}
+
+.task input:disabled {
+  cursor: not-allowed;
 }
 
 .task-actions {

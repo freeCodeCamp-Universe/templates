@@ -67,6 +67,12 @@
   border-radius: 1px;
 }
 
+@media (min-width: 769px) {
+  .sidebar-toggle {
+    display: none;
+  }
+}
+
 .nav-actions {
   display: flex;
   align-items: center;

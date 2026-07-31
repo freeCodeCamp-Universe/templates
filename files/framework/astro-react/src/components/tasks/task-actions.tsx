@@ -7,12 +7,13 @@ type TaskActionsProps = {
   result: Result | null;
   message: string;
   onCheck: () => void;
+  feedbackId: string;
 };
 
-export function TaskActions({ result, message, onCheck }: TaskActionsProps) {
+export function TaskActions({ result, message, onCheck, feedbackId }: TaskActionsProps) {
   return (
     <div className="task-actions">
-      <p className={`feedback ${result ?? ''}`} role="status" aria-live="polite">
+      <p id={feedbackId} className={`feedback ${result ?? ''}`} role="status" aria-live="polite">
         {message}
       </p>
 
