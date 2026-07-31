@@ -34,33 +34,35 @@ export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonPro
       className={sidebarOpen ? 'main sidebar-open' : 'main'}
       tabIndex={-1}
     >
-      <section>
-        <h1>{lesson.title}</h1>
+      <div className="lesson-content">
+        <section>
+          <h1>{lesson.title}</h1>
 
-        {lesson.content.map((block, index) => {
-          if (block.type === 'text') {
-            return <Markdown key={index}>{block.markdown}</Markdown>;
-          }
+          {lesson.content.map((block, index) => {
+            if (block.type === 'text') {
+              return <Markdown key={index}>{block.markdown}</Markdown>;
+            }
 
-          if (block.task.type === 'multiple-choice') {
-            return <MultipleChoice key={index} task={block.task} onCorrect={handleTaskPassed} />;
-          }
+            if (block.task.type === 'multiple-choice') {
+              return <MultipleChoice key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
 
-          if (block.task.type === 'select-all-that-apply') {
-            return <SelectAll key={index} task={block.task} onCorrect={handleTaskPassed} />;
-          }
+            if (block.task.type === 'select-all-that-apply') {
+              return <SelectAll key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
 
-          return <FillInTheBlank key={index} task={block.task} onCorrect={handleTaskPassed} />;
-        })}
+            return <FillInTheBlank key={index} task={block.task} onCorrect={handleTaskPassed} />;
+          })}
 
-        {canProceed ? (
-          <div className="lesson-next">
-            <Button variant="primary" href={nextHref} onClick={() => markLessonComplete(lessonSlug)}>
-              {isLastLesson ? 'Finish' : 'Next lesson'}
-            </Button>
-          </div>
-        ) : null}
-      </section>
+          {canProceed ? (
+            <div className="lesson-next">
+              <Button variant="primary" href={nextHref} onClick={() => markLessonComplete(lessonSlug)}>
+                {isLastLesson ? 'Finish' : 'Next lesson'}
+              </Button>
+            </div>
+          ) : null}
+        </section>
+      </div>
     </main>
   );
 }

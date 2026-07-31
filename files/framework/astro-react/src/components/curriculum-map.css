@@ -43,7 +43,7 @@
 }
 
 .item.current {
-  background: var(--quaternary-background);
+  background: var(--tertiary-background);
   border-left: 2px solid var(--highlight-color);
   padding-left: calc(var(--space-md) + var(--space-md) - 2px);
 }

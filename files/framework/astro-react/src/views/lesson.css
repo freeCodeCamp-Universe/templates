@@ -1,12 +1,20 @@
 .lesson-layout {
   display: flex;
-  align-items: flex-start;
 }
 
 .lesson-layout .main {
   flex: 1;
   min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: var(--tertiary-background);
+}
+
+.lesson-content {
   max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
 }
 
 .lesson-next {
