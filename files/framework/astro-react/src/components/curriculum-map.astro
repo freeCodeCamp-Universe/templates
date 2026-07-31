@@ -26,17 +26,18 @@ const { curriculum, currentLessonSlug } = Astro.props;
                 const isCurrent = slug === currentLessonSlug;
 
                 return (
-                  <li class={isCurrent ? 'item current' : 'item'}>
+                  <li class="item">
                     <a
                       href={buildLearnPath(section.title, module.title, lesson.title)}
                       aria-current={isCurrent ? ('page' as const) : undefined}
+                      class={isCurrent ? 'item-link current' : 'item-link'}
                     >
-                      {lesson.title}
+                      <span>{lesson.title}</span>
+                      <span class="completed-badge" data-lesson-slug={slug}>
+                        <span aria-hidden="true">✓</span>
+                        <span class="sr-only"> Completed</span>
+                      </span>
                     </a>
-                    <span class="completed-badge" data-lesson-slug={slug}>
-                      <span aria-hidden="true">✓</span>
-                      <span class="sr-only"> Completed</span>
-                    </span>
                   </li>
                 );
               })}
@@ -61,7 +62,7 @@ const { curriculum, currentLessonSlug } = Astro.props;
         const badge = document.querySelector('.completed-badge[data-lesson-slug="' + slug + '"]');
         if (badge) badge.classList.add('completed');
       }
-    } catch (e) {
+    } catch {
       // ignore malformed stored progress
     }
   })();
