@@ -96,6 +96,25 @@ Pick all the correct ones.
 
 Here's some text after the last task.
 
+### Lesson 5
+
+This lesson has a categorize task.
+
+--categorize--
+
+Match each animal to its class.
+
+- Mammal
+  - Dog
+  - Whale
+- Bird
+  - Eagle
+  - Penguin
+- Reptile
+  - Snake
+
+--end-categorize--
+
 ## Module 2.1
 
 ### Lesson 1

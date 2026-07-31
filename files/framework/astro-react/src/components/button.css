@@ -31,7 +31,7 @@
 
 .btn-secondary {
   background: none;
-  border: 1px solid var(--quaternary-background);
+  border: 1px solid var(--primary-color-translucent);
   color: var(--primary-color);
 }
 
