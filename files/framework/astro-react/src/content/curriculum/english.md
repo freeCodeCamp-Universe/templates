@@ -1,5 +1,6 @@
 ---
 title: Sample Curriculum
+description: Optional Description. A sample curriculum used to test and demo this boilerplate's task types and layout.
 ---
 
 # Section 1

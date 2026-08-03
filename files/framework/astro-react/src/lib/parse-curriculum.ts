@@ -112,7 +112,7 @@ function finalizeLessonContent(lesson: Lesson, nodes: RootContent[]): void {
   flushText();
 }
 
-export function parseCurriculum(markdown: string, title: string): Curriculum {
+export function parseCurriculum(markdown: string, title: string, description?: string): Curriculum {
   const tree = processor.parse(markdown) as Root;
 
   const sections: Section[] = [];
@@ -166,6 +166,7 @@ export function parseCurriculum(markdown: string, title: string): Curriculum {
 
   return {
     title,
+    description,
     sections,
   };
 }

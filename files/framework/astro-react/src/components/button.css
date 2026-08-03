@@ -62,3 +62,8 @@
 .btn-link:hover {
   text-decoration: underline;
 }
+
+.btn-lg {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-size-md);
+}
