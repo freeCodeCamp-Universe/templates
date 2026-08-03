@@ -107,14 +107,14 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
       </p>
 
       <div className="categorize">
-        <div className="zone" role="group" aria-labelledby={`${groupId}-unplaced-label`}>
-          <h4 id={`${groupId}-unplaced-label`}>Items</h4>
+        <div className="zone" role="group" aria-label="Items">
+          <h4 className="zone-heading">Items</h4>
           <div className="zone-items">
             {unplacedItems.map((item) => (
               <button
                 key={item}
                 type="button"
-                className={selectedItem === item ? 'btn btn-secondary selected' : 'btn btn-secondary'}
+                className={selectedItem === item ? 'item-row selected' : 'item-row'}
                 aria-pressed={selectedItem === item}
                 disabled={result === 'correct'}
                 onClick={() => handleSelectItem(item)}
@@ -123,20 +123,19 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
               </button>
             ))}
           </div>
-          <button type="button" className="btn btn-link zone-target" onClick={() => handlePlace(UNPLACED)}>
-            Move selected item here
-          </button>
+          <button
+            type="button"
+            className={selectedItem ? 'zone-drop active' : 'zone-drop'}
+            aria-label="Move selected item back to the unplaced items"
+            disabled={result === 'correct'}
+            onClick={() => handlePlace(UNPLACED)}
+          />
         </div>
 
         <div className="categorize-categories">
           {task.categories.map((category) => (
-            <div
-              key={category.name}
-              className="zone"
-              role="group"
-              aria-labelledby={`${groupId}-${category.name}-label`}
-            >
-              <h4 id={`${groupId}-${category.name}-label`}>{category.name}</h4>
+            <div key={category.name} className="zone" role="group" aria-label={category.name}>
+              <h4 className="zone-heading">{category.name}</h4>
               <div className="zone-items">
                 {order
                   .filter((item) => placements[item] === category.name)
@@ -144,7 +143,7 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
                     <button
                       key={item}
                       type="button"
-                      className={selectedItem === item ? 'btn btn-secondary selected' : 'btn btn-secondary'}
+                      className={selectedItem === item ? 'item-row selected' : 'item-row'}
                       aria-pressed={selectedItem === item}
                       disabled={result === 'correct'}
                       onClick={() => handleSelectItem(item)}
@@ -155,11 +154,11 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
               </div>
               <button
                 type="button"
-                className="btn btn-link zone-target"
+                className={selectedItem ? 'zone-drop active' : 'zone-drop'}
+                aria-label={`Move selected item to ${category.name}`}
+                disabled={result === 'correct'}
                 onClick={() => handlePlace(category.name)}
-              >
-                Move selected item to {category.name}
-              </button>
+              />
             </div>
           ))}
         </div>

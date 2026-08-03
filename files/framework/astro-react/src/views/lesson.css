@@ -9,7 +9,7 @@
   max-width: none;
   margin: 0;
   padding: 0;
-  background: var(--tertiary-background);
+  background: var(--secondary-background);
 }
 
 .lesson-content {

@@ -64,24 +64,19 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
           <Markdown>{task.question}</Markdown>
         </div>
 
-        {task.options.map((option, index) => {
-          const optionId = `${groupId}-${index}`;
-
-          return (
-            <div key={index} className="option">
-              <input
-                type="checkbox"
-                id={optionId}
-                checked={selected.has(index)}
-                onChange={() => handleToggle(index)}
-                disabled={result === 'correct'}
-                aria-invalid={invalid || undefined}
-                aria-describedby={result ? feedbackId : undefined}
-              />
-              <label htmlFor={optionId}>{option.text}</label>
-            </div>
-          );
-        })}
+        {task.options.map((option, index) => (
+          <label key={index} className="option">
+            <input
+              type="checkbox"
+              checked={selected.has(index)}
+              onChange={() => handleToggle(index)}
+              disabled={result === 'correct'}
+              aria-invalid={invalid || undefined}
+              aria-describedby={result ? feedbackId : undefined}
+            />
+            {option.text}
+          </label>
+        ))}
       </fieldset>
 
       <TaskActions

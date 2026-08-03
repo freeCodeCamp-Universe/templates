@@ -4,7 +4,7 @@
 }
 
 .section + .section {
-  border-top: 1px solid var(--quaternary-background);
+  border-top: 1px solid var(--secondary-background);
   padding-top: var(--space-md);
 }
 
@@ -47,13 +47,13 @@
 }
 
 .item-link.current {
-  background: var(--tertiary-background);
+  background: var(--secondary-background);
   border-left: 2px solid var(--highlight-color);
   padding-left: calc(var(--space-md) + var(--space-md) - 2px);
 }
 
 .item-link:hover {
-  background: var(--quaternary-background);
+  background: var(--tertiary-background);
   text-decoration: none;
 }
 
