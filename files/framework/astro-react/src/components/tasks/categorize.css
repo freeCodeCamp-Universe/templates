@@ -69,6 +69,10 @@
   cursor: not-allowed;
 }
 
+.unshuffled .item-row {
+  visibility: hidden;
+}
+
 .zone-drop {
   position: absolute;
   inset: 0;

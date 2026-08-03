@@ -29,6 +29,45 @@ function shuffle<T>(items: T[]): T[] {
   return copy;
 }
 
+type ZoneProps = {
+  label: string;
+  dropLabel: string;
+  items: string[];
+  selectedItem: string | null;
+  disabled: boolean;
+  onSelectItem: (item: string) => void;
+  onDrop: () => void;
+};
+
+function Zone({ label, dropLabel, items, selectedItem, disabled, onSelectItem, onDrop }: ZoneProps) {
+  return (
+    <div className="zone" role="group" aria-label={label}>
+      <h4 className="zone-heading">{label}</h4>
+      <div className="zone-items">
+        {items.map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={selectedItem === item ? 'item-row selected' : 'item-row'}
+            aria-pressed={selectedItem === item}
+            disabled={disabled}
+            onClick={() => onSelectItem(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        className={selectedItem ? 'zone-drop active' : 'zone-drop'}
+        aria-label={dropLabel}
+        disabled={disabled}
+        onClick={onDrop}
+      />
+    </div>
+  );
+}
+
 export function Categorize({ task, onCorrect }: CategorizeProps) {
   const groupId = useId();
 
@@ -43,11 +82,15 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState('');
   const [result, setResult] = useState<Result | null>(null);
+  const [shuffled, setShuffled] = useState(false);
 
   useEffect(() => {
     // Shuffle after hydration, not during initial render, so the server-rendered
-    // and client-rendered order match and there's no hydration mismatch.
+    // and client-rendered order match and there's no hydration mismatch. Items
+    // stay hidden (see the `unshuffled` class below) until this runs, so the
+    // unshuffled order never actually gets shown before reordering.
     setOrder(shuffle(allItems.map((entry) => entry.item)));
+    setShuffled(true);
   }, []);
 
   function handleSelectItem(item: string) {
@@ -106,60 +149,29 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
         {announcement}
       </p>
 
-      <div className="categorize">
-        <div className="zone" role="group" aria-label="Items">
-          <h4 className="zone-heading">Items</h4>
-          <div className="zone-items">
-            {unplacedItems.map((item) => (
-              <button
-                key={item}
-                type="button"
-                className={selectedItem === item ? 'item-row selected' : 'item-row'}
-                aria-pressed={selectedItem === item}
-                disabled={result === 'correct'}
-                onClick={() => handleSelectItem(item)}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            className={selectedItem ? 'zone-drop active' : 'zone-drop'}
-            aria-label="Move selected item back to the unplaced items"
-            disabled={result === 'correct'}
-            onClick={() => handlePlace(UNPLACED)}
-          />
-        </div>
+      <div className={shuffled ? 'categorize' : 'categorize unshuffled'}>
+        <Zone
+          label="Items"
+          dropLabel="Move selected item back to the unplaced items"
+          items={unplacedItems}
+          selectedItem={selectedItem}
+          disabled={result === 'correct'}
+          onSelectItem={handleSelectItem}
+          onDrop={() => handlePlace(UNPLACED)}
+        />
 
         <div className="categorize-categories">
           {task.categories.map((category) => (
-            <div key={category.name} className="zone" role="group" aria-label={category.name}>
-              <h4 className="zone-heading">{category.name}</h4>
-              <div className="zone-items">
-                {order
-                  .filter((item) => placements[item] === category.name)
-                  .map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      className={selectedItem === item ? 'item-row selected' : 'item-row'}
-                      aria-pressed={selectedItem === item}
-                      disabled={result === 'correct'}
-                      onClick={() => handleSelectItem(item)}
-                    >
-                      {item}
-                    </button>
-                  ))}
-              </div>
-              <button
-                type="button"
-                className={selectedItem ? 'zone-drop active' : 'zone-drop'}
-                aria-label={`Move selected item to ${category.name}`}
-                disabled={result === 'correct'}
-                onClick={() => handlePlace(category.name)}
-              />
-            </div>
+            <Zone
+              key={category.name}
+              label={category.name}
+              dropLabel={`Move selected item to ${category.name}`}
+              items={order.filter((item) => placements[item] === category.name)}
+              selectedItem={selectedItem}
+              disabled={result === 'correct'}
+              onSelectItem={handleSelectItem}
+              onDrop={() => handlePlace(category.name)}
+            />
           ))}
         </div>
       </div>
