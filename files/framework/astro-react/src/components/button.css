@@ -27,6 +27,7 @@
 
 .btn-primary:hover {
   background: var(--yellow-light);
+  text-decoration: none;
 }
 
 .btn-secondary {
@@ -37,6 +38,7 @@
 
 .btn-secondary:hover {
   background: var(--secondary-background);
+  text-decoration: none;
 }
 
 .btn-danger,
@@ -48,6 +50,7 @@
 
 .btn-danger:hover {
   opacity: 0.85;
+  text-decoration: none;
 }
 
 .btn-link,

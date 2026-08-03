@@ -90,5 +90,5 @@
 }
 
 .zone-drop:disabled {
-  cursor: not-allowed;
+  cursor: default;
 }

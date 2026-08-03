@@ -40,6 +40,9 @@ type ZoneProps = {
 };
 
 function Zone({ label, dropLabel, items, selectedItem, disabled, onSelectItem, onDrop }: ZoneProps) {
+  // A zone isn't a valid drop target for an item that's already in it.
+  const canDrop = selectedItem !== null && !items.includes(selectedItem);
+
   return (
     <div className="zone" role="group" aria-label={label}>
       <h4 className="zone-heading">{label}</h4>
@@ -59,9 +62,9 @@ function Zone({ label, dropLabel, items, selectedItem, disabled, onSelectItem, o
       </div>
       <button
         type="button"
-        className={selectedItem ? 'zone-drop active' : 'zone-drop'}
+        className={canDrop ? 'zone-drop active' : 'zone-drop'}
         aria-label={dropLabel}
-        disabled={disabled}
+        disabled={disabled || !canDrop}
         onClick={onDrop}
       />
     </div>
