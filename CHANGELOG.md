@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.10.0...app-templates-v0.10.1) (2026-08-04)
+
+
+### Bug Fixes
+
+* remove README ([#40](https://github.com/freeCodeCamp-Universe/templates/issues/40)) ([d737332](https://github.com/freeCodeCamp-Universe/templates/commit/d73733232e7dc71328fe00b1c5e8ae55fcf170e0))
+
 ## [0.10.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.9.0...app-templates-v0.10.0) (2026-08-04)
 
 
