@@ -88,10 +88,6 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
   const [shuffled, setShuffled] = useState(false);
 
   useEffect(() => {
-    // Shuffle after hydration, not during initial render, so the server-rendered
-    // and client-rendered order match and there's no hydration mismatch. Items
-    // stay hidden (see the `unshuffled` class below) until this runs, so the
-    // unshuffled order never actually gets shown before reordering.
     setOrder(shuffle(allItems.map((entry) => entry.item)));
     setShuffled(true);
   }, []);

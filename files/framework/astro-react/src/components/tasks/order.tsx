@@ -52,9 +52,6 @@ export function Order({ task, onCorrect }: OrderProps) {
     previousRects.current = rects;
   }
 
-  // FLIP animation: rows keep the same key when they swap, so React moves the
-  // existing DOM nodes rather than re-mounting them. Without this, the swap
-  // happens between one paint and the next with no visible motion to follow.
   useLayoutEffect(() => {
     const previous = previousRects.current;
     if (!previous) {
@@ -86,9 +83,6 @@ export function Order({ task, onCorrect }: OrderProps) {
   }, [items]);
 
   useEffect(() => {
-    // Shuffle after hydration, not during initial render, so the server-rendered
-    // and client-rendered order match and there's no hydration mismatch. Items
-    // stay hidden (see the `unshuffled` class below) until this runs.
     const shuffledItems = shuffle(task.items);
     setItems(shuffledItems);
     setInitialOrder(shuffledItems);
