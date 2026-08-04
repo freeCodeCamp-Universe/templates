@@ -61,11 +61,22 @@ const CategorizeTaskSchema = z
     { message: 'Categorize items must be unique across all categories' },
   );
 
+const OrderTaskSchema = z
+  .object({
+    type: z.literal('order'),
+    question: z.string(),
+    items: z.array(z.string()).min(2),
+  })
+  .refine((task) => new Set(task.items).size === task.items.length, {
+    message: 'Order items must be unique',
+  });
+
 export type Task =
   | z.infer<typeof MultipleChoiceTaskSchema>
   | z.infer<typeof SelectAllThatApplyTaskSchema>
   | z.infer<typeof FillInBlankTaskSchema>
-  | z.infer<typeof CategorizeTaskSchema>;
+  | z.infer<typeof CategorizeTaskSchema>
+  | z.infer<typeof OrderTaskSchema>;
 
 function isList(node: RootContent): node is List {
   return node.type === 'list';
@@ -126,6 +137,16 @@ function parseCategorizeContent(nodes: RootContent[]) {
   return { question, categories };
 }
 
+function parseOrderContent(nodes: RootContent[]) {
+  const questionNode = nodes.find((node) => node.type === 'paragraph');
+  const listNode = nodes.find(isList);
+
+  const question = questionNode ? nodesToMarkdown([questionNode]) : '';
+  const items = (listNode?.children ?? []).map((item) => toString(item).trim());
+
+  return { question, items };
+}
+
 type TaskDefinition = {
   schema: { parse: (candidate: unknown) => Task };
   parseContent: (nodes: RootContent[]) => Record<string, unknown>;
@@ -147,5 +168,9 @@ export const TASK_DEFINITIONS: Record<string, TaskDefinition> = {
   categorize: {
     schema: CategorizeTaskSchema,
     parseContent: parseCategorizeContent,
+  },
+  order: {
+    schema: OrderTaskSchema,
+    parseContent: parseOrderContent,
   },
 };

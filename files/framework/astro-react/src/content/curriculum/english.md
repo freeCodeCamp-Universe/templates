@@ -116,6 +116,21 @@ Match each animal to its class.
 
 --end-categorize--
 
+### Lesson 6
+
+This lesson has an order task.
+
+--order--
+
+Put these steps in the correct order.
+
+1. Preheat the oven.
+2. Mix the batter.
+3. Pour the batter into the pan.
+4. Bake for 30 minutes.
+
+--end-order--
+
 ## Module 2.1
 
 ### Lesson 1
