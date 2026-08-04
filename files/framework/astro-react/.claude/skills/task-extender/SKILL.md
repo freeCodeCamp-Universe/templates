@@ -5,11 +5,11 @@ description: Guides adding a new curriculum task type (like multiple-choice or f
 
 # Task Extender
 
-Design and implement a new curriculum task type following `.claude/REPO_CONVENTIONS.md`. Read that document and `src/lib/curriculum-tasks.ts` before doing anything so the new task matches existing conventions.
+Design and implement a new curriculum task type following `references/REPO_CONVENTIONS.md`. Read that document and `src/lib/curriculum-tasks.ts` before doing anything so the new task matches existing conventions.
 
 # Rules
 
-- Follow `.claude/REPO_CONVENTIONS.md`. If the user's request conflicts with it, explain the conflict instead of silently changing the design.
+- Follow `references/REPO_CONVENTIONS.md`. If the user's request conflicts with it, explain the conflict instead of silently changing the design.
 - Reuse existing task patterns whenever possible.
 - Don't guess when requirements are unclear. Ask only the minimum questions needed.
 - Prefer proposing reasonable defaults over asking exploratory questions. If a good default exists, propose it and let the user react.
@@ -71,7 +71,7 @@ If the user requests changes, revise the mockup and continue iterating until the
 
 ## Step 4: Implement
 
-Re-read the "Adding a new task type" section of `.claude/REPO_CONVENTIONS.md` and implement the task exactly as described.
+Re-read the "Adding a new task type" section of `references/REPO_CONVENTIONS.md` and implement the task exactly as described.
 
 Do not perform final verification yet.
 
