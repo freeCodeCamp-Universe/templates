@@ -1,11 +1,13 @@
 ---
 import Layout from '../layouts/layout.astro';
-import { Landing } from '../views/landing';
+import Landing from '../views/landing.astro';
 import { loadCurriculum } from '../lib/load-curriculum';
+import { getOrderedLessons } from '../lib/curriculum-route-utils';
 
 const curriculum = await loadCurriculum();
+const lessons = getOrderedLessons(curriculum).map((entry) => ({ slug: entry.slug, href: entry.href }));
 ---
 
 <Layout title={curriculum.title} brand={curriculum.title}>
-  <Landing title={curriculum.title} client:load />
+  <Landing title={curriculum.title} description={curriculum.description} lessons={lessons} />
 </Layout>

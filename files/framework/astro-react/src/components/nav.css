@@ -1,5 +1,6 @@
 .nav {
   --primary-color: var(--gray-00);
+  --primary-color-translucent: var(--gray-00-translucent);
   --secondary-background: var(--gray-80);
   --quaternary-background: var(--gray-75);
   position: sticky;

@@ -2,9 +2,11 @@ import './button.css';
 import type { MouseEventHandler, ReactNode } from 'react';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'link';
+type ButtonSize = 'lg';
 
 type ButtonProps = {
   variant?: ButtonVariant;
+  size?: ButtonSize;
   href?: string;
   type?: 'button' | 'submit';
   disabled?: boolean;
@@ -14,13 +16,14 @@ type ButtonProps = {
 
 export function Button({
   variant = 'secondary',
+  size,
   href,
   type = 'button',
   disabled = false,
   onClick,
   children,
 }: ButtonProps) {
-  const className = `btn btn-${variant}`;
+  const className = size ? `btn btn-${variant} btn-${size}` : `btn btn-${variant}`;
 
   if (href) {
     return (

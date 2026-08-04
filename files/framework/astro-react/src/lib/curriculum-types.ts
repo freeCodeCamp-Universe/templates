@@ -19,6 +19,7 @@ export type Section = {
 
 export type Curriculum = {
   title: string;
+  description?: string;
   sections: Section[];
 };
 

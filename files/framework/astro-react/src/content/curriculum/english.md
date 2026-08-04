@@ -1,5 +1,6 @@
 ---
 title: Sample Curriculum
+description: Optional Description. A sample curriculum used to test and demo this boilerplate's task types and layout.
 ---
 
 # Section 1
@@ -95,6 +96,40 @@ Pick all the correct ones.
 --end-select-all-that-apply--
 
 Here's some text after the last task.
+
+### Lesson 5
+
+This lesson has a categorize task.
+
+--categorize--
+
+Match each animal to its class.
+
+- Mammal
+  - Dog
+  - Whale
+- Bird
+  - Eagle
+  - Penguin
+- Reptile
+  - Snake
+
+--end-categorize--
+
+### Lesson 6
+
+This lesson has an order task.
+
+--order--
+
+Put these steps in the correct order.
+
+1. Preheat the oven.
+2. Mix the batter.
+3. Pour the batter into the pan.
+4. Bake for 30 minutes.
+
+--end-order--
 
 ## Module 2.1
 

@@ -27,16 +27,18 @@
 
 .btn-primary:hover {
   background: var(--yellow-light);
+  text-decoration: none;
 }
 
 .btn-secondary {
   background: none;
-  border: 1px solid var(--quaternary-background);
+  border: 1px solid var(--primary-color-translucent);
   color: var(--primary-color);
 }
 
 .btn-secondary:hover {
   background: var(--secondary-background);
+  text-decoration: none;
 }
 
 .btn-danger,
@@ -48,6 +50,7 @@
 
 .btn-danger:hover {
   opacity: 0.85;
+  text-decoration: none;
 }
 
 .btn-link,
@@ -61,4 +64,9 @@
 
 .btn-link:hover {
   text-decoration: underline;
+}
+
+.btn-lg {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-size-md);
 }

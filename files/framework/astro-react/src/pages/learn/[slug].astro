@@ -6,39 +6,27 @@ import CurriculumMap from '../../components/curriculum-map.astro';
 import { Lesson } from '../../views/lesson';
 import { loadCurriculum } from '../../lib/load-curriculum';
 import { toCurriculumOutline } from '../../lib/curriculum-outline';
-import { buildLearnPath, buildLessonRouteSlug } from '../../lib/curriculum-route-utils';
+import { getOrderedLessons } from '../../lib/curriculum-route-utils';
 
 export const getStaticPaths = (async () => {
   const curriculum = await loadCurriculum();
   const curriculumOutline = toCurriculumOutline(curriculum);
-
-  const entries = curriculum.sections.flatMap((sectionItem) =>
-    sectionItem.modules.flatMap((moduleItem) =>
-      moduleItem.lessons.map((lessonItem) => ({
-        section: sectionItem,
-        module: moduleItem,
-        lesson: lessonItem,
-      })),
-    ),
-  );
+  const entries = getOrderedLessons(curriculum);
 
   return entries.map((entry, index) => {
     const nextEntry = entries[index + 1];
     const isLastLesson = nextEntry === undefined;
-    const lessonSlug = buildLessonRouteSlug(entry.section, entry.module, entry.lesson);
 
     return {
       params: {
-        slug: lessonSlug,
+        slug: entry.slug,
       },
       props: {
         curriculum: curriculumOutline,
         lesson: entry.lesson,
-        lessonSlug,
+        lessonSlug: entry.slug,
         isLastLesson,
-        nextHref: isLastLesson
-          ? '/learn'
-          : buildLearnPath(nextEntry.section, nextEntry.module, nextEntry.lesson),
+        nextHref: isLastLesson ? '/learn' : nextEntry.href,
       },
     };
   });

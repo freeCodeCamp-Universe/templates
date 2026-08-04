@@ -42,10 +42,41 @@ const FillInBlankTaskSchema = z
     message: 'Fill in the blank must have at least one blank',
   });
 
+const CategorizeCategorySchema = z.object({
+  name: z.string(),
+  items: z.array(z.string()).min(1),
+});
+
+const CategorizeTaskSchema = z
+  .object({
+    type: z.literal('categorize'),
+    question: z.string(),
+    categories: z.array(CategorizeCategorySchema).min(2),
+  })
+  .refine(
+    (task) => {
+      const allItems = task.categories.flatMap((category) => category.items);
+      return new Set(allItems).size === allItems.length;
+    },
+    { message: 'Categorize items must be unique across all categories' },
+  );
+
+const OrderTaskSchema = z
+  .object({
+    type: z.literal('order'),
+    question: z.string(),
+    items: z.array(z.string()).min(2),
+  })
+  .refine((task) => new Set(task.items).size === task.items.length, {
+    message: 'Order items must be unique',
+  });
+
 export type Task =
   | z.infer<typeof MultipleChoiceTaskSchema>
   | z.infer<typeof SelectAllThatApplyTaskSchema>
-  | z.infer<typeof FillInBlankTaskSchema>;
+  | z.infer<typeof FillInBlankTaskSchema>
+  | z.infer<typeof CategorizeTaskSchema>
+  | z.infer<typeof OrderTaskSchema>;
 
 function isList(node: RootContent): node is List {
   return node.type === 'list';
@@ -89,6 +120,33 @@ function parseFillInBlankContent(nodes: RootContent[]) {
   return { segments };
 }
 
+function parseCategorizeContent(nodes: RootContent[]) {
+  const questionNode = nodes.find((node) => node.type === 'paragraph');
+  const listNode = nodes.find(isList);
+
+  const question = questionNode ? nodesToMarkdown([questionNode]) : '';
+  const categories = (listNode?.children ?? []).map((categoryItem) => {
+    const nestedList = categoryItem.children.find(isList);
+    const nameNode = categoryItem.children.find((child) => child.type !== 'list');
+    const name = nameNode ? toString(nameNode).trim() : '';
+    const items = (nestedList?.children ?? []).map((itemNode) => toString(itemNode).trim());
+
+    return { name, items };
+  });
+
+  return { question, categories };
+}
+
+function parseOrderContent(nodes: RootContent[]) {
+  const questionNode = nodes.find((node) => node.type === 'paragraph');
+  const listNode = nodes.find(isList);
+
+  const question = questionNode ? nodesToMarkdown([questionNode]) : '';
+  const items = (listNode?.children ?? []).map((item) => toString(item).trim());
+
+  return { question, items };
+}
+
 type TaskDefinition = {
   schema: { parse: (candidate: unknown) => Task };
   parseContent: (nodes: RootContent[]) => Record<string, unknown>;
@@ -106,5 +164,13 @@ export const TASK_DEFINITIONS: Record<string, TaskDefinition> = {
   'fill-in-the-blank': {
     schema: FillInBlankTaskSchema,
     parseContent: parseFillInBlankContent,
+  },
+  categorize: {
+    schema: CategorizeTaskSchema,
+    parseContent: parseCategorizeContent,
+  },
+  order: {
+    schema: OrderTaskSchema,
+    parseContent: parseOrderContent,
   },
 };

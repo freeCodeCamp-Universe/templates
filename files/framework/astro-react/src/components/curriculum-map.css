@@ -4,7 +4,7 @@
 }
 
 .section + .section {
-  border-top: 1px solid var(--quaternary-background);
+  border-top: 1px solid var(--secondary-background);
   padding-top: var(--space-md);
 }
 
@@ -31,21 +31,30 @@
   padding: 0;
 }
 
-.item {
+.item + .item {
+  margin-top: var(--space-xs);
+}
+
+.item-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
   font-size: var(--text-size-xs);
   margin-left: calc(-1 * var(--space-md));
   margin-right: calc(-1 * var(--space-md));
   padding: var(--space-xs) var(--space-md) var(--space-xs) calc(var(--space-md) + var(--space-md));
 }
 
-.item + .item {
-  margin-top: var(--space-xs);
-}
-
-.item.current {
-  background: var(--tertiary-background);
+.item-link.current {
+  background: var(--secondary-background);
   border-left: 2px solid var(--highlight-color);
   padding-left: calc(var(--space-md) + var(--space-md) - 2px);
+}
+
+.item-link:hover {
+  background: var(--tertiary-background);
+  text-decoration: none;
 }
 
 .completed-badge {

@@ -10,5 +10,6 @@ export async function loadCurriculum(
   const entry = await getEntry('curriculum', entryId);
   const markdown = entry?.body ?? '';
   const title = entry?.data.title ?? 'Curriculum';
-  return parseCurriculum(markdown, title);
+  const description = entry?.data.description;
+  return parseCurriculum(markdown, title, description);
 }
