@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.9.0...app-templates-v0.10.0) (2026-08-04)
+
+
+### Features
+
+* add readme ([#38](https://github.com/freeCodeCamp-Universe/templates/issues/38)) ([c1622e4](https://github.com/freeCodeCamp-Universe/templates/commit/c1622e4239cccf39e8f21c36c31953184f63b2e9))
+* added devContainer property to allow customization of devcontainer.json ([#33](https://github.com/freeCodeCamp-Universe/templates/issues/33)) ([2ac547b](https://github.com/freeCodeCamp-Universe/templates/commit/2ac547b68c62f052fac79f452bee9b86157d6fa9))
+* more astro react template ([#37](https://github.com/freeCodeCamp-Universe/templates/issues/37)) ([0d4b866](https://github.com/freeCodeCamp-Universe/templates/commit/0d4b866218fa4c5e41458b31c0dd71fa62d171d6))
+
+
+### Bug Fixes
+
+* allow skills to be committed in the astro-react template ([#36](https://github.com/freeCodeCamp-Universe/templates/issues/36)) ([e106c8f](https://github.com/freeCodeCamp-Universe/templates/commit/e106c8f7c5ebf24a1af08d800367f8889b32fe87))
+
 ## [0.9.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.8.0...app-templates-v0.9.0) (2026-07-31)
 
 
