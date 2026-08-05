@@ -34,8 +34,13 @@ const { curriculum, currentLessonSlug } = Astro.props;
                     >
                       <span>{lesson.title}</span>
                       <span class="completed-badge" data-lesson-slug={slug}>
-                        <span aria-hidden="true">✓</span>
-                        <span class="sr-only"> Completed</span>
+                        <span class="badge-pending" aria-hidden="true">
+                          –
+                        </span>
+                        <span class="badge-complete">
+                          <span aria-hidden="true">✓</span>
+                          <span class="sr-only"> Completed</span>
+                        </span>
                       </span>
                     </a>
                   </li>

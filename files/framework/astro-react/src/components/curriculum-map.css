@@ -58,12 +58,23 @@
 }
 
 .completed-badge {
-  display: none;
   margin-left: var(--space-xs);
-  color: var(--success-color);
   font-weight: 700;
 }
 
-.completed-badge.completed {
+.badge-pending {
+  color: var(--gray-45);
+}
+
+.badge-complete {
+  display: none;
+  color: var(--success-color);
+}
+
+.completed-badge.completed .badge-pending {
+  display: none;
+}
+
+.completed-badge.completed .badge-complete {
   display: inline;
 }
