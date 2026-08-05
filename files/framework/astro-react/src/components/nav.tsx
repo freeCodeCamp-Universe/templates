@@ -71,8 +71,20 @@ export function Nav({ brand, showSidebarToggle = false }: NavProps) {
         </div>
 
         <div className="nav-actions">
+          <div className="nav-links">
+            <a href="/learn" className="nav-link">
+              Learn
+            </a>
+
+            <a href="/progress" className="nav-link">
+              Progress
+            </a>
+          </div>
+
+          <span className="nav-divider" aria-hidden="true"></span>
+
           <Button variant="secondary" onClick={handleToggleTheme}>
-            {theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            {theme === 'dark' ? 'Light mode' : 'Dark mode'}
           </Button>
 
           <Button

@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/layout.astro';
+import Progress from '../views/progress.astro';
+import { loadCurriculum } from '../lib/load-curriculum';
+
+const curriculum = await loadCurriculum();
+---
+
+<Layout title={`Progress - ${curriculum.title}`} brand={curriculum.title}>
+  <Progress title={curriculum.title} />
+</Layout>

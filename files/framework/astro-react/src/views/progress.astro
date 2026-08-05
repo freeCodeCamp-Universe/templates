@@ -1,0 +1,18 @@
+---
+import './views.css';
+
+type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
+---
+
+<main id="main-content" class="main" tabindex="-1">
+  <header class="header">
+    <p class="eyebrow">Progress</p>
+    <h1>{title}</h1>
+  </header>
+
+  <p>Progress tracking is coming soon.</p>
+</main>
