@@ -1,5 +1,7 @@
 - **CSS class names: kebab-case, always**, not camelCase. These are plain .css files imported for side effects, not CSS Modules, so kebab-case is the standard (matches global.css: `.dark-palette`, `.skip-link`).
 
+- **UI components come from the freeCodeCamp UIKit copy-source registry:** fetch <https://design.freecodecamp.org/llms.txt> before adding or editing any UI. Never install UIKit from npm. Keep CSS custom property names intact; theme by editing values in `src/ui/theme/tokens.css`. Everything an agent needs is reachable from that one URL, so the line only has to carry the pointer plus the two rules that are unrecoverable by fetching (no npm, do not hard-code colors).
+
 - **Shared client-side reactive logic goes in `src/hooks/` as a real custom hook** (function prefixed `use`, itself calling `useState`/`useEffect`), not a plain lib utility that each consuming component wraps in its own manual `useEffect`. Only applies once something is used by 2+ components - single-consumer client logic can just live inline in that one component (see `nav.tsx`'s theme handling).
 
 - **Page-level components (1:1 with a route) go in `src/views/`.** `src/components/` is for things actually reused across multiple places. Task-type components (multiple-choice, select-all, etc.) get their own `src/components/tasks/` subfolder.
