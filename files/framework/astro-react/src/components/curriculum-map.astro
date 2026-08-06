@@ -13,52 +13,67 @@ const { curriculum, currentLessonSlug } = Astro.props;
 
 <nav aria-label="Curriculum sections" class="navigation">
   {
-    curriculum.sections.map((section) => (
-      <details class="section" open>
-        <summary>
-          <h2>{section.title}</h2>
-        </summary>
+    curriculum.sections.map((section) => {
+      const containsCurrentLesson = (moduleTitle: string, lessons: { title: string }[]) =>
+        lessons.some(
+          (lesson) => buildLessonRouteSlug(section.title, moduleTitle, lesson.title) === currentLessonSlug,
+        );
 
-        {section.modules.map((module) => (
-          <details class="module-block" open>
-            <summary>
-              <h3>{module.title}</h3>
-            </summary>
-            <ul class="list">
-              {module.lessons.map((lesson) => {
-                const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
-                const isCurrent = slug === currentLessonSlug;
+      // Learn page has no current lesson -> everything it expanded
+      // Lesson page has current lesson -> expand that section
+      const sectionOpen =
+        !currentLessonSlug || section.modules.some((module) => containsCurrentLesson(module.title, module.lessons));
 
-                return (
-                  <li class="item">
-                    <a
-                      href={buildLearnPath(section.title, module.title, lesson.title)}
-                      aria-current={isCurrent ? ('page' as const) : undefined}
-                      class={isCurrent ? 'item-link current' : 'item-link'}
-                    >
-                      <span>{lesson.title}</span>
-                      <span class="completed-badge" data-lesson-slug={slug}>
-                        <span class="badge-pending" aria-hidden="true">
-                          –
-                        </span>
-                        <span class="badge-complete">
-                          <span aria-hidden="true">✓</span>
-                          <span class="sr-only"> Completed</span>
-                        </span>
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </details>
-        ))}
-      </details>
-    ))
+      return (
+        <details class="section" open={sectionOpen}>
+          <summary>
+            <h2>{section.title}</h2>
+          </summary>
+
+          {section.modules.map((module) => {
+            const moduleOpen = !currentLessonSlug || containsCurrentLesson(module.title, module.lessons);
+
+            return (
+              <details class="module-block" open={moduleOpen}>
+                <summary>
+                  <h3>{module.title}</h3>
+                </summary>
+                <ul class="list">
+                  {module.lessons.map((lesson) => {
+                    const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
+                    const isCurrent = slug === currentLessonSlug;
+
+                    return (
+                      <li class="item">
+                        <a
+                          href={buildLearnPath(section.title, module.title, lesson.title)}
+                          aria-current={isCurrent ? ('page' as const) : undefined}
+                          class={isCurrent ? 'item-link current' : 'item-link'}
+                        >
+                          <span>{lesson.title}</span>
+                          <span class="completed-badge" data-lesson-slug={slug}>
+                            <span class="badge-pending" aria-hidden="true">
+                              –
+                            </span>
+                            <span class="badge-complete">
+                              <span aria-hidden="true">✓</span>
+                              <span class="sr-only"> Completed</span>
+                            </span>
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </details>
+            );
+          })}
+        </details>
+      );
+    })
   }
 </nav>
 
-{/* Show/hide completed badges. Inlined to avoid FOUC. */}
 <script is:inline>
   (function () {
     try {
