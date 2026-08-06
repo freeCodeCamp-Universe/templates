@@ -33,6 +33,9 @@
   "devDependencies": {
     "@astrojs/check": "^0.9",
     "@eslint/js": "^10",
+    "@testing-library/jest-dom": "^7",
+    "@testing-library/react": "^16",
+    "@testing-library/user-event": "^14",
     "@types/mdast": "^4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -40,9 +43,11 @@
     "eslint-config-prettier": "^10",
     "eslint-plugin-astro": "^1",
     "eslint-plugin-jsx-a11y": "^6",
+    "jsdom": "^30",
     "prettier": "^3",
     "prettier-plugin-astro": "^0.14",
     "typescript": "^6",
-    "typescript-eslint": "^8"
+    "typescript-eslint": "^8",
+    "vitest": "^4"
   }
 }
