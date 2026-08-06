@@ -171,6 +171,8 @@ Check the real fields each type requires (see Existing task types below) rather 
 
 If the PRD gives items but no instruction, write a clear one - a specific question beats a bare list of options.
 
+**Vary the correct answer's position.** Don't default to listing the correct option(s) first - that's a systematic tell, not a random one. Across the curriculum, correct answers should land in different positions from lesson to lesson where applicable.
+
 ---
 
 ## Step 3: Map activities to task types
@@ -182,17 +184,22 @@ Don't hardcode a list of task types here - it will drift the moment `task-extend
 1. Read `src/lib/curriculum-tasks.ts` for the authoritative list of task type names (each is a `type: z.literal('...')`) and their required fields.
 2. Find a real usage example of each type in `src/content/curriculum/english.md` (or any other file under `src/content/curriculum/`) to see the actual `--marker--` / `--end-marker--` markdown syntax in practice, since the schema describes parsed structure, not raw markdown.
 
-Match each activity to the closest type by what the learner actually does (one correct answer, several correct answers, filling a blank, sorting items, ordering steps), not by surface wording.
+Match each activity by what the learner does (one correct answer, several correct answers, filling a blank, sorting items, ordering steps) and what they need to be shown, not by surface wording. If nothing matches on either count, see New task types below - don't force a fit.
 
 **Don't sort a single item into categories** - that's a multiple-choice question with the categories as options. Categorize needs several items distributed across categories.
 
 ### New task types (placeholder syntax)
 
-For activities that don't fit an existing type, invent a sensible kebab-case name and write markdown fields that fit what the learner is doing. Document it in `new-task-types.md` (Output 2), following its format exactly.
+For activities that don't fit an existing type, invent a sensible kebab-case name and write markdown fields that fit what the learner is doing. Document it in `.new-task-types.md` (Output 2), following its format exactly.
 
-Only invent a new type when nothing discovered above fits - double check first, since most activities are an existing type wearing different clothes.
+**The fit test has two parts: what the learner does, and what they need to be shown.**
 
-**Consistency rule:** for a repeat occurrence of any task type, existing or invented, copy the exact skeleton of your last correct instance instead of rewriting the syntax from memory.
+- **Mechanic:** does an existing type ask the learner to do the literal same thing, just described differently? Consider it as an option. Does fitting the activity in require *you* to pre-build wrong answers, discard distractors, drop an assembly or ordering step, or flatten a multi-step interaction into one pick? That's a different mechanic - invent a new type.
+- **Presentation:** check the real component in `src/components/tasks/`, not just the schema. Does the slot the activity needs (question, options, items) need something new? A slot that can't show what's needed, likely needs a new type - even if the mechanic is otherwise identical.
+
+Apply both parts of the test per activity. A single PRD may need one new type, several, or none - don't assume the count in either direction.
+
+**Consistency rule:** for a repeat occurrence of any task type, existing or invented, copy the exact structural skeleton (markers, field order, blank-line placement) of your last correct instance instead of rewriting the syntax from memory. This is about structure, not content - it does not mean reusing the same correct-answer position; see Vary the correct answer's position above.
 
 ---
 
@@ -217,7 +224,8 @@ Before finalizing, verify:
 - [ ] New task types use placeholder syntax
 - [ ] No categorize block has only one item
 - [ ] Repeat occurrences of the same task type share an identical structural skeleton
-- [ ] `new-task-types.md` documents every new type used
+- [ ] Correct answers are not clustered in the first option position across the curriculum
+- [ ] `.new-task-types.md` documents every new type used
 
 ---
 

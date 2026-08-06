@@ -130,7 +130,7 @@ Provide a concise summary:
 
 # Decision rules
 
-* **Prefer existing patterns over new ones.**
+* **Prefer existing patterns over new ones - but this is a default, not a mandate to flatten a genuinely different interaction into a worse-fitting existing type.** Apply `curriculum-from-prd`'s fit test for that specific decision, not this general preference.
 * **Prefer extending the current system over introducing parallel systems.**
 * **Prefer simpler implementations that satisfy the learning goal.**
 * **Push back on requests that are clearly unrelated to the curriculum product** by deferring them, not by stopping to ask.
