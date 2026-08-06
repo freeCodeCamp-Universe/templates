@@ -1,20 +1,26 @@
 ---
 name: curriculum-from-prd
-description: Converts a PRD, spec, outline, or any document containing curriculum or course content into a structured curriculum markdown file. Use this whenever Tom has a document with educational content to turn into lessons -- even if the document does not call itself a curriculum. Triggers on: "convert this PRD to curriculum", "turn this into lessons", "make a curriculum from this", "PRD to curriculum", "convert curriculum", "generate curriculum from this doc", "build lessons from this". When Tom pastes a document and asks about curriculum structure, always trigger this skill.
+description: Converts a PRD, spec, outline, or any document containing curriculum or course content into a structured curriculum markdown file. Use this whenever a user has a document with educational content to turn into lessons - even if the document does not call itself a curriculum. Triggers on: "convert this PRD to curriculum", "turn this into lessons", "make a curriculum from this", "PRD to curriculum", "convert curriculum", "generate curriculum from this doc", "build lessons from this". When a user pastes a document and asks about curriculum structure, always trigger this skill.
 ---
 
 # PRD to Curriculum Converter
 
-Converts an input document -- PRD, outline, spec, or any structured educational content -- into two output files:
+Converts an input document - PRD, outline, spec, or any structured educational content - into up to two output files:
 
-1. A **curriculum markdown file** (`curriculum.md`) following the established schema
-2. A **new task types file** (`new-task-types.md`) documenting any task types invented during the conversion
+1. The **curriculum markdown**, following the established schema. Always produced. Write it directly to `src/content/curriculum/english.md`, overwriting the sample content there - that is the live file the site actually loads, so there is no separate staging step.
+2. A **new task types file** (`.new-task-types.md` at the repository root) documenting any task types invented during the conversion. Only produced if at least one activity didn't fit an existing type - skip this file entirely otherwise. It is a temporary handoff file for `task-extender`, not permanent content.
+
+---
+
+## Before you start
+
+Read `src/lib/curriculum-tasks.ts` (task type schemas) and find a real usage example of each type in `src/content/curriculum/english.md`. Do this first, not just when mapping activities in Step 3 - knowing what task types actually require shapes how lessons get planned in Step 2, not only how they get mapped later.
 
 ---
 
 ## Output 1: Curriculum format
 
-A single `.md` file with YAML frontmatter and a hierarchy of Sections -> Modules -> Lessons:
+Written directly to `src/content/curriculum/english.md`. YAML frontmatter and a hierarchy of Sections -> Modules -> Lessons:
 
 ```markdown
 ---
@@ -39,153 +45,131 @@ Task content.
 
 ### Naming conventions
 
-- **Sections**: Number at the start or end -- match the PRD's own phrasing if it already numbers its top-level divisions. Examples: `Session 1`, `1. Introduction`, `Unit 2`.
-- **Modules**: Decimal-numbered per section. Examples: `1.1 Word Parts`, `2.3 Practice`. Keep to 2-4 words.
-- **Lessons**: No numbers. Name the lesson after the concept or item being practiced, not the activity type. Examples: `Hypotensive`, `The Four Pieces`, `hypo/glyc/emia`. Avoid constructions like `Lesson 3: Labeling Word Parts` or `Question 4`.
+All titles must be concise - a short label, not a phrase or sentence.
+
+- **Sections**: Number at the start or end, matching the PRD's own phrasing if it already numbers divisions. Examples: `Session 1`, `1. Introduction`, `Unit 2`.
+- **Modules**: Decimal-numbered per section. Examples: `1.1 Basics`, `2.3 Practice`. Keep to 2-4 words.
+- **Lessons**: No numbers. Name after the concept being practiced, not the activity type. Keep to 1-5 words. Examples: `Compound Interest`, `The Renaissance`, `Photosynthesis`. Avoid `Lesson 3: Practice Activity` or `Question 4`.
 
 ### Prose content rules
 
-Do not use em-dashes, right arrows (->), or other characters that read as stylized punctuation in lesson content. Use plain commas, periods, and standard sentence structure. Write prose that sounds like a textbook or teacher, not generated text.
-
-Bad: "Start with the suffix -- it tells you the kind of event."
-Good: "Start with the suffix because it tells you the kind of event."
-
-Use backticks for any word part or technical term referenced inline: `hepat`, `o`, `neur/o`, `-oma`, `hyper-`. This includes word parts in lesson prose, micro-context sentences, and task prompts.
-
-**Do not include internal PRD identifiers** such as card IDs (P01, S01, R01, etc.) or section references in the curriculum output. Refer to concepts by name, not by ID.
-
-**Do not add `<!-- NEW TYPE: ... -->` HTML comments in curriculum.md.** Those comments belong only in `new-task-types.md`.
+- Be concise. No filler words or padding - use the fewest words that still make the point clearly.
+- No em-dashes, right arrows (->), or stylized punctuation. Use plain commas and periods; write like a textbook, not generated text.
+  Bad: "Start with the setup - it tells you what happens next."
+  Good: "Start with the setup because it tells you what happens next."
+- Use backticks for technical terms, formulas, code, or short exact phrases referenced inline (e.g., `H2O`, `binary search`, `iambic pentameter`) in prose, anchors, and task prompts.
+- No internal PRD identifiers (item codes, section reference numbers) in the output. Refer to concepts by name.
 
 ---
 
 ## Granularity rule (important)
 
-**One task per lesson is the default.** Split activities into as many lessons as there are practice items.
+**One task per lesson is the default.** Split any multi-item activity (a 5-item exercise, a 6-question quiz, an 8-question review set) into that many lessons, one task each - unless it reads like a final exam, in which case keep it as one lesson.
 
-- A 5-item labeling exercise becomes 5 lessons, each with one task.
-- A 6-question listening round becomes 6 lessons.
-- A 4-question cold open becomes 4 lessons.
-- An 8-question exit ticket becomes 8 lessons (unless it reads like a final exam, in which case keep it as one lesson).
+Exception: a reference table immediately followed by one matching exercise can share a lesson; a table followed by 5 separate questions becomes 1 reference lesson + 5 task lessons.
 
-The exception is when splitting would be disjointed: a reference table followed immediately by one matching exercise can share a lesson. But a reference table followed by 5 separate questions means 1 reference lesson + 5 task lessons.
+Name each lesson after its concept, not a generic label - `Photosynthesis`, not `Warm-up Question 1`.
 
-When a lesson contains one question about a specific word or concept, name the lesson after that concept. For example, a question about the word "hypotensive" gets the lesson title `Hypotensive`, not `Cold Open Question 1` or `Audio Practice`.
-
-Explanatory text that introduces a new concept is its own lesson with no task. Do not force a task onto every lesson -- some lessons are just reading.
+Explanatory text introducing a new concept is its own lesson with no task - not every lesson needs one.
 
 ---
 
 ## Lesson prose rule (important)
 
-Every lesson must have either prose before the task block or a self-contained task prompt inside the block. Never leave a lesson that is just a bare task block with nothing to orient the learner.
+Every lesson needs either prose before the task or a self-contained task prompt - never a bare task block with nothing orienting the learner.
 
-**When the lesson is the first in a module:** Write one to three sentences establishing the module's purpose. Subsequent lessons in the same module do not need to repeat this framing -- the module title and the task prompt carry it.
-
-**When the lesson is not the first in a module:** Omit repeated framing. The task prompt inside the block is enough if it is self-contained (e.g., "Which ending would make you ask 'what is inflamed?'" is self-contained). But if the task refers to something not visible in the lesson itself (e.g., "using your decoder" without defining the decoder), rewrite the task prompt to be self-contained, or add a one-sentence anchor.
-
-**Make task prompts self-contained:** The question or instruction inside a task block should make sense on its own, without requiring the learner to remember what was said three lessons ago. Instead of "Decode this using your decoder," write "Break this word into known parts." Instead of "Match the card," write "Match each suffix to its meaning."
+- **First lesson in a module:** one to three sentences establishing the module's purpose.
+- **Later lessons:** skip repeated framing - the module title and task prompt carry it. If the task depends on something introduced earlier without redefining it, rewrite the prompt to be self-contained or add a one-sentence anchor.
+- **Task prompts must be self-contained:** they should make sense without recalling earlier lessons. Instead of "Solve this using the method from before," write "Solve for x using the substitution method."
 
 ---
 
 ## Micro-context rule (important)
 
-Some lessons are one of many practice items in a sequence. When the task requires the learner to recall something specific, a brief anchor sentence before the task block helps.
+When a task depends on recalling something specific, add a brief anchor sentence before the task block.
 
-**When to add a micro-context sentence:**
-- A categorize or label task where the lesson is about a specific word, and the key fact needed is the *grammatical role* of its parts (root, suffix, prefix, combining vowel) -- not just its meaning.
-- A word-builder task where the learner needs to know the meaning of the target word to evaluate which tiles to pick.
+**Add one when:** the task depends on a specific fact not obvious from the lesson itself (e.g., a categorize task testing a role or property, not just meaning).
 
-**When NOT to add one:**
-- Cold open / ungraded warm-up items (intentionally context-free -- the PRD will say so).
-- Listening round items (designed to test recognition, not recall of definitions).
+**Skip it when:**
+- Ungraded warm-up items (intentionally context-free).
 - Multiple-choice questions where the question itself provides everything needed.
-- Categorize tasks where the learner just studied the relevant cards -- the cards are the context and the task is meant to test recall.
+- Categorize tasks where the learner just studied the relevant material - the material is the context and the task tests recall.
 
-**What the anchor should say:** For a categorize task testing grammatical role, the anchor should name the role: "`hemat` is a root; `-oma` is a suffix that signals a mass or swelling." For a word-builder task, the anchor should give the meaning hint: "Build the word that means inflammation of the liver." (That last one usually goes inside the task prompt itself, not as separate prose.)
+**The anchor should name the specific fact, not the topic.** For example, if a categorize task tests which of two words is a noun and which is a verb, the anchor should name the roles: "`cat` is a noun; `run` is a verb." Not "cat means a small animal," which doesn't help classify it.
 
-Do not use an anchor that only restates meaning without helping with the task. "hemat means blood" does not help the learner label `hemat` as a root rather than a suffix.
-
-Example -- correct anchor for a categorize task:
+Example - correct anchor for a categorize task:
 ```markdown
-### hemat/oma
+### cat/run
 
-`hemat` is a root; `-oma` is a suffix.
+`cat` is a noun; `run` is a verb.
 
 --categorize--
 
-Label each part of `hemat/oma`.
+Label each word.
 
-- Root
-  - hemat
-- Suffix
-  - oma
+- Noun
+  - cat
+- Verb
+  - run
 
 --end-categorize--
 ```
 
-Example -- cold open lesson, no anchor needed:
+Example - lesson with no anchor needed (question is self-contained):
 ```markdown
-### Intracranial Hematoma
+### Boiling Point
 
---audio-multiple-choice--
+--multiple-choice--
 
-[Audio: "The scan shows an intracranial hematoma."]
+At sea level, water boils at approximately what temperature?
 
-What does this most likely describe?
+- [x] 100°C
+- [ ] 50°C
+- [ ] 150°C
 
-- [x] A mass of blood inside the skull.
-- [ ] Inflammation below the skin.
-- [ ] A tumor around the heart.
-
---end-audio-multiple-choice--
+--end-multiple-choice--
 ```
 
 ---
 
 ## Step 1: Identify the PRD section types
 
-PRDs for longer courses often contain several different kinds of sections. Before writing anything, identify which type each section is:
+Longer PRDs mix several kinds of sections. Identify each section's type before writing anything:
 
 | Section type | Recognizable by | What to do |
 |---|---|---|
 | **Session / unit content** | Has activities, tasks, practice items | Convert to curriculum modules and lessons |
 | **Learner contract / intro text** | Says "display this before session 1" or gives rules of the game | Include as a lesson (or a few lessons) in the first module of the first session. Keep "display verbatim" text as blockquote prose. |
 | **Notation or reference tables** | Tables of syntax, symbols, or vocabulary with no practice | Include as a lesson (no task) if the learner needs to read it |
-| **Canonical card inventory** | A catalogue of word-part families, each with a definition, sound cue, coach line, and examples | Extract cards for embedding within the session that introduces them (see Card lessons below) |
-| **Session map / schedule** | A table of sessions with timing, themes, and card lists | Omit. Use it to understand flow and which cards appear in which session, but do not include it in the curriculum |
+| **Session map / schedule** | A table of sessions with timing and themes | Omit. Use it to understand flow and topic ordering, but do not include it in the curriculum |
 | **Outcomes / objectives** | Bullet lists of what the learner will be able to do | Omit |
 | **Product thesis / research** | Context for why the product exists, research citations | Omit |
 | **Mastery levels table** | Explains how progress is tracked | Omit unless the PRD explicitly says to show it to learners |
+| **Wrap-up / transition text** | Closing or transitional remarks between sections | Include as closing prose on the last lesson of a section if it orients the learner; omit if purely structural |
 
-When a session section says "show cards X through Y" or "show canonical cards...", those cards become a module of card lessons within that session. Pull the card content from the canonical inventory section.
+Anything not covered above (a glossary, a reference deck, worked examples) gets the same treatment as any section: decide if each entry is prose or practice, and apply the same rules. Don't invent a special-cased path for it.
 
 ---
 
 ## Step 2: Plan the structure before writing
 
-Sketch the structure before writing output. For each activity in the PRD, count the individual items and plan that many lessons. Think through:
+Sketch the structure first. For each activity, count the items and plan that many lessons:
 
 - Is this activity one concept explained, or a set of practice items?
 - If it is a set of items, each item is a lesson.
 - What is the best lesson title for each item (the concept, not the activity)?
 - Which lessons need a task and which are just reading?
 - Which lessons need a micro-context anchor? What should it say?
-- Which card families need to be expanded as card study lessons?
 
 ---
 
 ## Task content rule
 
-**Every task block must contain a task — a question, instruction, or prompt that tells the learner what to do.** A task block with only answer options and no question is incomplete. A task block with only content to read and no action is not a task.
+**Every task block must contain a task** - a question, instruction, or prompt telling the learner what to do. Answer options alone, or content with no action, are not enough.
 
-- `--multiple-choice--` must contain a question the learner answers.
-- `--categorize--` must contain an instruction like "Label each part of `hemat/oma`." or "Match each suffix to its meaning."
-- `--fill-in-the-blank--` must contain a sentence with at least one `{{blank}}`.
-- `--audio-multiple-choice--` must contain a `[Audio: "..."]` line and a question.
-- `--word-builder--` must contain a "Build the word that means..." prompt, a `Tiles:` line, and an `Answer:` line.
-- `--order--` must contain an instruction and an ordered list.
+Check the real fields each type requires (see Existing task types below) rather than assuming. Whatever the type, tell the learner what to do - don't just show material.
 
-If the PRD provides the items but not an explicit instruction, write a clear one. "Label each part" is better than nothing; "Which of these endings means inflammation?" is better than a bare list of options.
+If the PRD gives items but no instruction, write a clear one - a specific question beats a bare list of options.
 
 ---
 
@@ -193,154 +177,26 @@ If the PRD provides the items but not an explicit instruction, write a clear one
 
 ### Existing task types
 
-**`--multiple-choice--`** -- One correct answer. Use for comprehension checks, recall, single-correct quizzes.
+Don't hardcode a list of task types here - it will drift the moment `task-extender` adds one. Discover what exists before mapping anything:
 
-```
---multiple-choice--
+1. Read `src/lib/curriculum-tasks.ts` for the authoritative list of task type names (each is a `type: z.literal('...')`) and their required fields.
+2. Find a real usage example of each type in `src/content/curriculum/english.md` (or any other file under `src/content/curriculum/`) to see the actual `--marker--` / `--end-marker--` markdown syntax in practice, since the schema describes parsed structure, not raw markdown.
 
-Which ending would make you ask "what is inflamed?"
+Match each activity to the closest type by what the learner actually does (one correct answer, several correct answers, filling a blank, sorting items, ordering steps), not by surface wording.
 
-- [x] `-itis`
-- [ ] `-emia`
-- [ ] `-oma`
-- [ ] `-algia`
-
---end-multiple-choice--
-```
-
-**`--select-all-that-apply--`** -- Multiple correct answers. Use for "which of these are true" or identifying multiple valid items.
-
-```
---select-all-that-apply--
-
-Which of these are valid?
-
-- [x] Correct.
-- [ ] Incorrect.
-- [x] Also correct.
-
---end-select-all-that-apply--
-```
-
-**`--fill-in-the-blank--`** -- Complete sentences with missing words. Use for vocabulary recall, completing definitions. Mark each blank with `{{answer}}`. Write task prompts that are self-contained -- avoid phrasing like "using your decoder" which requires memory of earlier lessons.
-
-```
---fill-in-the-blank--
-
-`hyper-` means {{above normal or excessive}}.
-
---end-fill-in-the-blank--
-```
-
-**`--categorize--`** -- The learner sorts **multiple items** into multiple categories (drag-and-drop). Use when you have several terms to distribute across a few buckets — for example, labeling word parts (`hemat`, `oma` → Root / Suffix) or sorting a set of terms into groups. List categories as top-level bullets, items as sub-bullets.
-
-**Do not use `--categorize--` when there is only one item.** A single item being sorted into one of five categories is just a multiple-choice question — use `--multiple-choice--` with the categories as options instead.
-
-```
---categorize--
-
-Label each part of `hemat/oma`.
-
-- Root
-  - hemat
-- Suffix
-  - oma
-
---end-categorize--
-```
-
-Good use: labeling both parts of a compound word, grouping 6 terms into 3 columns, matching prefixes to meanings.
-Bad use: "Sort `necrosis` into one of these five categories" — that is a multiple-choice question.
-
-**`--order--`** -- Arrange items in the correct sequence. Use for steps in a process, stages of a procedure.
-
-```
---order--
-
-Put these steps in order.
-
-1. First step.
-2. Second step.
-3. Third step.
-
---end-order--
-```
+**Don't sort a single item into categories** - that's a multiple-choice question with the categories as options. Categorize needs several items distributed across categories.
 
 ### New task types (placeholder syntax)
 
-For activities that do not fit existing types, use a sensible kebab-case type name as a placeholder. Document each new type in `new-task-types.md` (Output 2).
+For activities that don't fit an existing type, invent a sensible kebab-case name and write markdown fields that fit what the learner is doing. Document it in `new-task-types.md` (Output 2), following its format exactly.
 
-**`--audio-multiple-choice--`** -- The learner hears audio then answers a question. The `[Audio: "..."]` line captures the spoken transcript; actual audio files will be generated separately. Use when the PRD describes audio stimuli.
+Only invent a new type when nothing discovered above fits - double check first, since most activities are an existing type wearing different clothes.
 
-```
---audio-multiple-choice--
-
-[Audio: "The patient is hypotensive."]
-
-What does this most likely mean?
-
-- [x] The patient has low blood pressure.
-- [ ] The patient has high blood pressure.
-- [ ] The patient has a blood infection.
-
---end-audio-multiple-choice--
-```
-
-**`--word-builder--`** -- The learner assembles a word from labeled tiles (click or tap). Use when the PRD asks learners to construct words from component parts. List available tiles and the correct answer. Include a `Note:` line for special rules such as vowel dropping.
-
-```
---word-builder--
-
-Build the word that means "nerve pain."
-
-Tiles: neur, o, algia, emia
-
-Answer: neur/algia
-
-Note: The combining vowel drops before a suffix starting with a vowel.
-
---end-word-builder--
-```
-
-If you encounter an activity type not covered above, invent a sensible kebab-case type name, use placeholder syntax, and document it in `new-task-types.md`.
-
-### Card study lessons (no task block)
-
-When a session introduces canonical word-part cards, each card family becomes its own lesson. **Do not use a task block for card study** -- cards are not quizzes. Write the card content as formatted lesson prose.
-
-Format each card lesson like this:
-
-```markdown
-### hyper-/hypo-
-
-**hyper-/hypo-** -- above or below normal
-
-Sound cue: HIGH-per / HIGH-poh
-
-Hyper goes high; hypo goes low.
-
-Examples: `hypertension`, `hypotension`, `hyperglycemia`, `hypoglycemia`, `hyperkalemia`
-```
-
-Name the lesson after the word-part family (e.g., `hyper-/hypo-`, `a-/an-`, `-itis`), not after an internal ID. Do not include internal IDs anywhere.
+**Consistency rule:** for a repeat occurrence of any task type, existing or invented, copy the exact skeleton of your last correct instance instead of rewriting the syntax from memory.
 
 ---
 
-## Step 4: Handling overhead content
-
-| PRD content | What to do |
-|---|---|
-| Learning outcomes / objectives | Omit |
-| Minute-by-minute schedule | Omit; use it only to understand session flow and card ordering |
-| Learner contract / framing intro | Include as prose lessons in the first module. Use blockquote (`>`) for text the PRD says to "display verbatim" |
-| Notation tables | Include as a lesson (no task) if the learner needs to read it before practicing |
-| Mastery level table | Omit |
-| Wrap-up / transition text | Include as closing prose on the last lesson of a section if it orients the learner; omit if structural |
-| Card inventory section | Do not include as a standalone section; extract and embed cards session by session |
-
----
-
-## Step 5: Quality checklist
+## Step 4: Quality checklist
 
 Before finalizing, verify:
 
@@ -348,25 +204,28 @@ Before finalizing, verify:
 - [ ] Sections use numbered titles
 - [ ] Every module has a decimal number (1.1, 1.2, not just 1, 2)
 - [ ] Lesson titles have no leading or trailing numbers
-- [ ] Lesson titles are concise (2-5 words)
+- [ ] Section, module, and lesson titles are all concise (lessons: 1-5 words)
+- [ ] Lesson prose is concise, with no filler words or padding
 - [ ] Every lesson has either prose before the task or a self-contained task prompt
-- [ ] Task prompts do not reference "your decoder" or other context-dependent labels
+- [ ] Task prompts do not depend on something from an earlier lesson without redefining it
 - [ ] Most lessons have exactly one task block
 - [ ] No em-dashes or arrows in prose
-- [ ] No `<!-- NEW TYPE -->` comments in curriculum.md
-- [ ] No internal PRD IDs (P01, S01, R01, etc.) anywhere
-- [ ] Backticks around word parts and technical terms in prose
-- [ ] Micro-context anchors (where present) address grammatical role, not just meaning
-- [ ] Cold open and listening round lessons are context-free (module intro carries the framing)
-- [ ] Card study lessons are prose, not task blocks
-- [ ] New task types use placeholder syntax (no `<!-- NEW TYPE -->` comment in curriculum.md)
+- [ ] No internal PRD identifiers (item codes, section reference numbers, etc.) anywhere
+- [ ] Backticks around technical terms in prose
+- [ ] Micro-context anchors (where present) address the specific fact the task depends on, not just the general topic
+- [ ] Ungraded warm-up lessons are context-free (module intro carries the framing)
+- [ ] New task types use placeholder syntax
+- [ ] No categorize block has only one item
+- [ ] Repeat occurrences of the same task type share an identical structural skeleton
 - [ ] `new-task-types.md` documents every new type used
 
 ---
 
 ## Output 2: New task types file
 
-After writing the curriculum, write a second file documenting every new task type invented during the conversion. This file is for developer implementation — keep it lean.
+Only needed if the conversion invented at least one new task type. If every activity mapped to an existing type, skip this file - do not create an empty one.
+
+After writing the curriculum, document every invented task type in `.new-task-types.md` at the repository root, for developer implementation. Keep it lean.
 
 Format each type as follows:
 
@@ -396,8 +255,6 @@ fieldName: z.string()
 Any edge cases or constraints the developer needs to know. Keep to 2-3 sentences.
 ```
 
-Note: `<!-- NEW TYPE: ... -->` HTML comments belong here and ONLY here, not in curriculum.md.
-
 ---
 
 ## Example: first vs subsequent lessons in a module
@@ -405,82 +262,31 @@ Note: `<!-- NEW TYPE: ... -->` HTML comments belong here and ONLY here, not in c
 The first lesson of a module gets the framing. Subsequent lessons in the same module are leaner:
 
 ```markdown
-## 1.1 Cold Open
+## 1.1 Warm-up
 
-### Hypotensive
+### Prime Numbers
 
 Try these before you study. Guessing is the point. These questions do not affect your score.
 
---audio-multiple-choice--
+--multiple-choice--
 
-[Audio: "The patient is hypotensive."]
+Which of these is a prime number?
 
-What does this most likely mean?
+- [x] 7
+- [ ] 9
+- [ ] 12
 
-- [x] The patient has low blood pressure.
-- [ ] The patient has high blood pressure.
-- [ ] The patient has a blood infection.
+--end-multiple-choice--
 
---end-audio-multiple-choice--
+### Even Numbers
 
-### Intracranial Hematoma
+--multiple-choice--
 
---audio-multiple-choice--
+Which of these is even?
 
-[Audio: "The scan shows an intracranial hematoma."]
+- [x] 8
+- [ ] 9
+- [ ] 11
 
-What does this most likely describe?
-
-- [x] A mass of blood inside the skull.
-- [ ] Inflammation below the skin.
-- [ ] A tumor around the heart.
-
---end-audio-multiple-choice--
-```
-
-## Example: card study module (prose, no task block)
-
-```markdown
-## 1.3 Word-Part Cards
-
-### a-/an-
-
-**a-/an-** -- without, absent, not
-
-Sound cue: uh / an
-
-At the front of a medical word, `a-` or `an-` often removes something.
-
-Examples: `apnea`, `anoxia`, `anemia`, `anuria`, `anencephaly`
-
-### dys-
-
-**dys-** -- bad, painful, difficult, abnormal
-
-Sound cue: diss
-
-`dys-` says a normal function has become difficult, painful, or abnormal.
-
-Examples: `dyspnea`, `dysuria`, `dysphagia`, `dysplasia`, `dysrhythmia`
-```
-
-## Example: categorize lesson with role anchor
-
-After the card module, labeling tasks need an anchor on the grammatical role (not just the meaning):
-
-```markdown
-### hemat/oma
-
-`hemat` is a root; `-oma` is a suffix.
-
---categorize--
-
-Label each part of `hemat/oma`.
-
-- Root
-  - hemat
-- Suffix
-  - oma
-
---end-categorize--
+--end-multiple-choice--
 ```

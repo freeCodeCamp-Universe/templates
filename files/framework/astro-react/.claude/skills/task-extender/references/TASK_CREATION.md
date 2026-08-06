@@ -33,7 +33,7 @@ Determine whether an existing task type already solves the problem.
 4. Wire it into `src/views/lesson.tsx`.
    - Add the new `block.task.type === 'your-task-type'` branch inside the lesson content dispatch.
 
-5. Add at least one real example to `english.md` to verify parsing.
+5. Check `english.md` for an existing real example of this type first - if it was invented via `curriculum-from-prd`, one (likely several) already exists there. Only add a fresh example if none exists yet.
 
 6. Verify:
    - lint
