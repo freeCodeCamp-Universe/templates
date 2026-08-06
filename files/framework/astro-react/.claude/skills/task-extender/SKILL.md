@@ -16,6 +16,10 @@ Design and implement a new curriculum task type following `references/TASK_CREAT
 - Prefer the simplest interaction that accomplishes the learning goal. Avoid introducing unnecessary complexity.
 - Work one phase at a time. Do not begin the next phase until the current one has been completed or explicitly approved where applicable.
 
+## Autonomous entry point
+
+Steps 1-3 exist to negotiate an unambiguous spec with a human. If you are invoked with a task type that is already fully specified (for example, an entry from `curriculum-from-prd`'s `new-task-types.md`, which already includes the markdown syntax, fields, and a schema outline), there is nothing left to negotiate. Treat that spec as already approved, skip Steps 1-3, and begin at Step 4.
+
 ## Step 1: Get a basic description
 
 Ask:
@@ -76,6 +80,8 @@ Re-read the "Creating a New Task Type" section of `references/TASK_CREATION.md` 
 Do not perform final verification yet.
 
 ## Step 5: Browser review
+
+No human available (autonomous entry point)? Skip this step and go straight to Step 6 — the verification pass and self-review there are the substitute for manual browser testing.
 
 Ask the user to run the site and test the new task in the browser.
 
