@@ -13,7 +13,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.75rem;
-  color: var(--gray-45);
+  color: var(--quaternary-color);
 }
 
 .module-block + .module-block {
@@ -63,7 +63,7 @@
 }
 
 .badge-pending {
-  color: var(--gray-45);
+  color: var(--quaternary-color);
 }
 
 .badge-complete {
