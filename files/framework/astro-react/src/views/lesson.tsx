@@ -7,6 +7,8 @@ import { SelectAll } from '../components/tasks/select-all';
 import { FillInTheBlank } from '../components/tasks/fill-in-the-blank';
 import { Categorize } from '../components/tasks/categorize';
 import { Order } from '../components/tasks/order';
+import { ListeningChoice } from '../components/tasks/listening-choice';
+import { WordBuilder } from '../components/tasks/word-builder';
 import { useSidebarOpen } from '../hooks/use-sidebar-open';
 import { markLessonComplete } from '../lib/curriculum-progress';
 
@@ -59,6 +61,14 @@ export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonPro
 
             if (block.task.type === 'order') {
               return <Order key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
+
+            if (block.task.type === 'listening-choice') {
+              return <ListeningChoice key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
+
+            if (block.task.type === 'word-builder') {
+              return <WordBuilder key={index} task={block.task} onCorrect={handleTaskPassed} />;
             }
 
             return <FillInTheBlank key={index} task={block.task} onCorrect={handleTaskPassed} />;

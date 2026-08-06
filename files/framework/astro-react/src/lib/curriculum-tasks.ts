@@ -71,12 +71,38 @@ const OrderTaskSchema = z
     message: 'Order items must be unique',
   });
 
+const ListeningChoiceTaskSchema = z
+  .object({
+    type: z.literal('listening-choice'),
+    audioText: z.string().min(1),
+    options: z.array(TaskOptionSchema).min(2),
+  })
+  .refine((task) => task.options.filter((option) => option.correct).length === 1, {
+    message: 'Listening choice must have exactly one correct option',
+  });
+
+const WordBuilderTaskSchema = z
+  .object({
+    type: z.literal('word-builder'),
+    prompt: z.string().min(1),
+    tiles: z.array(z.string()).min(2),
+    answer: z.array(z.string()).min(1),
+  })
+  .refine((task) => task.answer.length <= task.tiles.length, {
+    message: 'Word builder answer cannot use more tiles than are available',
+  })
+  .refine((task) => task.answer.every((part) => task.tiles.includes(part)), {
+    message: 'Word builder answer must only use tokens present in the tile pool',
+  });
+
 export type Task =
   | z.infer<typeof MultipleChoiceTaskSchema>
   | z.infer<typeof SelectAllThatApplyTaskSchema>
   | z.infer<typeof FillInBlankTaskSchema>
   | z.infer<typeof CategorizeTaskSchema>
-  | z.infer<typeof OrderTaskSchema>;
+  | z.infer<typeof OrderTaskSchema>
+  | z.infer<typeof ListeningChoiceTaskSchema>
+  | z.infer<typeof WordBuilderTaskSchema>;
 
 function isList(node: RootContent): node is List {
   return node.type === 'list';
@@ -147,6 +173,54 @@ function parseOrderContent(nodes: RootContent[]) {
   return { question, items };
 }
 
+function isLabeledParagraph(node: RootContent, label: string): boolean {
+  return node.type === 'paragraph' && new RegExp(`^${label}:`, 'i').test(toString(node).trim());
+}
+
+function parseListeningChoiceContent(nodes: RootContent[]) {
+  const audioNode = nodes.find((node) => isLabeledParagraph(node, 'Audio'));
+  const listNode = nodes.find(isList);
+
+  const audioLine = audioNode ? toString(audioNode).trim() : '';
+  const audioText = audioLine
+    .replace(/^Audio:\s*/i, '')
+    .trim()
+    .replace(/^"(.*)"$/, '$1')
+    .trim();
+
+  const options = (listNode?.children ?? []).map((item) => ({
+    text: toString(item).trim(),
+    correct: item.checked,
+  }));
+
+  return { audioText, options };
+}
+
+function parseWordBuilderContent(nodes: RootContent[]) {
+  const paragraphs = nodes.filter((node) => node.type === 'paragraph');
+  const tilesNode = paragraphs.find((node) => isLabeledParagraph(node, 'Tiles'));
+  const answerNode = paragraphs.find((node) => isLabeledParagraph(node, 'Answer'));
+  const promptNode = paragraphs.find((node) => node !== tilesNode && node !== answerNode);
+
+  const prompt = promptNode ? nodesToMarkdown([promptNode]) : '';
+  const tiles = tilesNode
+    ? toString(tilesNode)
+        .replace(/^Tiles:\s*/i, '')
+        .split(',')
+        .map((tile) => tile.trim())
+        .filter(Boolean)
+    : [];
+  const answer = answerNode
+    ? toString(answerNode)
+        .replace(/^Answer:\s*/i, '')
+        .split('/')
+        .map((part) => part.trim())
+        .filter(Boolean)
+    : [];
+
+  return { prompt, tiles, answer };
+}
+
 type TaskDefinition = {
   schema: { parse: (candidate: unknown) => Task };
   parseContent: (nodes: RootContent[]) => Record<string, unknown>;
@@ -172,5 +246,13 @@ export const TASK_DEFINITIONS: Record<string, TaskDefinition> = {
   order: {
     schema: OrderTaskSchema,
     parseContent: parseOrderContent,
+  },
+  'listening-choice': {
+    schema: ListeningChoiceTaskSchema,
+    parseContent: parseListeningChoiceContent,
+  },
+  'word-builder': {
+    schema: WordBuilderTaskSchema,
+    parseContent: parseWordBuilderContent,
   },
 };

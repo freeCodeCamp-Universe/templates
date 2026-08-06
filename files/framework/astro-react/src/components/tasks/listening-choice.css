@@ -1,0 +1,13 @@
+.listening-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.listening-transcript {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--quaternary-background);
+  border-radius: var(--radius-md);
+  font-style: italic;
+}
