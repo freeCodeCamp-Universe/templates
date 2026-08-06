@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.11.1](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.11.0...app-templates-v0.11.1) (2026-08-06)
+
+
+### Bug Fixes
+
+* ignore .claude when copying ([#50](https://github.com/freeCodeCamp-Universe/templates/issues/50)) ([aa7624d](https://github.com/freeCodeCamp-Universe/templates/commit/aa7624d76c14e07689ae51ce48ae4df172323e19))
+* prevent layout shifts due to font swapping in astro-react ([#52](https://github.com/freeCodeCamp-Universe/templates/issues/52)) ([7c344e5](https://github.com/freeCodeCamp-Universe/templates/commit/7c344e59af63a53b2cc4e7f76ade01fca9593840))
+
 ## [0.11.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.10.1...app-templates-v0.11.0) (2026-08-06)
 
 
