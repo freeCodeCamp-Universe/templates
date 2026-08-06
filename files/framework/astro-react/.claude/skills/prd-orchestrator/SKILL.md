@@ -1,3 +1,8 @@
+---
+name: prd-orchestrator
+description: Takes a PRD, spec, or any document describing curriculum content and turns it into a finished curriculum site by coordinating the other skills in this repository (curriculum-from-prd, task-extender). Runs fully autonomously with no human checkpoints. Use when a user wants to build, generate, or populate this curriculum boilerplate from a PRD end to end.
+---
+
 # PRD Orchestrator
 
 You are the orchestration layer for this curriculum boilerplate.
@@ -10,13 +15,10 @@ You do **not** implement every detail yourself. You decide what needs to be done
 
 ## Read these first
 
-Before doing anything else, read:
+Before doing anything else:
 
-* `.claude/CLAUDE.md`
-* `.claude/REPO_CONVENTIONS.md`
-* `.claude/skills/command-line-chic/SKILL.md`
-
-Treat those files as authoritative.
+* Read `.claude/CLAUDE.md`, `.claude/REPO_CONVENTIONS.md`, and `.claude/skills/command-line-chic/SKILL.md`. Treat them as authoritative, with one explicit override: `CLAUDE.md` says to ask for clarification or for a missing path - this workflow runs with no human present, so wherever those two rules would apply, follow this skill's own Decision rules (make the most reasonable inferred choice, flag it in the final report) instead of stopping to ask.
+* Inspect `src/lib/curriculum-tasks.ts`, `src/components/tasks/`, `src/views/`, and `src/pages/` to learn what capabilities already exist. Infer capabilities from the code, not a hardcoded list - you need this before you can classify the PRD in Step 1.
 
 ---
 
@@ -26,85 +28,23 @@ When asked to build a site from a PRD, follow this process in order.
 
 ## 1. Analyze the PRD
 
-Determine what the PRD contains.
-
-Classify each requirement into one of these categories:
+Determine what the PRD contains. Classify each requirement:
 
 * **Content already provided** (full lessons, exercises, explanations, etc.)
 * **Content to author** (topics/goals are provided, but lessons must be written)
 * **Curriculum structure** (sections, modules, lesson ordering)
-* **New task types** (interactive lesson blocks not currently supported)
+* **Activities that might not fit existing capabilities** (a coarse flag only - `curriculum-from-prd` determines the real list of new task types during delegation, not this step)
 * **New pages** (landing pages, dashboards, catalog pages, etc.)
 * **New application features** (progress tracking, search, certificates, accounts, etc.)
 * **Visual/design guidance**
-* **Ambiguous requests**
+* **Ambiguous requests** (make the most reasonable inferred decision and note the assumption in the final report - there is no human to ask)
+* **Deferred / rejected** (clearly out of scope, or nothing exists yet to build it - see Application features and pages below)
 
-Do not assume every request should be implemented.
-
----
-
-## 2. Inspect the repository
-
-Use the codebase as the source of truth.
-
-Especially inspect:
-
-* `src/lib/curriculum-tasks.ts`
-* `src/components/tasks/`
-* `src/views/`
-* `src/pages/`
-
-Infer existing capabilities from the code instead of relying on hardcoded lists.
+Do not assume every request should be implemented. This classification is the plan for the rest of the workflow - keep it in mind as you delegate, but it does not need to be written to a file. Nothing pauses for human review at any point in this workflow; work through every step to completion.
 
 ---
 
-## 3. Create a build plan
-
-Create a temporary file named `.build-plan.md` at the repository root.
-
-Use this structure:
-
-```md
-# Build Plan
-
-## Content
-
-- Extract existing lessons from PRD
-- Author missing lessons for ...
-
-## Existing Capabilities
-
-- multiple-choice
-- fill-blank
-- ...
-
-## New Task Types
-
-- timeline
-- memory-diagram
-
-## New Pages
-
-- /placeholder
-
-## New Features
-
-- placeholder
-
-## Deferred / Rejected
-
-- animated mascot (out of scope)
-
-## Open Questions
-
-- none
-```
-
-The build plan is the contract for the rest of the workflow.
-
----
-
-## 4. Delegate specialized work
+## 2. Delegate specialized work
 
 Delegating to a skill means reading and following the instructions in that skill's file directly, not assuming a live tool-call mechanism. Name the exact file you are about to follow before you follow it.
 
@@ -117,35 +57,25 @@ Read and follow `.claude/skills/curriculum-from-prd/SKILL.md` for:
 * generating curriculum markdown
 * applying the project's curriculum style
 
-This produces `curriculum.md` and, if any activities did not fit an existing task type, `new-task-types.md`.
+This writes directly to `src/content/curriculum/english.md` (the live content file) and, if any activities did not fit an existing task type, produces `.new-task-types.md` at the repository root.
 
 ### New task types
 
-For every entry in `new-task-types.md`, read and follow `.claude/skills/task-extender/references/TASK_CREATION.md` directly, using that entry as an already-approved spec (markdown syntax + fields + schema outline).
+If `.new-task-types.md` was not produced, `curriculum-from-prd` found nothing that needed a new type - there is nothing to do here, move on.
 
-`task-extender`'s own `SKILL.md` is written for a human collaborating interactively (it stops to ask for typed approvals like `approve markdown`). There is no human in this loop, so skip straight to its **Step 4: Implement** using the `new-task-types.md` entry as the pre-approved design, then continue through Steps 5-7 (browser review can be replaced by the verification pass in step 7 below; the self-review checklist in Step 6 still applies).
+For every entry that is present, read and follow `.claude/skills/task-extender/SKILL.md`, entering at its documented **Autonomous entry point** (it explicitly covers being invoked with an already-fully-specified type, which is exactly what a `.new-task-types.md` entry is). That entry point skips Steps 1-3 and begins at Step 4, which itself reads `references/TASK_CREATION.md` as part of implementing. Step 5 (browser review) is also skipped per that same skill's own instructions in favor of Step 6's verification pass.
 
-Do not implement task types manually unless neither file is available.
+Do not implement task types manually unless `task-extender/SKILL.md` itself is unavailable.
 
 ### Application features and pages
 
 There is currently no skill covering new routes, pages, navigation changes, dashboards, or other application-level features. Do not improvise this work.
 
-List anything in this category under **Deferred / Rejected** in the build plan with a one-line reason ("no feature-building skill available yet"), and mention it prominently in the final report so a human can follow up.
+Treat anything in this category as deferred, with a one-line reason ("no feature-building skill available yet"), and mention it prominently in the final report so a human can follow up.
 
 ---
 
-## 5. Integrate
-
-After all delegated work is complete:
-
-* wire new pages into navigation if appropriate
-* ensure new task types are referenced correctly
-* ensure curriculum files are connected to the site
-
----
-
-## 6. UI review
+## 3. UI review
 
 Check the result against `.claude/skills/command-line-chic/SKILL.md`.
 
@@ -157,15 +87,11 @@ The surrounding application should remain quiet and unobtrusive.
 Simplify the UI wherever possible. Review every page added or modified.
 
 Remove unnecessary:
-- Repeated or similar text within a page (that's not part of the curriculum?)
+- Repeated, duplicate, or redundant text and information
 - Explanatory paragraphs that state the obvious
-- Duplicate information
-- Multiple UI elements communicating the same thing
-- Empty cards or sections
+- Multiple UI elements (cards, controls) communicating the same thing
+- Empty or unnecessary cards and sections
 - Decorative content that doesn't help the user complete a task
-- Redundant text
-- Unnecessary cards
-- Duplicate controls
 - Unnecessary whitespace
 
 The application should support learning, not explain itself.
@@ -174,22 +100,23 @@ When unsure, simplify.
 
 ---
 
-## 7. Verify
+## 4. Verify
 
 Run the project's verification commands (build, typecheck, lint, tests if available).
 
 Also verify manually that:
 
 * every lesson referenced by the curriculum exists
-* every task type referenced by the curriculum exists
-* every new page has a route
+* every task type referenced by the curriculum exists and is correctly implemented
+* every new page has a route and is wired into navigation if appropriate
+* the curriculum file is connected to the site
 * there are no obvious broken links or imports
 
 Fix any issues before finishing.
 
 ---
 
-## 8. Final report
+## 5. Final report
 
 Provide a concise summary:
 
@@ -206,8 +133,8 @@ Provide a concise summary:
 * **Prefer existing patterns over new ones.**
 * **Prefer extending the current system over introducing parallel systems.**
 * **Prefer simpler implementations that satisfy the learning goal.**
-* **Push back on requests that are clearly unrelated to the curriculum product.**
-* **Ask for clarification only when a decision cannot reasonably be inferred.**
+* **Push back on requests that are clearly unrelated to the curriculum product** by deferring them, not by stopping to ask.
+* **Never stop to ask a human mid-workflow.** If a decision cannot reasonably be inferred, make the most conservative choice available and flag the assumption in the final report.
 
 ---
 
