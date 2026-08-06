@@ -197,6 +197,8 @@ For activities that don't fit an existing type, invent a sensible kebab-case nam
 - **Mechanic:** does an existing type ask the learner to do the literal same thing, just described differently? Consider it as an option. Does fitting the activity in require *you* to pre-build wrong answers, discard distractors, drop an assembly or ordering step, or flatten a multi-step interaction into one pick? That's a different mechanic - invent a new type.
 - **Presentation:** check the real component in `src/components/tasks/`, not just the schema. Does the slot the activity needs (question, options, items) need something new? A slot that can't show what's needed, likely needs a new type - even if the mechanic is otherwise identical.
 
+A missing capability (no current component can show or play it) is not a missing asset (a specific file - a real recording, a real photo - the PRD doesn't supply and this skill can't create). The first is always in scope: build the type. Before treating something as a missing asset, check whether a browser-native capability can stand in without any pre-supplied file. Only defer if no such stand-in exists.
+
 Apply both parts of the test per activity. A single PRD may need one new type, several, or none - don't assume the count in either direction.
 
 **Consistency rule:** for a repeat occurrence of any task type, existing or invented, copy the exact structural skeleton (markers, field order, blank-line placement) of your last correct instance instead of rewriting the syntax from memory. This is about structure, not content - it does not mean reusing the same correct-answer position; see Vary the correct answer's position above.
