@@ -20,4 +20,9 @@ export default defineConfig({
       weights: [400, 700],
     },
   ],
+  prefetch: {
+    // 'viewport' is quite an aggressive strategy.  'hover' could suffice, but we need to experiment.
+    defaultStrategy: "viewport",
+    prefetchAll: true
+  }
 });
