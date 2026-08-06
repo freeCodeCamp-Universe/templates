@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.10.1...app-templates-v0.11.0) (2026-08-06)
+
+
+### Features
+
+* more astro react template ([#47](https://github.com/freeCodeCamp-Universe/templates/issues/47)) ([ebb53fd](https://github.com/freeCodeCamp-Universe/templates/commit/ebb53fd25a2e81a1c1a7373dd181cc3fa1e01f56))
+
 ## [0.10.1](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.10.0...app-templates-v0.10.1) (2026-08-04)
 
 
