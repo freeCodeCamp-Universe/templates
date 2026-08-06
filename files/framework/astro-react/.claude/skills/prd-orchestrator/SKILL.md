@@ -12,9 +12,9 @@ You do **not** implement every detail yourself. You decide what needs to be done
 
 Before doing anything else, read:
 
-* `CLAUDE.md`
-* `.claude/docs/repo-conventions.md`
-* `.claude/docs/command-line-chic.md`
+* `.claude/CLAUDE.md`
+* `.claude/REPO_CONVENTIONS.md`
+* `.claude/skills/command-line-chic/SKILL.md`
 
 Treat those files as authoritative.
 
@@ -106,33 +106,32 @@ The build plan is the contract for the rest of the workflow.
 
 ## 4. Delegate specialized work
 
-Use the appropriate skill for each category.
+Delegating to a skill means reading and following the instructions in that skill's file directly, not assuming a live tool-call mechanism. Name the exact file you are about to follow before you follow it.
 
 ### Curriculum work
 
-Use `curriculum-builder` for:
+Read and follow `.claude/skills/curriculum-from-prd/SKILL.md` for:
 
 * extracting lesson content from the PRD
 * authoring missing lessons
 * generating curriculum markdown
 * applying the project's curriculum style
 
+This produces `curriculum.md` and, if any activities did not fit an existing task type, `new-task-types.md`.
+
 ### New task types
 
-Use `task-extender` for every item listed under **New Task Types**.
+For every entry in `new-task-types.md`, read and follow `.claude/skills/task-extender/references/TASK_CREATION.md` directly, using that entry as an already-approved spec (markdown syntax + fields + schema outline).
 
-Do not implement task types manually unless the skill is unavailable.
+`task-extender`'s own `SKILL.md` is written for a human collaborating interactively (it stops to ask for typed approvals like `approve markdown`). There is no human in this loop, so skip straight to its **Step 4: Implement** using the `new-task-types.md` entry as the pre-approved design, then continue through Steps 5-7 (browser review can be replaced by the verification pass in step 7 below; the self-review checklist in Step 6 still applies).
+
+Do not implement task types manually unless neither file is available.
 
 ### Application features and pages
 
-Use `feature-builder` for:
+There is currently no skill covering new routes, pages, navigation changes, dashboards, or other application-level features. Do not improvise this work.
 
-* new routes
-* new pages
-* navigation changes
-* dashboards
-* progress features
-* other application-level functionality
+List anything in this category under **Deferred / Rejected** in the build plan with a one-line reason ("no feature-building skill available yet"), and mention it prominently in the final report so a human can follow up.
 
 ---
 
@@ -148,7 +147,7 @@ After all delegated work is complete:
 
 ## 6. UI review
 
-Check the result against `.claude/docs/command-line-chic.md`.
+Check the result against `.claude/skills/command-line-chic/SKILL.md`.
 
 Prefer existing components and styling patterns. Do not invent new visual systems unless necessary.
 
