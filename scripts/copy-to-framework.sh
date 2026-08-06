@@ -29,6 +29,7 @@ source_abs="$(cd "$source_dir" && pwd)"
 # Files and directories that should not be copied into templates
 IGNORE_PATTERNS=(
   .agents/
+  .claude/
   .devcontainer/
   .dockerignore
   .gitignore
@@ -41,7 +42,6 @@ IGNORE_PATTERNS=(
   README.md
   compose.yaml
   donation-config.json
-  fake
   package-lock.json
   platform.yaml
   pnpm-lock.yaml
