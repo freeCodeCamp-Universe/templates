@@ -14,12 +14,16 @@ const { curriculum, currentLessonSlug } = Astro.props;
 <nav aria-label="Curriculum sections" class="navigation">
   {
     curriculum.sections.map((section) => (
-      <section class="section">
-        <h2>{section.title}</h2>
+      <details class="section" open>
+        <summary>
+          <h2>{section.title}</h2>
+        </summary>
 
         {section.modules.map((module) => (
-          <div class="module-block">
-            <h3>{module.title}</h3>
+          <details class="module-block" open>
+            <summary>
+              <h3>{module.title}</h3>
+            </summary>
             <ul class="list">
               {module.lessons.map((lesson) => {
                 const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
@@ -34,17 +38,22 @@ const { curriculum, currentLessonSlug } = Astro.props;
                     >
                       <span>{lesson.title}</span>
                       <span class="completed-badge" data-lesson-slug={slug}>
-                        <span aria-hidden="true">✓</span>
-                        <span class="sr-only"> Completed</span>
+                        <span class="badge-pending" aria-hidden="true">
+                          –
+                        </span>
+                        <span class="badge-complete">
+                          <span aria-hidden="true">✓</span>
+                          <span class="sr-only"> Completed</span>
+                        </span>
                       </span>
                     </a>
                   </li>
                 );
               })}
             </ul>
-          </div>
+          </details>
         ))}
-      </section>
+      </details>
     ))
   }
 </nav>
