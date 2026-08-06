@@ -5,16 +5,20 @@ description: Guides adding a new curriculum task type (like multiple-choice or f
 
 # Task Extender
 
-Design and implement a new curriculum task type following `references/REPO_CONVENTIONS.md`. Read that document and `src/lib/curriculum-tasks.ts` before doing anything so the new task matches existing conventions.
+Design and implement a new curriculum task type following `references/TASK_CREATION.md`. Read that document and `src/lib/curriculum-tasks.ts` before doing anything so the new task matches existing conventions.
 
 # Rules
 
-- Follow `references/REPO_CONVENTIONS.md`. If the user's request conflicts with it, explain the conflict instead of silently changing the design.
+- Follow `references/TASK_CREATION.md`. If the user's request conflicts with it, explain the conflict instead of silently changing the design.
 - Reuse existing task patterns whenever possible.
 - Don't guess when requirements are unclear. Ask only the minimum questions needed.
 - Prefer proposing reasonable defaults over asking exploratory questions. If a good default exists, propose it and let the user react.
 - Prefer the simplest interaction that accomplishes the learning goal. Avoid introducing unnecessary complexity.
 - Work one phase at a time. Do not begin the next phase until the current one has been completed or explicitly approved where applicable.
+
+## Autonomous entry point
+
+Steps 1-3 exist to negotiate an unambiguous spec with a human. If you are invoked with a task type that is already fully specified (for example, an entry from `curriculum-from-prd`'s `new-task-types.md`, which already includes the markdown syntax, fields, and a schema outline), there is nothing left to negotiate. Treat that spec as already approved, skip Steps 1-3, and begin at Step 4.
 
 ## Step 1: Get a basic description
 
@@ -71,11 +75,13 @@ If the user requests changes, revise the mockup and continue iterating until the
 
 ## Step 4: Implement
 
-Re-read the "Adding a new task type" section of `references/REPO_CONVENTIONS.md` and implement the task exactly as described.
+Re-read the "Creating a New Task Type" section of `references/TASK_CREATION.md` and implement the task exactly as described.
 
 Do not perform final verification yet.
 
 ## Step 5: Browser review
+
+No human available (autonomous entry point)? Skip this step and go straight to Step 6 — the verification pass and self-review there are the substitute for manual browser testing.
 
 Ask the user to run the site and test the new task in the browser.
 
