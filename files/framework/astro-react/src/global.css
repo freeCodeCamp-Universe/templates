@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Inconsolata:wght@400;700&display=swap');
-
 *,
 *::before,
 *::after {
@@ -51,8 +49,8 @@
   --purple-dark: #5a01a7;
 
   /* Typography */
-  --font-body: 'Lato', sans-serif;
-  --font-mono: 'Inconsolata', monospace;
+  --font-body: var(--font-lato), sans-serif;
+  --font-mono: var(--font-inconsolata), monospace;
   --text-size-xs: 0.875rem;
   --text-size-sm: 1rem;
   --text-size-md: 1.125rem;
