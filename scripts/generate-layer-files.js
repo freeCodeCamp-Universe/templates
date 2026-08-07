@@ -1,6 +1,6 @@
-import { copyFile, mkdir, readdir, readFile, readlink, rm, stat, symlink, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { join, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 
 const LAYER_TYPE_MAP = [
   ["always.json", "always"],
@@ -14,27 +14,22 @@ const LAYER_TYPE_MAP = [
 const defaultBaseDir = () => resolve(import.meta.dirname, "..");
 
 /**
- * Recursively copies a directory, excluding .gitkeep files.
- * @param {string} src
- * @param {string} dest
+ * @param {string} base
+ * @param {string} dir
+ * @param {Record<string, string>} files
  * @returns {Promise<void>}
  */
-const copyDir = async (src, dest) => {
-  await mkdir(dest, { recursive: true });
-  const entries = await readdir(src, { withFileTypes: true });
+const walkDir = async (base, dir, files) => {
+  const entries = await readdir(dir, { withFileTypes: true });
   await Promise.all(
     entries
       .filter((entry) => entry.name !== ".gitkeep")
       .map(async (entry) => {
-        const srcPath = join(src, entry.name);
-        const destPath = join(dest, entry.name);
-        if (entry.isSymbolicLink()) {
-          const target = await readlink(srcPath);
-          await symlink(target, destPath);
-        } else if (entry.isDirectory()) {
-          await copyDir(srcPath, destPath);
+        const full = join(dir, entry.name);
+        if (entry.isDirectory()) {
+          await walkDir(base, full, files);
         } else {
-          await copyFile(srcPath, destPath);
+          files[relative(base, full)] = await readFile(full, "utf-8");
         }
       }),
   );
@@ -64,9 +59,6 @@ const orderObjectKeys = (obj) => {
  * @returns {Promise<void>}
  */
 const generateLayerFiles = async (baseDir = defaultBaseDir()) => {
-  const distDir = join(baseDir, "dist");
-  await rm(distDir, { force: true, recursive: true });
-
   const filesBase = join(baseDir, "files");
   const layersDir = join(baseDir, "templates", "layers");
   const outputDir = join(baseDir, "dist", "layers");
@@ -142,21 +134,24 @@ const generateLayerFiles = async (baseDir = defaultBaseDir()) => {
     throw new Error(allErrors.join("\n"));
   }
 
-  const outputFilesDir = join(baseDir, "dist", "files");
-
   await Promise.all(
-    layerResults.map(async ({ json, jsonFile, typeDir, typeName }) => {
+    layerResults.map(async ({ json, jsonFile, typeDir }) => {
+      await Promise.all(
+        Object.keys(json).map(async (key) => {
+          const keyDir = join(typeDir, key);
+          /** @type {Record<string, string>} */
+          const files = {};
+          await walkDir(keyDir, keyDir, files);
+          const entry = json[key];
+          if (entry !== undefined) {
+            entry.files = files;
+          }
+        }),
+      );
       await writeFile(
         join(outputDir, jsonFile),
         `${JSON.stringify(orderObjectKeys(json), null, 2)}\n`,
         "utf-8",
-      );
-      await Promise.all(
-        Object.keys(json).map(async (key) => {
-          const srcDir = join(typeDir, key);
-          const destDir = join(outputFilesDir, typeName, key);
-          await copyDir(srcDir, destDir);
-        }),
       );
     }),
   );

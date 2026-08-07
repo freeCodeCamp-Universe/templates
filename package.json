@@ -1,12 +1,11 @@
 {
   "name": "app-templates",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "",
   "main": "none",
   "exports": {
     "./layers/*.json": "./dist/layers/*.json",
-    "./labels.json": "./dist/labels.json",
-    "./files/*": "./dist/files/*"
+    "./labels.json": "./dist/labels.json"
   },
   "type": "module",
   "scripts": {
