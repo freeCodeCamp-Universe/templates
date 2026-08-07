@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import type { Lesson } from '../lib/curriculum-types';
-import { Markdown } from '../components/markdown';
-import { Button } from '../components/button';
-import { MultipleChoice } from '../components/tasks/multiple-choice';
-import { SelectAll } from '../components/tasks/select-all';
-import { FillInTheBlank } from '../components/tasks/fill-in-the-blank';
-import { Categorize } from '../components/tasks/categorize';
-import { Order } from '../components/tasks/order';
+import { Markdown } from './markdown';
+import { Button } from './button';
+import { MultipleChoice } from './tasks/multiple-choice';
+import { SelectAll } from './tasks/select-all';
+import { FillInTheBlank } from './tasks/fill-in-the-blank';
+import { Categorize } from './tasks/categorize';
+import { Order } from './tasks/order';
 import { useSidebarOpen } from '../hooks/use-sidebar-open';
 import { markLessonComplete } from '../lib/curriculum-progress';
 
-import './views.css';
+import '../styles/pages.css';
 import './lesson.css';
 
 type LessonProps = {
@@ -31,11 +31,7 @@ export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonPro
   }
 
   return (
-    <main
-      id="main-content"
-      className={sidebarOpen ? 'main sidebar-open' : 'main'}
-      tabIndex={-1}
-    >
+    <main id="main-content" className={sidebarOpen ? 'main sidebar-open' : 'main'} tabIndex={-1}>
       <div className="lesson-content">
         <section>
           <h1>{lesson.title}</h1>
@@ -66,7 +62,11 @@ export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonPro
 
           {canProceed ? (
             <div className="lesson-next">
-              <Button variant="primary" href={nextHref} onClick={() => markLessonComplete(lessonSlug)}>
+              <Button
+                variant="primary"
+                href={nextHref}
+                onClick={() => markLessonComplete(lessonSlug)}
+              >
                 {isLastLesson ? 'Finish' : 'Next lesson'}
               </Button>
             </div>

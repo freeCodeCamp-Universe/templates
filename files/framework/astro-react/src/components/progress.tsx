@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
-import { AnimatedCount } from '../components/animated-count';
 import { Button } from '../components/button';
-import { exportProgress, getCompletedLessons, importProgress, resetProgress } from '../lib/curriculum-progress';
+import { AnimatedCount } from './animated-count';
+import {
+  exportProgress,
+  getCompletedLessons,
+  importProgress,
+  resetProgress,
+} from '../lib/curriculum-progress';
 
-import './views.css';
+import '../styles/pages.css';
 import './progress.css';
 
 type LessonEntry = {
@@ -155,7 +160,9 @@ export function Progress({ lessons }: ProgressProps) {
           </ul>
         ) : null}
 
-        {allComplete ? <p className="progress-complete-message">You have completed every lesson. Nice work!</p> : null}
+        {allComplete ? (
+          <p className="progress-complete-message">You have completed every lesson. Nice work!</p>
+        ) : null}
 
         <div className="progress-actions">
           <div className="progress-actions-primary">
