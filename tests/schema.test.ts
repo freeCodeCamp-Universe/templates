@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
-  AlwaysInputSchema,
-  DatabaseInputSchema,
-  FrameworkInputSchema,
-  PackageManagerInputSchema,
-  RuntimeInputSchema,
-  ServiceInputSchema,
+  AlwaysSchema,
+  DatabaseSchema,
+  FrameworkSchema,
+  PackageManagerSchema,
+  RuntimeSchema,
+  ServiceSchema,
 } from "../src/schemas/layers.js";
 import { LabelsSchema } from "../src/schemas/labels.js";
 import alwaysInputJson from "../templates/layers/always.json" with { type: "json" };
@@ -16,34 +16,34 @@ import runtimeInputJson from "../templates/layers/runtime.json" with { type: "js
 import serviceInputJson from "../templates/layers/service.json" with { type: "json" };
 import labelsJson from "../templates/labels.json" with { type: "json" };
 
-describe("input schemas", () => {
-  it("always.json matches the input schema", () => {
-    const parsed = AlwaysInputSchema.safeParse(alwaysInputJson);
+describe("layer schemas", () => {
+  it("always.json matches the schema", () => {
+    const parsed = AlwaysSchema.safeParse(alwaysInputJson);
     expect(parsed.error).toBeUndefined();
   });
 
-  it("database.json matches the input schema", () => {
-    const parsed = DatabaseInputSchema.safeParse(databaseInputJson);
+  it("database.json matches the schema", () => {
+    const parsed = DatabaseSchema.safeParse(databaseInputJson);
     expect(parsed.error).toBeUndefined();
   });
 
-  it("framework.json matches the input schema", () => {
-    const parsed = FrameworkInputSchema.safeParse(frameworkInputJson);
+  it("framework.json matches the schema", () => {
+    const parsed = FrameworkSchema.safeParse(frameworkInputJson);
     expect(parsed.error).toBeUndefined();
   });
 
-  it("package-manager.json matches the input schema", () => {
-    const parsed = PackageManagerInputSchema.safeParse(packageManagersInputJson);
+  it("package-manager.json matches the schema", () => {
+    const parsed = PackageManagerSchema.safeParse(packageManagersInputJson);
     expect(parsed.error).toBeUndefined();
   });
 
-  it("runtime.json matches the input schema", () => {
-    const parsed = RuntimeInputSchema.safeParse(runtimeInputJson);
+  it("runtime.json matches the schema", () => {
+    const parsed = RuntimeSchema.safeParse(runtimeInputJson);
     expect(parsed.error).toBeUndefined();
   });
 
-  it("service.json matches the input schema", () => {
-    const parsed = ServiceInputSchema.safeParse(serviceInputJson);
+  it("service.json matches the schema", () => {
+    const parsed = ServiceSchema.safeParse(serviceInputJson);
     expect(parsed.error).toBeUndefined();
   });
 });
