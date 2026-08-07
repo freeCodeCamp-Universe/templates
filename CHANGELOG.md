@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.12.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.11.1...app-templates-v0.12.0) (2026-08-06)
+
+
+### Features
+
+* prefetch in viewport for astro-react ([#56](https://github.com/freeCodeCamp-Universe/templates/issues/56)) ([bb586df](https://github.com/freeCodeCamp-Universe/templates/commit/bb586df12a10e382466dbf2abafe1d07b377f41a))
+
+
+### Bug Fixes
+
+* expanded sections issue and some UI improvements ([#54](https://github.com/freeCodeCamp-Universe/templates/issues/54)) ([91b0c39](https://github.com/freeCodeCamp-Universe/templates/commit/91b0c390c674c067f69df8d6aa12e54eff1715a7))
+
 ## [0.11.1](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.11.0...app-templates-v0.11.1) (2026-08-06)
 
 
