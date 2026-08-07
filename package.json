@@ -5,8 +5,7 @@
   "main": "none",
   "exports": {
     "./layers/*.json": "./dist/layers/*.json",
-    "./labels.json": "./dist/labels.json",
-    "./files/*": "./dist/files/*"
+    "./labels.json": "./dist/labels.json"
   },
   "type": "module",
   "scripts": {
