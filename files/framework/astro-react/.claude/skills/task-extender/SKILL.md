@@ -1,122 +1,48 @@
 ---
 name: task-extender
-description: Guides adding a new curriculum task type (like multiple-choice or fill-in-the-blank) to this Astro-React template. Use when a user wants to create, add, or design a new task type for lessons.
+description: Instructions for adding a new curriculum task type (like multiple-choice or fill-in-the-blank) to this Astro-React template. Use when creating, adding, or designing a new task type for lessons.
 ---
 
 # Task Extender
 
-Design and implement a new curriculum task type following `references/TASK_CREATION.md`. Read that document and `src/lib/curriculum-tasks.ts` before doing anything so the new task matches existing conventions.
+## Before Creating a New Task Type
 
-# Rules
+Determine whether an existing task type already solves the problem.
 
-- Follow `references/TASK_CREATION.md`. If the user's request conflicts with it, explain the conflict instead of silently changing the design.
-- Reuse existing task patterns whenever possible.
-- Don't guess when requirements are unclear. Ask only the minimum questions needed.
-- Prefer proposing reasonable defaults over asking exploratory questions. If a good default exists, propose it and let the user react.
-- Prefer the simplest interaction that accomplishes the learning goal. Avoid introducing unnecessary complexity.
-- Work one phase at a time. Do not begin the next phase until the current one has been completed or explicitly approved where applicable.
+1. Read `src/lib/curriculum-tasks.ts` to discover existing task schemas and definitions.
+2. Inspect existing implementations in `src/components/tasks/`.
+3. Find the closest existing task type.
+4. Extend an existing task type if possible.
+5. Only create a new task type when the interaction itself cannot reasonably be represented by an existing type.
 
-## Autonomous entry point
+## Creating a New Task Type
 
-Steps 1-3 exist to negotiate an unambiguous spec with a human. If you are invoked with a task type that is already fully specified (for example, an entry from `curriculum-from-prd`'s `new-task-types.md`, which already includes the markdown syntax, fields, and a schema outline), there is nothing left to negotiate. Treat that spec as already approved, skip Steps 1-3, and begin at Step 4.
+1. Decide the markdown syntax - what `--your-task-type--` looks like and what content follows it. Markers need a blank line before and after - the parser only recognizes a marker as its own paragraph.
 
-## Step 1: Get a basic description
+2. In `src/lib/curriculum-tasks.ts`:
+   - Add a Zod schema (`type: z.literal('your-task-type')` + fields), with `.refine()` for cross-field validation.
+   - Add it to the exported `Task` union.
+   - Write a `parseYourTypeContent(nodes)` function extracting structured data from raw mdast nodes.
+   - Register both under a new key in `TASK_DEFINITIONS`.
+   - Do not modify `parse-curriculum.ts` - the registry entry is the only parser change needed.
 
-Ask:
+3. Build the component in `src/components/tasks/your-task-type.tsx`.
+   - Add CSS if needed.
+   - Reuse existing task styles where possible.
+   - Follow existing task component patterns.
+   - Hide the check button on success; disable inputs instead of hiding them. Any other new control (reset, hint, etc.) needs the same treatment.
+   - Move focus to the task's container on success using the shared `useFocusOnCorrect` hook.
+   - Use `aria-labelledby` instead of `<legend>`/`<label>` if the prompt or options need rich markdown. `role="radio"` does not support `aria-invalid`.
+   - If the initial item order could reveal the answer, shuffle it client-side in a `useEffect` after mount, not during the initial render, to avoid a server/client hydration mismatch.
 
-> Describe the task type you'd like to add.
+4. Wire it into `src/views/lesson.tsx`.
+   - Add the new `block.task.type === 'your-task-type'` branch inside the lesson content dispatch.
 
-Only ask a follow-up if the interaction model is still unclear. When you do, present the reasonable alternatives, recommend one, and explain why. Prefer the option that best matches existing task and accessibility patterns.
+5. Check `english.md` for an existing real example of this type first - if it was invented via `curriculum-from-prd`, one (likely several) already exists there. Only add a fresh example if none exists yet.
 
-Do not discuss markdown yet.
-
-## Step 2: Propose the markdown
-
-Propose a markdown syntax that follows the existing `--marker--` / `--end-marker--` convention.
-
-Requirements:
-
-- Unambiguous
-- Easy to author
-- Consistent with existing task types
-- Parser-friendly
-
-Do not show schemas or parsed data structures.
-
-Stop here and tell the user to type `approve markdown` if they are happy with the proposed markdown. Otherwise, have the user tell you what changes they'd like to see.
-
-Do not continue until the user explicitly types `approve markdown`.
-
-If the user requests changes, revise the markdown proposal and continue iterating until the user explicitly types `approve markdown`.
-
-## Step 3: Design the UI/UX
-
-Work with the user until the interaction is fully specified.
-
-Cover:
-
-- Layout
-- Appearance of each interactive element
-- Clickable items and click behavior
-- Whether a secondary control (e.g. reset) is needed, and what it does
-- Keyboard and screen-reader accessibility
-
-Expect multiple rounds of discussion. Don't rush to a single proposal.
-
-The check/feedback row is already fixed by the shared `TaskActions` component and is the same for every task type. Don't redesign it. It's always one row: the feedback message on the left, then any secondary control, then the check button last. Match this exactly in the mockup instead of guessing at button order or placement - unless the task **requires** a different layout.
-
-When ready, present an ASCII mockup.
-
-Stop here and tell the user to type `approve ui` if they are happy with the proposed UI. Otherwise, have the user tell you what changes they'd like to see.
-
-Do not continue until the user explicitly types `approve ui`.
-
-If the user requests changes, revise the mockup and continue iterating until the user explicitly types `approve ui`.
-
-## Step 4: Implement
-
-Re-read the "Creating a New Task Type" section of `references/TASK_CREATION.md` and implement the task exactly as described.
-
-Do not perform final verification yet.
-
-## Step 5: Browser review
-
-No human available (autonomous entry point)? Skip this step and go straight to Step 6 — the verification pass and self-review there are the substitute for manual browser testing.
-
-Ask the user to run the site and test the new task in the browser.
-
-Expect one or more rounds of UI/UX refinement. Make any requested changes, then ask the user to test again.
-
-When the user is satisfied, tell them to type `approve browser` if they are happy with the proposed UI. Otherwise, have the user tell you what changes they'd like to see.
-
-Do not continue until the user explicitly types `approve browser`.
-
-If the user requests changes, revise the mockup and continue iterating until the user explicitly types `approve browser`.
-
-## Step 6: Verify
-
-Run:
-
-- lint
-- typecheck
-- build
-
-Deliberately break the example once (bad marker, missing required field, failing `.refine()`, etc.) and verify the build reports a clear, specific error. Then restore the example.
-
-Self-review:
-
-- Every interactive element becomes inert once the task is answered correctly, including any secondary controls introduced by the task.
-- No adjacent or overlapping UI elements accidentally use the same color token (border/background, hover/border, button/surface, etc.).
-- Every intended click target responds correctly (no dead zones caused by `pointer-events` or layout issues).
-- The interaction is fully usable with the keyboard.
-
-Do not make further functional or visual changes after this point unless the
-user requests them.
-
-## Step 7: Report
-
-Summarize:
-
-- The markdown syntax that was added
-- The files that were changed
-- The verification results
+6. Verify:
+   - lint
+   - format
+   - typecheck
+   - build
+   - deliberately break the example once to confirm validation fails clearly, then restore it.
