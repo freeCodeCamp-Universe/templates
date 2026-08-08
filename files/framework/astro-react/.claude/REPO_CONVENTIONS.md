@@ -2,7 +2,6 @@
 
 ## Architecture
 
-- Page-level components (1:1 with routes) go in `src/views/`.
 - Reusable UI goes in `src/components/`.
 - Task components go in `src/components/tasks/`.
 - Framework-agnostic logic goes in `src/lib/`.
@@ -11,9 +10,6 @@
 
 ## UI
 
-- Prefer React (`.tsx`) for UI. Use `.astro` only for leaf static content.
-- `.astro` pages should stay thin: fetch data and compose components; rendering decisions and logic belong in views/components.
-- Prevent FOUC for client-only state with a synchronous inline script colocated with the affected component.
 - CSS classes use kebab-case.
 
 ## TypeScript
@@ -32,23 +28,13 @@ Before creating new functionality:
 
 If introducing a genuinely new pattern, document it here.
 
-## Curriculum System
-
-Task-specific implementation conventions live in the task creation skill.
-
-Canonical task definitions:
-- `src/lib/curriculum-tasks.ts`
-
-Task implementations:
-- `src/components/tasks/`
-
 ## Code Discovery
 
 When investigating existing behavior, start here:
 
 - Curriculum/task schemas: `src/lib/curriculum-tasks.ts`
 - Task UI: `src/components/tasks/`
-- Pages: `src/views/`
+- Pages: `src/pages`
 - Shared UI: `src/components/`
 
 ## Naming
