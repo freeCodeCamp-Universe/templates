@@ -16,58 +16,68 @@ const { curriculum, currentLessonSlug } = Astro.props;
     curriculum.sections.map((section) => {
       const containsCurrentLesson = (moduleTitle: string, lessons: { title: string }[]) =>
         lessons.some(
-          (lesson) => buildLessonRouteSlug(section.title, moduleTitle, lesson.title) === currentLessonSlug,
+          (lesson) =>
+            buildLessonRouteSlug(section.title, moduleTitle, lesson.title) === currentLessonSlug,
         );
 
       // Learn page has no current lesson -> everything it expanded
       // Lesson page has current lesson -> expand that section
       const sectionOpen =
-        !currentLessonSlug || section.modules.some((module) => containsCurrentLesson(module.title, module.lessons));
+        !currentLessonSlug ||
+        section.modules.some((module) => containsCurrentLesson(module.title, module.lessons));
+
+      const moduleCount = section.modules.length;
 
       return (
         <details class="section" open={sectionOpen}>
           <summary>
             <h2>{section.title}</h2>
+            <span class="count">
+              {moduleCount} {moduleCount === 1 ? 'module' : 'modules'}
+            </span>
           </summary>
 
-          {section.modules.map((module) => {
-            const moduleOpen = !currentLessonSlug || containsCurrentLesson(module.title, module.lessons);
+          <div class="modules">
+            {section.modules.map((module) => {
+              const moduleOpen =
+                !currentLessonSlug || containsCurrentLesson(module.title, module.lessons);
+              const lessonSlugs = module.lessons.map((lesson) =>
+                buildLessonRouteSlug(section.title, module.title, lesson.title),
+              );
 
-            return (
-              <details class="module-block" open={moduleOpen}>
-                <summary>
-                  <h3>{module.title}</h3>
-                </summary>
-                <ul class="list">
-                  {module.lessons.map((lesson) => {
-                    const slug = buildLessonRouteSlug(section.title, module.title, lesson.title);
-                    const isCurrent = slug === currentLessonSlug;
+              return (
+                <details class="module-block" open={moduleOpen}>
+                  <summary>
+                    <h3>{module.title}</h3>
+                    <span class="count" data-module-lessons={lessonSlugs.join(' ')}>
+                      0/{lessonSlugs.length}
+                    </span>
+                  </summary>
+                  <ul class="list">
+                    {module.lessons.map((lesson, index) => {
+                      const slug = lessonSlugs[index];
+                      const isCurrent = slug === currentLessonSlug;
 
-                    return (
-                      <li class="item">
-                        <a
-                          href={buildLearnPath(section.title, module.title, lesson.title)}
-                          aria-current={isCurrent ? ('page' as const) : undefined}
-                          class={isCurrent ? 'item-link current' : 'item-link'}
-                        >
-                          <span>{lesson.title}</span>
-                          <span class="completed-badge" data-lesson-slug={slug}>
-                            <span class="badge-pending" aria-hidden="true">
-                              –
-                            </span>
-                            <span class="badge-complete">
-                              <span aria-hidden="true">✓</span>
-                              <span class="sr-only"> Completed</span>
-                            </span>
-                          </span>
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </details>
-            );
-          })}
+                      return (
+                        <li class="item">
+                          <a
+                            href={buildLearnPath(section.title, module.title, lesson.title)}
+                            aria-current={isCurrent ? ('page' as const) : undefined}
+                            class={isCurrent ? 'item-link current' : 'item-link'}
+                            data-lesson-slug={slug}
+                          >
+                            <span class="check" aria-hidden="true" />
+                            <span class="item-title">{lesson.title}</span>
+                            <span class="sr-only status-complete"> Completed</span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </details>
+              );
+            })}
+          </div>
         </details>
       );
     })
@@ -78,13 +88,23 @@ const { curriculum, currentLessonSlug } = Astro.props;
   (function () {
     try {
       const stored = localStorage.getItem('progress');
-      const completed = stored ? JSON.parse(stored) : [];
-      if (!Array.isArray(completed)) return;
+      const parsed = stored ? JSON.parse(stored) : [];
+      if (!Array.isArray(parsed)) return;
+
+      const completed = new Set(
+        parsed.filter((slug) => typeof slug === 'string' && /^[a-z0-9-]+$/.test(slug)),
+      );
 
       for (const slug of completed) {
-        if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) continue;
-        const badge = document.querySelector('.completed-badge[data-lesson-slug="' + slug + '"]');
-        if (badge) badge.classList.add('completed');
+        const link = document.querySelector('.item-link[data-lesson-slug="' + slug + '"]');
+        if (link) link.classList.add('completed');
+      }
+
+      for (const counter of document.querySelectorAll('[data-module-lessons]')) {
+        const slugs = counter.dataset.moduleLessons.split(' ').filter(Boolean);
+        const done = slugs.filter((slug) => completed.has(slug)).length;
+        counter.textContent = done + '/' + slugs.length;
+        if (done === slugs.length) counter.classList.add('count-complete');
       }
     } catch {
       // ignore malformed stored progress
