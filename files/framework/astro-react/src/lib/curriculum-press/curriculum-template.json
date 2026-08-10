@@ -1,0 +1,9 @@
+{
+  "name": "astro-react-lesson",
+  "elements": [
+    { "kind": "text", "id": "title", "height": 96 },
+    { "kind": "markdown", "id": "intro", "height": 320 },
+    { "kind": "json", "id": "task-1", "height": 320 },
+    { "kind": "markdown", "id": "outro", "height": 240 }
+  ]
+}
