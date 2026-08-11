@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.13.0...app-templates-v1.0.0) (2026-08-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* support symlinks and separate files from config ([#61](https://github.com/freeCodeCamp-Universe/templates/issues/61)) (#67)
+
+### Features
+
+* support symlinks and separate files from config ([#61](https://github.com/freeCodeCamp-Universe/templates/issues/61)) ([#67](https://github.com/freeCodeCamp-Universe/templates/issues/67)) ([2c0953b](https://github.com/freeCodeCamp-Universe/templates/commit/2c0953b300893347f65e3897d2c2279f647d41b2))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([#70](https://github.com/freeCodeCamp-Universe/templates/issues/70)) ([a344ca9](https://github.com/freeCodeCamp-Universe/templates/commit/a344ca9d3a27ce2819e7f4de27967f0cc252b2fe))
+
 ## [0.13.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.12.0...app-templates-v0.13.0) (2026-08-07)
 
 
