@@ -1,19 +1,20 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { generateLayerFiles } from "../scripts/generate-layer-files.js";
 import {
-  AlwaysOutputSchema,
-  DatabaseOutputSchema,
-  FrameworkOutputSchema,
-  PackageManagerOutputSchema,
-  RuntimeOutputSchema,
-  ServiceOutputSchema,
+  AlwaysSchema,
+  DatabaseSchema,
+  FrameworkSchema,
+  PackageManagerSchema,
+  RuntimeSchema,
+  ServiceSchema,
 } from "../src/schemas/layers.js";
 
 const INPUT_LAYERS_SUBDIR = join("templates", "layers");
 const OUTPUT_LAYERS_SUBDIR = join("dist", "layers");
+const OUTPUT_FILES_SUBDIR = join("dist", "files");
 
 interface FolderOpts {
   extraFiles?: Record<string, string>;
@@ -82,63 +83,6 @@ describe(generateLayerFiles, () => {
 
   afterEach(async () => {
     await rm(root, { force: true, recursive: true });
-  });
-
-  it("injects file content into the files key", async () => {
-    await writeFile(
-      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
-      JSON.stringify({ node: {} }, null, 2),
-    );
-    await makeFolder(root, "runtime", "node", { extraFiles: { Procfile: "web: node index.js\n" } });
-
-    await generateLayerFiles(root);
-
-    const result = await readOutputJson(root, "runtime.json");
-    expect(result).toMatchObject({ node: { files: { Procfile: "web: node index.js\n" } } });
-  });
-
-  it("excludes .gitkeep from the files map", async () => {
-    await writeFile(
-      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
-      JSON.stringify({ node: {} }, null, 2),
-    );
-    await makeFolder(root, "runtime", "node", { extraFiles: { "example.txt": "hello" } });
-
-    await generateLayerFiles(root);
-
-    const result = await readOutputJson(root, "runtime.json");
-    expect(JSON.stringify(result)).not.toContain(".gitkeep");
-    expect(result).toMatchObject({ node: { files: { "example.txt": "hello" } } });
-  });
-
-  it("produces empty files object when folder contains only .gitkeep", async () => {
-    await writeFile(
-      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
-      JSON.stringify({ node: {} }, null, 2),
-    );
-    await makeFolder(root, "runtime", "node");
-
-    await generateLayerFiles(root);
-
-    const result = await readOutputJson(root, "runtime.json");
-    expect(result).toMatchObject({ node: { files: {} } });
-  });
-
-  it("uses relative paths for files in subdirectories", async () => {
-    await writeFile(
-      join(root, INPUT_LAYERS_SUBDIR, "framework.json"),
-      JSON.stringify({ express: {} }, null, 2),
-    );
-    await makeFolder(root, "framework", "express", {
-      extraFiles: { "src/index.ts": "export {};\n" },
-    });
-
-    await generateLayerFiles(root);
-
-    const result = await readOutputJson(root, "framework.json");
-    expect(result).toMatchObject({
-      express: { files: { "src/index.ts": "export {};\n" } },
-    });
   });
 
   it("throws when a JSON entry has no corresponding folder", async () => {
@@ -213,15 +157,9 @@ describe(generateLayerFiles, () => {
 
     const result = await readOutputRaw(root, "runtime.json");
     expect(result).toBe(`{
-  "a": {
-    "files": {}
-  },
-  "extra": {
-    "files": {}
-  },
-  "node": {
-    "files": {}
-  }
+  "a": {},
+  "extra": {},
+  "node": {}
 }
 `);
   });
@@ -235,8 +173,7 @@ describe(generateLayerFiles, () => {
       // oxlint-disable-next-line sort-keys
       JSON.stringify({ node: { b: "second", a: "first" } }, null, 2),
     );
-    // oxlint-disable-next-line sort-keys
-    await makeFolder(root, "runtime", "node", { extraFiles: { b: "", a: "" } });
+    await makeFolder(root, "runtime", "node");
 
     await generateLayerFiles(root);
 
@@ -244,11 +181,7 @@ describe(generateLayerFiles, () => {
     expect(result).toBe(`{
   "node": {
     "a": "first",
-    "b": "second",
-    "files": {
-      "a": "",
-      "b": ""
-    }
+    "b": "second"
   }
 }
 `);
@@ -259,19 +192,68 @@ describe(generateLayerFiles, () => {
       join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
       JSON.stringify({ node: { watchSync: [{ path: "src", target: "/app/src" }] } }, null, 2),
     );
-    await makeFolder(root, "runtime", "node", {
-      extraFiles: { "src/index.ts": "export {};\n" },
-    });
+    await makeFolder(root, "runtime", "node");
 
     await generateLayerFiles(root);
 
     const result = await readOutputJson(root, "runtime.json");
     expect(result).toMatchObject({
       node: {
-        files: { "src/index.ts": "export {};\n" },
         watchSync: [{ path: "src", target: "/app/src" }],
       },
     });
+  });
+
+  it("copies files into dist/files/{type}/{key}/", async () => {
+    await writeFile(
+      join(root, INPUT_LAYERS_SUBDIR, "framework.json"),
+      JSON.stringify({ express: {} }, null, 2),
+    );
+    await makeFolder(root, "framework", "express", {
+      extraFiles: { "src/index.ts": "export {};\n", "package.json": "{}\n" },
+    });
+
+    await generateLayerFiles(root);
+
+    const copied = await readFile(
+      join(root, OUTPUT_FILES_SUBDIR, "framework", "express", "src", "index.ts"),
+      "utf-8",
+    );
+    expect(copied).toBe("export {};\n");
+
+    const pkg = await readFile(
+      join(root, OUTPUT_FILES_SUBDIR, "framework", "express", "package.json"),
+      "utf-8",
+    );
+    expect(pkg).toBe("{}\n");
+  });
+
+  it("does not copy .gitkeep files into dist/files/", async () => {
+    await writeFile(
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
+      JSON.stringify({ node: {} }, null, 2),
+    );
+    await makeFolder(root, "runtime", "node", { extraFiles: { "example.txt": "hello" } });
+
+    await generateLayerFiles(root);
+
+    const destDir = join(root, OUTPUT_FILES_SUBDIR, "runtime", "node");
+    const entries = await readdir(destDir);
+    expect(entries).not.toContain(".gitkeep");
+    expect(entries).toContain("example.txt");
+  });
+
+  it("does not include a files key in layer JSONs", async () => {
+    await writeFile(
+      join(root, INPUT_LAYERS_SUBDIR, "runtime.json"),
+      JSON.stringify({ node: {} }, null, 2),
+    );
+    await makeFolder(root, "runtime", "node", { extraFiles: { "a.txt": "content" } });
+
+    await generateLayerFiles(root);
+
+    const result = await readOutputJson(root, "runtime.json");
+    expect(result).toStrictEqual({ node: {} });
   });
 });
 
@@ -285,36 +267,35 @@ describe("schema validation", () => {
     await generateLayerFiles(projectRoot);
   });
 
-  describe("output schemas", () => {
-    it("always.json matches the output schema", async () => {
-      const parsed = AlwaysOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "always.json"));
+  describe("layer schemas", () => {
+    it("always.json matches the schema", async () => {
+      const parsed = AlwaysSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "always.json"));
       expect(parsed.error).toBeUndefined();
     });
 
-    it("database.json matches the output schema", async () => {
-      const parsed = DatabaseOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "database.json"));
+    it("database.json matches the schema", async () => {
+      const parsed = DatabaseSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "database.json"));
       expect(parsed.error).toBeUndefined();
     });
 
-    it("framework.json matches the output schema", async () => {
-      const parsed = FrameworkOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "framework.json"));
+    it("framework.json matches the schema", async () => {
+      const parsed = FrameworkSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "framework.json"));
       expect(parsed.error).toBeUndefined();
     });
 
-    it("package-manager.json matches the output schema", async () => {
-      const parsed = PackageManagerOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "package-manager.json"));
+    it("package-manager.json matches the schema", async () => {
+      const parsed = PackageManagerSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "package-manager.json"));
       expect(parsed.error).toBeUndefined();
     });
 
-    it("runtime.json matches the output schema", async () => {
-      const parsed = RuntimeOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "runtime.json"));
+    it("runtime.json matches the schema", async () => {
+      const parsed = RuntimeSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "runtime.json"));
       expect(parsed.error).toBeUndefined();
     });
 
-    it("service.json matches the output schema", async () => {
-      const parsed = ServiceOutputSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "service.json"));
+    it("service.json matches the schema", async () => {
+      const parsed = ServiceSchema.safeParse(await readJson(OUTPUT_LAYERS_SUBDIR, "service.json"));
       expect(parsed.error).toBeUndefined();
     });
   });
-
 });
