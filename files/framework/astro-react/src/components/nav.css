@@ -13,6 +13,7 @@
   padding: 0 var(--space-md);
   background: var(--gray-90);
   color: var(--gray-00);
+  border-bottom: 1px solid var(--quaternary-background);
 }
 
 .nav-start {
@@ -99,6 +100,10 @@
 
 .nav-divider {
   width: 1px;
-  height: var(--header-height);
-  background: var(--secondary-background);
+  height: calc(var(--header-height) - var(--space-md));
+  background: var(--quaternary-background);
+}
+
+.nav .btn {
+  line-height: 1.2;
 }
