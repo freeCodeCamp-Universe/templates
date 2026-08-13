@@ -1,0 +1,19 @@
+---
+title: Lesson 1
+id: s1-m2-l1
+---
+
+import { MultipleChoice } from '@components/tasks/multiple-choice';
+
+This lesson has a multiple choice question.
+
+<MultipleChoice
+  client:load
+  question="Is this a mulitple choice question?"
+  options={[
+    { text: 'Maybe.', correct: false },
+    { text: 'Yes.', correct: true },
+    { text: 'No.', correct: false },
+    { text: "I don't think so.", correct: false },
+  ]}
+/>

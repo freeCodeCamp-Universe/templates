@@ -1,0 +1,25 @@
+title: Sample Curriculum
+sections:
+  - title: Section 1
+    modules:
+      - title: Module 1.1
+        lessons:
+          - id: s1-m1-l1
+      - title: Module 1.2
+        lessons:
+          - id: s1-m2-l1
+          - id: s1-m2-l2
+          - id: s1-m2-l3
+          - id: s1-m2-l4
+          - id: s1-m2-l5
+          - id: s1-m2-l6
+          - id: s1-m2-l7
+      - title: Module 2.1
+        lessons:
+          - id: s1-m3-l1
+          - id: s1-m3-l2
+  - title: Section 2
+    modules:
+      - title: Module 1.1
+        lessons:
+          - id: s2-m1-l1

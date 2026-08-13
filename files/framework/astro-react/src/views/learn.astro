@@ -1,11 +1,11 @@
 ---
 import CurriculumMap from '../components/curriculum-map.astro';
-import type { CurriculumOutline } from '../lib/curriculum-outline';
+import type { CurriculumNav } from '../lib/curriculum-types';
 
 import './views.css';
 
 type Props = {
-  curriculum: CurriculumOutline;
+  curriculum: CurriculumNav;
 };
 
 const { curriculum } = Astro.props;

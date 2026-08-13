@@ -1,11 +1,17 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 
+import { unified } from '@astrojs/markdown-remark';
 import react from '@astrojs/react';
+import mdx from '@astrojs/mdx';
+import { remarkExtractTasks } from './src/plugins/remark-extract-tasks';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react()],
+  integrations: [react(), mdx()],
+  markdown: {
+    processor: unified({ remarkPlugins: [remarkExtractTasks] }),
+  },
   fonts: [
     {
       provider: fontProviders.google(),
@@ -22,7 +28,7 @@ export default defineConfig({
   ],
   prefetch: {
     // 'viewport' is quite an aggressive strategy.  'hover' could suffice, but we need to experiment.
-    defaultStrategy: "viewport",
-    prefetchAll: true
-  }
+    defaultStrategy: 'viewport',
+    prefetchAll: true,
+  },
 });

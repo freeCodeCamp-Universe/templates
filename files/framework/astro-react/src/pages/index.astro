@@ -1,13 +1,33 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/layout.astro';
 import Landing from '../views/landing.astro';
-import { loadCurriculum } from '../lib/load-curriculum';
+import { loadManifest } from '../lib/load-manifest';
 import { getOrderedLessons } from '../lib/curriculum-route-utils';
+import type { CurriculumNav } from '../lib/curriculum-types';
 
-const curriculum = await loadCurriculum();
-const lessons = getOrderedLessons(curriculum).map((entry) => ({ slug: entry.slug, href: entry.href }));
+const manifest = await loadManifest();
+const allLessons = await getCollection('lessons');
+const lessonTitleMap = new Map(allLessons.map((lesson) => [lesson.id, lesson.data.title]));
+const curriculum: CurriculumNav = {
+  title: manifest.title,
+  sections: manifest.sections.map((section) => ({
+    title: section.title,
+    modules: section.modules.map((module) => ({
+      title: module.title,
+      lessons: module.lessons.map((lesson) => ({
+        title: lessonTitleMap.get(lesson.id) ?? lesson.id,
+        id: lesson.id,
+      })),
+    })),
+  })),
+};
+const lessons = getOrderedLessons(curriculum).map((entry) => ({
+  slug: entry.slug,
+  href: entry.href,
+}));
 ---
 
-<Layout title={curriculum.title} brand={curriculum.title}>
-  <Landing title={curriculum.title} description={curriculum.description} lessons={lessons} />
+<Layout title={manifest.title} brand={manifest.title}>
+  <Landing title={manifest.title} lessons={lessons} />
 </Layout>

@@ -1,0 +1,32 @@
+---
+title: Lesson 4
+id: s1-m2-l4
+---
+
+import { MultipleChoice } from '@components/tasks/multiple-choice';
+import { SelectAll } from '@components/tasks/select-all';
+
+Here's some text before the first task.
+
+<MultipleChoice
+  client:load
+  question="Pick the correct one."
+  options={[
+    { text: 'Wrong.', correct: false },
+    { text: 'Right.', correct: true },
+  ]}
+/>
+
+Here's some text between the two tasks.
+
+<SelectAll
+  client:load
+  question="Pick all the correct ones."
+  options={[
+    { text: 'Right one.', correct: true },
+    { text: 'Wrong one.', correct: false },
+    { text: 'Another right one.', correct: true },
+  ]}
+/>
+
+Here's some text after the last task.

@@ -1,0 +1,19 @@
+---
+title: Lesson 2
+id: s1-m2-l2
+---
+
+import { SelectAll } from '@components/tasks/select-all';
+
+This lesson has a select all that apply task.
+
+<SelectAll
+  client:load
+  question="Select the valid options:"
+  options={[
+    { text: 'No.', correct: false },
+    { text: 'No.', correct: false },
+    { text: 'Yes.', correct: true },
+    { text: 'Yes.', correct: true },
+  ]}
+/>

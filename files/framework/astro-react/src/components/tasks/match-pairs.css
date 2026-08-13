@@ -1,0 +1,53 @@
+.match-pairs {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.match-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.match-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border: 2px solid var(--quaternary-background);
+  border-radius: var(--radius-sm);
+  background: var(--secondary-background);
+  color: var(--foreground);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.match-item:hover {
+  border-color: var(--blue-mid);
+}
+
+.match-item.selected {
+  border-color: var(--blue-mid);
+  background: var(--blue-dark-translucent);
+}
+
+.match-item.matched {
+  border-color: var(--quaternary-background);
+  opacity: 0.75;
+}
+
+.match-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background: var(--blue-mid);
+  color: var(--gray-00);
+  font-size: var(--text-size-xs);
+  font-weight: 700;
+  flex-shrink: 0;
+}

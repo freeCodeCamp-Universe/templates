@@ -1,7 +1,7 @@
 import './task.css';
 import './fill-in-the-blank.css';
 import { useId, useState } from 'react';
-import type { Task } from '../../lib/curriculum-tasks';
+import { taskPassed } from '../../stores/lesson-store';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
 import { TaskActions, type Result } from './task-actions';
 
@@ -11,15 +11,16 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
   unanswered: 'Fill in every blank first.',
 };
 
+type Segment = { kind: 'text'; value: string } | { kind: 'blank'; answer: string };
+
 type FillInTheBlankProps = {
-  task: Extract<Task, { type: 'fill-in-the-blank' }>;
-  onCorrect: () => void;
+  segments: Segment[];
 };
 
-export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
+export function FillInTheBlank({ segments }: FillInTheBlankProps) {
   const groupId = useId();
   const feedbackId = `${groupId}-feedback`;
-  const blankCount = task.segments.filter((segment) => segment.kind === 'blank').length;
+  const blankCount = segments.filter((segment) => segment.kind === 'blank').length;
   const [answers, setAnswers] = useState<string[]>(() => Array(blankCount).fill(''));
   const [result, setResult] = useState<Result | null>(null);
   const invalid = result === 'incorrect' || result === 'unanswered';
@@ -39,7 +40,7 @@ export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
     }
 
     let blankIndex = 0;
-    const isCorrect = task.segments.every((segment) => {
+    const isCorrect = segments.every((segment) => {
       if (segment.kind !== 'blank') {
         return true;
       }
@@ -52,7 +53,7 @@ export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
 
     setResult(isCorrect ? 'correct' : 'incorrect');
     if (isCorrect) {
-      onCorrect();
+      taskPassed();
     }
   }
 
@@ -61,7 +62,7 @@ export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
       <p className="prompt">
-        {task.segments.map((segment, index) => {
+        {segments.map((segment, index) => {
           if (segment.kind === 'text') {
             return <span key={index}>{segment.value}</span>;
           }

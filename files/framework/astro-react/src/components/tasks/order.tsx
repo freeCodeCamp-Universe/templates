@@ -1,7 +1,7 @@
 import './task.css';
 import './order.css';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import type { Task } from '../../lib/curriculum-tasks';
+import { taskPassed } from '../../stores/lesson-store';
 import { Markdown } from '../markdown';
 import { Button } from '../button';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
@@ -14,8 +14,8 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 };
 
 type OrderProps = {
-  task: Extract<Task, { type: 'order' }>;
-  onCorrect: () => void;
+  question: string;
+  items: string[];
 };
 
 function shuffle<T>(items: T[]): T[] {
@@ -27,13 +27,13 @@ function shuffle<T>(items: T[]): T[] {
   return copy;
 }
 
-export function Order({ task, onCorrect }: OrderProps) {
+export function Order({ question, items: orderedItems }: OrderProps) {
   const groupId = useId();
   const questionId = `${groupId}-question`;
   const feedbackId = `${groupId}-feedback`;
 
-  const [items, setItems] = useState<string[]>(() => task.items);
-  const [initialOrder, setInitialOrder] = useState<string[]>(() => task.items);
+  const [items, setItems] = useState<string[]>(() => orderedItems);
+  const [initialOrder, setInitialOrder] = useState<string[]>(() => orderedItems);
   const [shuffled, setShuffled] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const [result, setResult] = useState<Result | null>(null);
@@ -83,7 +83,7 @@ export function Order({ task, onCorrect }: OrderProps) {
   }, [items]);
 
   useEffect(() => {
-    const shuffledItems = shuffle(task.items);
+    const shuffledItems = shuffle(orderedItems);
     setItems(shuffledItems);
     setInitialOrder(shuffledItems);
     setShuffled(true);
@@ -113,10 +113,10 @@ export function Order({ task, onCorrect }: OrderProps) {
   }
 
   function handleCheck() {
-    const isCorrect = items.every((item, index) => item === task.items[index]);
+    const isCorrect = items.every((item, index) => item === orderedItems[index]);
     setResult(isCorrect ? 'correct' : 'incorrect');
     if (isCorrect) {
-      onCorrect();
+      taskPassed();
     }
   }
 
@@ -125,7 +125,7 @@ export function Order({ task, onCorrect }: OrderProps) {
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
       <div id={questionId} className="question">
-        <Markdown>{task.question}</Markdown>
+        <Markdown>{question}</Markdown>
       </div>
 
       <p aria-live="polite" className="sr-only">

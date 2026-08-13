@@ -1,53 +1,157 @@
 ---
-import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
+import type { GetStaticPaths } from 'astro';
+import { getCollection, getEntry, render } from 'astro:content';
 import Layout from '../../layouts/layout.astro';
 import { Sidebar } from '../../components/sidebar';
 import CurriculumMap from '../../components/curriculum-map.astro';
-import { Lesson } from '../../views/lesson';
-import { loadCurriculum } from '../../lib/load-curriculum';
-import { toCurriculumOutline } from '../../lib/curriculum-outline';
-import { getOrderedLessons } from '../../lib/curriculum-route-utils';
+import { LessonNav } from '../../components/lesson-nav';
+import { loadManifest } from '../../lib/load-manifest';
+import { slugify } from '../../lib/curriculum-route-utils';
+import type { CurriculumNav } from '../../lib/curriculum-types';
+import '../../views/views.css';
+import '../../views/lesson.css';
+import { ExtractedTaskSchema } from '../../lib/task-schemas';
 
 export const getStaticPaths = (async () => {
-  const curriculum = await loadCurriculum();
-  const curriculumOutline = toCurriculumOutline(curriculum);
-  const entries = getOrderedLessons(curriculum);
+  const manifest = await loadManifest();
+  const allLessons = await getCollection('lessons');
+  const collectionIds = new Set(allLessons.map((l) => l.id));
+
+  // Validate frontmatter id matches filename-derived collection id
+  for (const lesson of allLessons) {
+    if (lesson.data.id !== lesson.id) {
+      throw new Error(
+        `Lesson file "${lesson.id}.mdx" has frontmatter id "${lesson.data.id}" — these must match.`,
+      );
+    }
+  }
+
+  // Validate manifest ID uniqueness
+  const allManifestIds = manifest.sections.flatMap((s) =>
+    s.modules.flatMap((m) => m.lessons.map((l) => l.id)),
+  );
+  const seenIds = new Set<string>();
+  for (const id of allManifestIds) {
+    if (seenIds.has(id)) {
+      throw new Error(`Duplicate lesson ID "${id}" in manifest.`);
+    }
+    seenIds.add(id);
+  }
+
+  const entries: {
+    sectionTitle: string;
+    moduleTitle: string;
+    lessonId: string;
+    slug: string;
+  }[] = [];
+
+  for (const section of manifest.sections) {
+    for (const mod of section.modules) {
+      for (const lesson of mod.lessons) {
+        if (!collectionIds.has(lesson.id)) {
+          throw new Error(
+            `Manifest references lesson "${lesson.id}" but no matching ` +
+              `MDX file was found in the lessons collection.`,
+          );
+        }
+        entries.push({
+          sectionTitle: section.title,
+          moduleTitle: mod.title,
+          lessonId: lesson.id,
+          slug: [slugify(section.title), slugify(mod.title), slugify(lesson.id)].join('-'),
+        });
+      }
+    }
+  }
+
+  // Validate no orphaned MDX files
+  const referencedIds = new Set(entries.map((e) => e.lessonId));
+  for (const lesson of allLessons) {
+    if (!referencedIds.has(lesson.id)) {
+      throw new Error(
+        `MDX file "${lesson.id}" exists in the lessons collection but is not referenced by the manifest.`,
+      );
+    }
+  }
+
+  // Validate no duplicate slugs
+  const slugSet = new Set<string>();
+  for (const entry of entries) {
+    if (slugSet.has(entry.slug)) {
+      throw new Error(`Duplicate slug "${entry.slug}" — check manifest for naming collisions.`);
+    }
+    slugSet.add(entry.slug);
+  }
+
+  const lessonTitleMap = new Map(allLessons.map((l) => [l.id, l.data.title]));
+
+  const nav: CurriculumNav = {
+    title: manifest.title,
+    sections: manifest.sections.map((s) => ({
+      title: s.title,
+      modules: s.modules.map((m) => ({
+        title: m.title,
+        lessons: m.lessons.map((l) => ({
+          title: lessonTitleMap.get(l.id) ?? l.id,
+          id: l.id,
+        })),
+      })),
+    })),
+  };
 
   return entries.map((entry, index) => {
     const nextEntry = entries[index + 1];
-    const isLastLesson = nextEntry === undefined;
+    const isLastLesson = !nextEntry;
 
     return {
-      params: {
-        slug: entry.slug,
-      },
+      params: { slug: entry.slug },
       props: {
-        curriculum: curriculumOutline,
-        lesson: entry.lesson,
-        lessonSlug: entry.slug,
+        lessonId: entry.lessonId,
+        nav,
         isLastLesson,
-        nextHref: isLastLesson ? '/learn' : nextEntry.href,
+        lessonSlug: entry.slug,
+        nextHref: isLastLesson ? '/learn' : `/learn/${nextEntry.slug}`,
       },
     };
   });
 }) satisfies GetStaticPaths;
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { lessonId, nav, lessonSlug, isLastLesson, nextHref } = Astro.props;
 
-const { curriculum, lesson, lessonSlug, isLastLesson, nextHref } = Astro.props;
+const entry = await getEntry('lessons', lessonId);
+if (!entry) throw new Error(`Lesson "${lessonId}" not found`);
+const { Content, remarkPluginFrontmatter } = await render(entry);
+const tasks = (remarkPluginFrontmatter.tasks ?? []) as Record<string, unknown>[];
+
+for (const task of tasks) {
+  try {
+    ExtractedTaskSchema.parse(task);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    throw new Error(`Invalid task in lesson "${lessonId}": ${message}`, { cause: err });
+  }
+}
 ---
 
-<Layout title={lesson.title} brand={curriculum.title} hasSidebar>
+<Layout title={entry.data.title} brand={nav.title} hasSidebar>
   <div class="lesson-layout">
     <Sidebar client:load>
-      <CurriculumMap curriculum={curriculum} currentLessonSlug={lessonSlug} />
+      <CurriculumMap curriculum={nav} currentLessonSlug={lessonSlug} />
     </Sidebar>
-    <Lesson
-      lesson={lesson}
-      lessonSlug={lessonSlug}
-      isLastLesson={isLastLesson}
-      nextHref={nextHref}
-      client:load
-    />
+    <main id="main-content" class="main" tabindex="-1">
+      <div class="lesson-content">
+        <section>
+          <h1>{entry.data.title}</h1>
+          <Content />
+          <LessonNav
+            taskCount={tasks.length}
+            lessonSlug={lessonSlug}
+            nextHref={nextHref}
+            isLastLesson={isLastLesson}
+            client:load
+          />
+        </section>
+      </div>
+    </main>
   </div>
 </Layout>
