@@ -66,7 +66,7 @@ This lesson has a fill in the blank task.
 
 --fill-in-the-blank--
 
-This sentence has a {{blank}}. So does {{this}} one.
+This sentence has a {{blank}}. So does {{this}} one. A blank accepts more than one spelling when they are separated by a pipe, so {{thirteen|13}} takes either.
 
 --end-fill-in-the-blank--
 

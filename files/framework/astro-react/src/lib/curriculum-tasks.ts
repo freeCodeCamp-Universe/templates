@@ -30,7 +30,7 @@ const SelectAllThatApplyTaskSchema = z
 
 const FillInBlankSegmentSchema = z.union([
   z.object({ kind: z.literal('text'), value: z.string() }),
-  z.object({ kind: z.literal('blank'), answer: z.string() }),
+  z.object({ kind: z.literal('blank'), answers: z.array(z.string().min(1)).min(1) }),
 ]);
 
 const FillInBlankTaskSchema = z
@@ -97,9 +97,27 @@ function parseOptionListContent(nodes: RootContent[]) {
 
 const BLANK = /\{\{([^}]+)\}\}/g;
 
+function parseBlankAnswers(raw: string) {
+  const answers = raw
+    .split('|')
+    .map((answer) => answer.trim())
+    .filter((answer) => answer !== '');
+
+  if (answers.length > 0) {
+    return answers;
+  }
+
+  // Every alternative was empty, so the blank holds a literal separator such as
+  // {{|}} rather than a list of alternatives. A blank containing only
+  // whitespace stays empty and fails validation.
+  const literal = raw.trim();
+  return literal === '' ? [] : [literal];
+}
+
 function parseFillInBlankContent(nodes: RootContent[]) {
   const text = nodes.map((node) => toString(node)).join(' ');
-  const segments: Array<{ kind: 'text'; value: string } | { kind: 'blank'; answer: string }> = [];
+  const segments: Array<{ kind: 'text'; value: string } | { kind: 'blank'; answers: string[] }> =
+    [];
 
   let lastIndex = 0;
   let match: RegExpExecArray | null;
@@ -109,7 +127,7 @@ function parseFillInBlankContent(nodes: RootContent[]) {
     if (match.index > lastIndex) {
       segments.push({ kind: 'text', value: text.slice(lastIndex, match.index) });
     }
-    segments.push({ kind: 'blank', answer: match[1].trim() });
+    segments.push({ kind: 'blank', answers: parseBlankAnswers(match[1]) });
     lastIndex = BLANK.lastIndex;
   }
 
