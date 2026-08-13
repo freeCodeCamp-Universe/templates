@@ -97,19 +97,25 @@ function parseOptionListContent(nodes: RootContent[]) {
 
 const BLANK = /\{\{([^}]+)\}\}/g;
 
+// Alternatives are separated by "|". An answer that contains a pipe of its own
+// escapes it as "\|", which authors write as "\\|" in markdown because the
+// markdown parser consumes one backslash before this runs.
+const UNESCAPED_PIPE = /(?<!\\)\|/;
+const ESCAPED_PIPE = /\\\|/g;
+
 function parseBlankAnswers(raw: string) {
   const answers = raw
-    .split('|')
-    .map((answer) => answer.trim())
+    .split(UNESCAPED_PIPE)
+    .map((answer) => answer.replace(ESCAPED_PIPE, '|').trim())
     .filter((answer) => answer !== '');
 
   if (answers.length > 0) {
     return answers;
   }
 
-  // Every alternative was empty, so the blank holds a literal separator such as
-  // {{|}} rather than a list of alternatives. A blank containing only
-  // whitespace stays empty and fails validation.
+  // Every alternative was empty, so the blank holds unescaped separators such
+  // as {{|}} and is read literally. A blank containing only whitespace stays
+  // empty and fails validation.
   const literal = raw.trim();
   return literal === '' ? [] : [literal];
 }

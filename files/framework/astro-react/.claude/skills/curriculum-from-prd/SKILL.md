@@ -183,22 +183,24 @@ Write the alternatives in the order a learner is most likely to type them. A sin
 
 The check is still exact, so this is not a licence to blank something vague. Prefer a proper noun, a year, or a term the lesson wrote out verbatim, and use alternatives for the cases where a correct learner could reasonably type something else.
 
-**Never blank a value that contains a pipe.** The `|` is always a separator, so any pipe inside a blank splits it into alternatives. This is silent: the build succeeds, and the learner who types the whole correct answer is marked wrong while someone typing only the fragment before the pipe is marked right.
+**Escape a pipe that belongs to the answer itself.** Write it `\\|`, with two backslashes. Markdown consumes one before the curriculum parser runs, so a single `\|` is not enough and behaves exactly like an unescaped pipe.
 
-This bites hardest on code, where `|` is ordinary syntax:
+This matters most for code, where `|` is ordinary syntax:
 
-| Written as | Actually parsed as |
+| Write this | Answer becomes |
 |---|---|
-| `{{string \| number}}` | two answers, `string` and `number` |
-| `{{cat file \| grep foo}}` | two answers, `cat file` and `grep foo` |
-| `{{^(cat\|dog)$}}` | two answers, `^(cat` and `dog)$` |
-| `{{x \|\| y}}` | two answers, `x` and `y` |
+| `{{string \\\| number}}` | `string \| number` |
+| `{{cat file \\\| grep foo}}` | `cat file \| grep foo` |
+| `{{^(cat\\\|dog)$}}` | `^(cat\|dog)$` |
+| `{{x \\\|\\\| y}}` | `x \|\| y` |
 
-Backticks do not protect it. `` {{`x || y`}} `` splits exactly the same way, because the blank is read from the text after markdown is parsed.
+Escaping also lets a pipe be one alternative among several: `{{pipe|\\|}}` accepts either `pipe` or `|`.
 
-So before writing any blank, check whether the answer contains a pipe. TypeScript unions, shell pipelines, regex alternation, logical `OR`, and markdown table rows all do. When the answer contains one, do not blank it. Blank a different part of the line, or rewrite the sentence so the pipe sits in the surrounding text and the blank holds something else.
+Forgetting the escape fails silently. The build succeeds, the answer is split into alternatives, and the learner who types the whole correct answer is marked wrong while someone typing only the fragment before the pipe is marked right. Backticks do not help, because the blank is read from the text after markdown is parsed, so `` {{`x || y`}} `` splits just the same.
 
-The only safe exception is a blank made of nothing but pipes, which is read literally: `{{|}}` asks for `|`, and `{{||}}` asks for `||`. Use that to test the operator itself. Anything mixing a pipe with other characters splits.
+So check every blank for a pipe before writing it. TypeScript unions, shell pipelines, regex alternation, logical `OR`, and table rows all contain one.
+
+A blank made of nothing but unescaped pipes is read literally, so `{{|}}` asks for `|` and `{{||}}` asks for `||`. Either that or the escape works for teaching the operator itself.
 
 **Vary the correct answer's position.** Don't default to listing the correct option(s) first - that's a systematic tell, not a random one. Across the curriculum, correct answers should land in different positions from lesson to lesson where applicable.
 
@@ -246,7 +248,7 @@ Before finalizing, verify:
 - [ ] Lesson prose is concise, with no filler words or padding
 - [ ] Every lesson has either prose before the task or a self-contained task prompt
 - [ ] Every fill-in-the-blank answer with more than one valid written form lists its alternatives with `|`
-- [ ] No fill-in-the-blank answer contains a pipe as part of its own value (unions, shell pipelines, regex alternation, logical `OR`), since it would silently split
+- [ ] Every pipe belonging to a fill-in-the-blank answer itself (unions, shell pipelines, regex alternation, logical `OR`) is escaped as `\\|`, since an unescaped one splits silently
 - [ ] Task prompts do not depend on something from an earlier lesson without redefining it
 - [ ] Most lessons have exactly one task block
 - [ ] No em-dashes or arrows in prose
