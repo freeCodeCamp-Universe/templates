@@ -43,6 +43,8 @@ Task content.
 --end-task-type--
 ```
 
+**All content must sit under a `###` lesson heading.** The parser discards any prose placed under a `#` section or `##` module heading before the first `###` lesson. It does this silently, with no error and no build failure, so the text simply never appears on the site. If a module needs an introduction, make it the module's first lesson with no task, not a paragraph under the `##` heading.
+
 ### Naming conventions
 
 All titles must be concise - a short label, not a phrase or sentence.
@@ -81,6 +83,47 @@ Every lesson needs either prose before the task or a self-contained task prompt 
 - **First lesson in a module:** one to three sentences establishing the module's purpose.
 - **Later lessons:** skip repeated framing - the module title and task prompt carry it. If the task depends on something introduced earlier without redefining it, rewrite the prompt to be self-contained or add a one-sentence anchor.
 - **Task prompts must be self-contained:** they should make sense without recalling earlier lessons. Instead of "Solve this using the method from before," write "Solve for x using the substitution method."
+
+---
+
+## Teach before you test (important)
+
+**Every fact a task tests must appear in an earlier lesson.** A self-contained prompt is not the same as a taught fact. "In 1643, what did Torricelli achieve?" is perfectly self-contained and still unanswerable if no lesson ever said what he did.
+
+This matters most when the source document is prose rather than a PRD with activities. Questions written directly from a paragraph tend to leave the answer living only inside the question, because the source read as though it had already explained everything.
+
+- **Name the names.** If a task asks about a person, school, experiment, or instrument, an earlier lesson must have named it and said what they did.
+- **State the figures.** Dates, measurements, and quantities that a task tests belong in a reading lesson first.
+- **Explain assumed mechanisms.** Source documents skip background their audience already has. If a task depends on how a technique works, or on a unit or scale the learner has not met, a reading lesson has to cover it in plain terms.
+
+After drafting, check each task by asking: which earlier lesson could the learner have read to answer this? If there is none, either add the fact to a preceding reading lesson or cut the task.
+
+Inference tasks are a deliberate exception, but only when every step of the reasoning was taught. Do not use them to paper over a fact you never presented.
+
+---
+
+## Do not answer the question you are about to ask (important)
+
+Teaching a fact and testing it belong in **separate lessons**. Put the fact in a reading lesson, then let the next lesson hold the task.
+
+Prose sitting directly above a task in the same lesson turns recall into copying. This is the most common failure with `categorize` and `order` tasks, where a single sentence can restate the entire sort or sequence.
+
+```markdown
+### Later Estimates
+
+Eddington derived 3.18 K by a calculation similar to Guillaume's. Regener used
+cosmic rays to estimate 2.8 K. Alpher and Herman predicted 5 K from decreasing
+background energy.
+
+### Sources Of Evidence
+
+--categorize--
+
+Sort each physicist by the evidence their estimate rested on.
+...
+```
+
+The one-sentence anchor described below is the narrow exception, not a licence to summarize the answer.
 
 ---
 
@@ -215,7 +258,11 @@ Before finalizing, verify:
 - [ ] Lesson titles have no leading or trailing numbers
 - [ ] Section, module, and lesson titles are all concise (lessons: 1-5 words)
 - [ ] Lesson prose is concise, with no filler words or padding
+- [ ] No prose sits under a `#` or `##` heading before the first `###` lesson
 - [ ] Every lesson has either prose before the task or a self-contained task prompt
+- [ ] Every fact a task tests is stated in an earlier lesson, including names, dates, and figures
+- [ ] Mechanisms, units, and scales a task depends on are explained in plain terms first
+- [ ] No lesson states the answer to its own task in the prose directly above it
 - [ ] Task prompts do not depend on something from an earlier lesson without redefining it
 - [ ] Most lessons have exactly one task block
 - [ ] No em-dashes or arrows in prose
