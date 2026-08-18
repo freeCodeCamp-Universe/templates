@@ -171,37 +171,6 @@ Check the real fields each type requires (see Existing task types below) rather 
 
 If the PRD gives items but no instruction, write a clear one - a specific question beats a bare list of options.
 
-**List every spelling a blank should accept.** `fill-in-the-blank` compares the learner's text against each accepted answer after trimming and lowercasing, and nothing else. There is no fuzzy matching, so any form you do not list is marked wrong.
-
-Separate alternatives with `|`. A blank whose value can be written more than one way must list each one:
-
-- Numbers with both a numeral and a word: `{{thirteen|13}}`.
-- Values carrying a unit or symbol: `{{5 K|5 kelvin}}`, `{{50%|50 percent}}`.
-- Names with an optional article or particle: `{{the Air Board|Air Board}}`.
-
-Write the alternatives in the order a learner is most likely to type them. A single-answer blank like `{{Jervis}}` needs no pipe.
-
-The check is still exact, so this is not a licence to blank something vague. Prefer a proper noun, a year, or a term the lesson wrote out verbatim, and use alternatives for the cases where a correct learner could reasonably type something else.
-
-**Escape a pipe that belongs to the answer itself.** Write it `\\|`, with two backslashes. Markdown consumes one before the curriculum parser runs, so a single `\|` is not enough and behaves exactly like an unescaped pipe.
-
-This matters most for code, where `|` is ordinary syntax:
-
-| Write this | Answer becomes |
-|---|---|
-| `{{string \\\| number}}` | `string \| number` |
-| `{{cat file \\\| grep foo}}` | `cat file \| grep foo` |
-| `{{^(cat\\\|dog)$}}` | `^(cat\|dog)$` |
-| `{{x \\\|\\\| y}}` | `x \|\| y` |
-
-Escaping also lets a pipe be one alternative among several: `{{pipe|\\|}}` accepts either `pipe` or `|`.
-
-Forgetting the escape fails silently. The build succeeds, the answer is split into alternatives, and the learner who types the whole correct answer is marked wrong while someone typing only the fragment before the pipe is marked right. Backticks do not help, because the blank is read from the text after markdown is parsed, so `` {{`x || y`}} `` splits just the same.
-
-So check every blank for a pipe before writing it. TypeScript unions, shell pipelines, regex alternation, logical `OR`, and table rows all contain one.
-
-A blank made of nothing but unescaped pipes is read literally, so `{{|}}` asks for `|` and `{{||}}` asks for `||`. Either that or the escape works for teaching the operator itself.
-
 **Vary the correct answer's position.** Don't default to listing the correct option(s) first - that's a systematic tell, not a random one. Across the curriculum, correct answers should land in different positions from lesson to lesson where applicable.
 
 ---
@@ -247,8 +216,6 @@ Before finalizing, verify:
 - [ ] Section, module, and lesson titles are all concise (lessons: 1-5 words)
 - [ ] Lesson prose is concise, with no filler words or padding
 - [ ] Every lesson has either prose before the task or a self-contained task prompt
-- [ ] Every fill-in-the-blank answer with more than one valid written form lists its alternatives with `|`
-- [ ] Every pipe belonging to a fill-in-the-blank answer itself (unions, shell pipelines, regex alternation, logical `OR`) is escaped as `\\|`, since an unescaped one splits silently
 - [ ] Task prompts do not depend on something from an earlier lesson without redefining it
 - [ ] Most lessons have exactly one task block
 - [ ] No em-dashes or arrows in prose
