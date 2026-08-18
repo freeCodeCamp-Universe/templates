@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.0.0...app-templates-v1.1.0) (2026-08-18)
+
+
+### Features
+
+* add page transitions to astro-react ([#53](https://github.com/freeCodeCamp-Universe/templates/issues/53)) ([91cf063](https://github.com/freeCodeCamp-Universe/templates/commit/91cf06374b6c407dd4b84574aab8ead4ed7a7f12))
+* add web-accessibility skill to all web frameworks ([#74](https://github.com/freeCodeCamp-Universe/templates/issues/74)) ([ba58148](https://github.com/freeCodeCamp-Universe/templates/commit/ba581483183ad1a038702641134e1b8861747d18))
+* animate progress page in astro-react ([#58](https://github.com/freeCodeCamp-Universe/templates/issues/58)) ([7297a5e](https://github.com/freeCodeCamp-Universe/templates/commit/7297a5ebe8223287bb13801fd4cd73d03d98f973))
+* remove prd-orchestrator, simplify other claude docs ([#59](https://github.com/freeCodeCamp-Universe/templates/issues/59)) ([90bd2f2](https://github.com/freeCodeCamp-Universe/templates/commit/90bd2f200864bfa5dec87435ecbdb8e4c669cd45))
+
+
+### Bug Fixes
+
+* copy skill into .agents ([#44](https://github.com/freeCodeCamp-Universe/templates/issues/44)) ([582c805](https://github.com/freeCodeCamp-Universe/templates/commit/582c805e436a7d8824db3ce3bc2dde2f809f7f0e))
+
 ## [1.0.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v0.13.0...app-templates-v1.0.0) (2026-08-11)
 
 
