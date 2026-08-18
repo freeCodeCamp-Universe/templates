@@ -42,6 +42,10 @@
       {
         "repo": "freeCodeCamp-Universe/marketplace",
         "skill": "command-line-chic"
+      },
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "web-accessibility"
       }
     ],
     "watchSync": [
@@ -68,6 +72,10 @@
       {
         "repo": "freeCodeCamp-Universe/marketplace",
         "skill": "command-line-chic"
+      },
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "web-accessibility"
       }
     ],
     "watchSync": [
@@ -94,6 +102,10 @@
       {
         "repo": "freeCodeCamp-Universe/marketplace",
         "skill": "command-line-chic"
+      },
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "web-accessibility"
       }
     ],
     "watchSync": [
@@ -155,6 +167,10 @@
       {
         "repo": "freeCodeCamp-Universe/marketplace",
         "skill": "astro"
+      },
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "web-accessibility"
       }
     ],
     "watchSync": [
