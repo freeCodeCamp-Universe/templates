@@ -1,5 +1,6 @@
 ---
 import '../global.css';
+import { ClientRouter } from 'astro:transitions';
 import { Font } from 'astro:assets';
 import { Nav } from '../components/nav';
 
@@ -22,6 +23,7 @@ const { title, brand, hasSidebar = false } = Astro.props;
     <Font cssVariable="--font-lato" preload />
     <Font cssVariable="--font-inconsolata" />
     <title>{title}</title>
+    <ClientRouter />
   </head>
   <body class="dark-palette">
     <!-- Load theme before paint -->
