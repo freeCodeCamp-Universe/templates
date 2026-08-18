@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
-import { Button } from '../components/button';
-import { exportProgress, getCompletedLessons, importProgress, resetProgress } from '../lib/curriculum-progress';
+import { AnimatedCount } from './animated-count';
+import { Button } from './button';
+import {
+  exportProgress,
+  getCompletedLessons,
+  importProgress,
+  resetProgress,
+} from '../lib/curriculum-progress';
 
-import './views.css';
+import '../styles/pages.css';
 import './progress.css';
 
 type LessonEntry = {
@@ -24,12 +30,10 @@ type ProgressProps = {
 export function Progress({ lessons }: ProgressProps) {
   const [completedSlugs, setCompletedSlugs] = useState<string[]>([]);
   const [feedback, setFeedback] = useState('');
-  const [ready, setReady] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setCompletedSlugs(getCompletedLessons());
-    setReady(true);
   }, []);
 
   const completedSet = useMemo(() => new Set(completedSlugs), [completedSlugs]);
@@ -122,10 +126,12 @@ export function Progress({ lessons }: ProgressProps) {
         <hr className="page-label-divider" />
       </header>
 
-      <section className={ready ? 'progress-stats' : 'progress-stats loading'}>
+      <section className="progress-stats">
         <div className="progress-headline">
-          <span className="progress-percent">{percent}%</span>
-          <span className="progress-percent-label">Complete</span>
+          <AnimatedCount n={percent} size="2xl">
+            %
+          </AnimatedCount>
+          <span className="progress-percent-label">complete</span>
         </div>
 
         <progress
@@ -138,21 +144,27 @@ export function Progress({ lessons }: ProgressProps) {
         </progress>
 
         <p className="progress-lesson-count">
-          Lessons: {completedCount} / {totalCount}
+          Lessons: <AnimatedCount n={completedCount} /> / {totalCount}
         </p>
 
         {sections.length > 0 ? (
           <ul className="progress-section-list">
-            {sections.map((section) => (
-              <li key={section.title} className="progress-section-row">
-                <span>{section.title}</span>
-                <span>{section.total > 0 ? Math.round((section.completed / section.total) * 100) : 0}%</span>
-              </li>
-            ))}
+            {sections.map((section) => {
+              const sectionPercent =
+                section.total > 0 ? Math.round((section.completed / section.total) * 100) : 0;
+              return (
+                <li key={section.title} className="progress-section-row">
+                  <span>{section.title}</span>
+                  <AnimatedCount n={sectionPercent}>%</AnimatedCount>
+                </li>
+              );
+            })}
           </ul>
         ) : null}
 
-        {allComplete ? <p className="progress-complete-message">You have completed every lesson. Nice work!</p> : null}
+        {allComplete ? (
+          <p className="progress-complete-message">You have completed every lesson. Nice work!</p>
+        ) : null}
 
         <div className="progress-actions">
           <div className="progress-actions-primary">
