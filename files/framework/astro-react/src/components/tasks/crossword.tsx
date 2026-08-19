@@ -98,6 +98,8 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
     return new Set(wordCells(currentClue).map((cell) => key(cell.row, cell.col)));
   }, [currentClue]);
 
+  const tabStopCell = activeCell ?? (defaultClue ? { row: defaultClue.row, col: defaultClue.col } : null);
+
   const invalid = result === 'incorrect' || result === 'unanswered';
   const taskRef = useFocusOnCorrect<HTMLDivElement>(result);
 
@@ -242,6 +244,7 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
                 : 1;
               const number = numberByPosition.get(key(row, col));
               const isActive = activeWordCells.has(key(row, col));
+              const isTabStop = tabStopCell?.row === row && tabStopCell?.col === col;
 
               return (
                 <div
@@ -263,6 +266,7 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
                     autoCapitalize="characters"
                     spellCheck={false}
                     maxLength={1}
+                    tabIndex={isTabStop ? 0 : -1}
                     className="crossword-input"
                     aria-label={
                       wordClue
