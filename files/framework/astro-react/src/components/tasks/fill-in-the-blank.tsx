@@ -45,9 +45,11 @@ export function FillInTheBlank({ task, onCorrect }: FillInTheBlankProps) {
       }
 
       const userAnswer = answers[blankIndex].trim().toLowerCase();
-      const expected = segment.answer.trim().toLowerCase();
+      const accepted = segment.answers.some(
+        (expected) => expected.trim().toLowerCase() === userAnswer,
+      );
       blankIndex += 1;
-      return userAnswer === expected;
+      return accepted;
     });
 
     setResult(isCorrect ? 'correct' : 'incorrect');

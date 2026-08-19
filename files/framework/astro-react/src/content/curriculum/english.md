@@ -66,7 +66,7 @@ This lesson has a fill in the blank task.
 
 --fill-in-the-blank--
 
-This sentence has a {{blank}}. So does {{this}} one.
+This sentence has a {{blank}}. Case is ignored when filling in {{a|the}} blank(s). Allow multiple answers for a single blank by separating them with a pipe.
 
 --end-fill-in-the-blank--
 
