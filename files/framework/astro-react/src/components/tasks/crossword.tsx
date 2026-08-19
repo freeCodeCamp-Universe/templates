@@ -209,18 +209,8 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
     }
   }
 
-  const statusText = currentClue
-    ? `Now solving: ${currentClue.number} ${currentClue.direction === 'across' ? 'Across' : 'Down'} — ${currentClue.clue}`
-    : '';
-
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
-      <p className="question">Fill in the crossword using the clues below.</p>
-
-      <p role="status" aria-live="polite" className="crossword-status">
-        {statusText}
-      </p>
-
       <p aria-live="polite" className="sr-only">
         {announcement}
       </p>
@@ -285,6 +275,17 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
           )}
         </div>
       </div>
+
+      <p role="status" aria-live="polite" className="crossword-status">
+        {currentClue ? (
+          <>
+            <span className="crossword-status-number">
+              {currentClue.number} {currentClue.direction === 'across' ? 'Across' : 'Down'}:
+            </span>{' '}
+            {currentClue.clue}
+          </>
+        ) : null}
+      </p>
 
       <TaskActions
         result={result}
