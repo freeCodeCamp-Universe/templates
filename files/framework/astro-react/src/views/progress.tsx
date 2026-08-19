@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties } from 'react';
 import { AnimatedCount } from '../components/animated-count';
 import { Button } from '../components/button';
 import { exportProgress, getCompletedLessons, importProgress, resetProgress } from '../lib/curriculum-progress';
@@ -132,14 +132,9 @@ export function Progress({ lessons }: ProgressProps) {
           <span className="progress-percent-label">complete</span>
         </div>
 
-        <progress
-          className="progress-bar"
-          value={completedCount}
-          max={totalCount || 1}
-          aria-label="Lesson completion"
-        >
-          {percent}%
-        </progress>
+        <div className="progress-bar" aria-hidden="true">
+          <div className="progress-bar-fill" style={{ '--p': percent } as CSSProperties} />
+        </div>
 
         <p className="progress-lesson-count">
           Lessons: <AnimatedCount n={completedCount} /> / {totalCount}
