@@ -161,9 +161,13 @@ export function Progress({ lessons }: ProgressProps) {
           <div className="progress-actions-primary">
             {nextLesson ? (
               <Button variant="primary" href={nextLesson.href}>
-                Continue learning
+                {completedCount === 0 ? 'Start learning' : 'Continue learning'}
               </Button>
-            ) : null}
+            ) : (
+              <Button variant="secondary" href="/learn">
+                Browse lessons
+              </Button>
+            )}
           </div>
 
           <div className="progress-actions-data">
