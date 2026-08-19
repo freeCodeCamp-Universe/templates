@@ -24,6 +24,11 @@ const { title, brand, hasSidebar = false } = Astro.props;
     <Font cssVariable="--font-inconsolata" />
     <title>{title}</title>
     <ClientRouter />
+    <script>
+      document.addEventListener('astro:after-swap', () => {
+        document.getElementById('main-content')?.focus();
+      });
+    </script>
   </head>
   <body class="dark-palette">
     <!-- Load theme before paint -->
