@@ -16,6 +16,7 @@ type SectionStat = {
   title: string;
   completed: number;
   total: number;
+  href: string;
 };
 
 type ProgressProps = {
@@ -40,18 +41,22 @@ export function Progress({ lessons }: ProgressProps) {
   const sections = useMemo(() => {
     const stats: SectionStat[] = [];
     const indexBySection = new Map<string, number>();
+    const foundIncomplete = new Set<number>();
 
     for (const lesson of lessons) {
       let index = indexBySection.get(lesson.section);
       if (index === undefined) {
         index = stats.length;
         indexBySection.set(lesson.section, index);
-        stats.push({ title: lesson.section, completed: 0, total: 0 });
+        stats.push({ title: lesson.section, completed: 0, total: 0, href: lesson.href });
       }
 
       stats[index].total += 1;
       if (completedSet.has(lesson.slug)) {
         stats[index].completed += 1;
+      } else if (!foundIncomplete.has(index)) {
+        stats[index].href = lesson.href;
+        foundIncomplete.add(index);
       }
     }
 
@@ -147,7 +152,7 @@ export function Progress({ lessons }: ProgressProps) {
                 section.total > 0 ? Math.round((section.completed / section.total) * 100) : 0;
               return (
                 <li key={section.title} className="progress-section-row">
-                  <span>{section.title}</span>
+                  <a href={section.href}>{section.title}</a>
                   <AnimatedCount n={sectionPercent}>%</AnimatedCount>
                 </li>
               );
