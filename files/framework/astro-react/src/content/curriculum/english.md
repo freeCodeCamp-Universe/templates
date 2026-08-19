@@ -137,6 +137,8 @@ This lesson has a crossword task.
 
 --crossword--
 
+Fill in the crossword using the clues below.
+
 ```
 .S..
 GLAD

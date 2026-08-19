@@ -207,6 +207,7 @@ const CrosswordClueSchema = z.object({
 const CrosswordTaskSchema = z
   .object({
     type: z.literal('crossword'),
+    question: z.string(),
     solution: z.array(
       z.array(z.string().regex(/^[A-Z]$/, 'Crossword grid cells must be a single letter or "."').nullable()),
     ),
@@ -358,6 +359,8 @@ function findCrosswordClueTexts(nodes: RootContent[], label: 'across' | 'down'):
 }
 
 function parseCrosswordContent(nodes: RootContent[]) {
+  const questionNode = nodes.find((node) => node.type === 'paragraph');
+  const question = questionNode ? nodesToMarkdown([questionNode]) : '';
   const solution = buildCrosswordSolution(nodes);
   const acrossStarts = findAcrossStarts(solution);
   const downStarts = findDownStarts(solution);
@@ -378,7 +381,7 @@ function parseCrosswordContent(nodes: RootContent[]) {
     length: downStarts[index]?.length ?? 0,
   }));
 
-  return { solution, clues: [...acrossClues, ...downClues] };
+  return { question, solution, clues: [...acrossClues, ...downClues] };
 }
 
 type TaskDefinition = {

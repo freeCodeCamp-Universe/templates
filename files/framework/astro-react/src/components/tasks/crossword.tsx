@@ -3,6 +3,7 @@ import './crossword.css';
 import { useId, useMemo, useRef, useState } from 'react';
 import type { FocusEvent, KeyboardEvent } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
+import { Markdown } from '../markdown';
 import { Button } from '../button';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
 import { TaskActions, type Result } from './task-actions';
@@ -37,6 +38,7 @@ function wordCells(clue: Clue): Array<{ row: number; col: number }> {
 
 export function Crossword({ task, onCorrect }: CrosswordProps) {
   const groupId = useId();
+  const questionId = `${groupId}-question`;
   const feedbackId = `${groupId}-feedback`;
 
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -67,9 +69,10 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
     [task.clues, numberByPosition],
   );
 
-  const acrossClues = cluesWithNumbers.filter((clue) => clue.direction === 'across');
-  const downClues = cluesWithNumbers.filter((clue) => clue.direction === 'down');
-  const defaultClue = acrossClues[0] ?? downClues[0] ?? null;
+  const defaultClue =
+    [...cluesWithNumbers].sort(
+      (a, b) => a.number - b.number || (a.direction === 'across' ? -1 : 1),
+    )[0] ?? null;
 
   const cellWords = useMemo(() => {
     const map = new Map<string, CellWords>();
@@ -211,6 +214,10 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
 
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
+      <div id={questionId} className="question">
+        <Markdown>{task.question}</Markdown>
+      </div>
+
       <p aria-live="polite" className="sr-only">
         {announcement}
       </p>
@@ -218,6 +225,8 @@ export function Crossword({ task, onCorrect }: CrosswordProps) {
       <div className="crossword-grid-scroll">
         <div
           className="crossword-grid"
+          role="group"
+          aria-labelledby={questionId}
           style={{ gridTemplateColumns: `repeat(${task.solution[0]?.length ?? 0}, 1fr)` }}
         >
           {task.solution.map((rowCells, row) =>
