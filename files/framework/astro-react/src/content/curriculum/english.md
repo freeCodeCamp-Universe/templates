@@ -66,7 +66,7 @@ This lesson has a fill in the blank task.
 
 --fill-in-the-blank--
 
-This sentence has a {{blank}}. So does {{this}} one. A blank accepts more than one spelling when they are separated by a pipe, so {{thirteen|13}} takes either. A pipe belonging to the answer itself is escaped with two backslashes, as in {{string \\| number}}.
+This sentence has a {{blank}}. Case is ignored when filling in {{a|the}} blank(s). Allow multiple answers for a single blank by separating them with a pipe.
 
 --end-fill-in-the-blank--
 
