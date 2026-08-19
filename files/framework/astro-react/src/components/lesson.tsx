@@ -7,6 +7,7 @@ import { SelectAll } from './tasks/select-all';
 import { FillInTheBlank } from './tasks/fill-in-the-blank';
 import { Categorize } from './tasks/categorize';
 import { Order } from './tasks/order';
+import { Crossword } from './tasks/crossword';
 import { useSidebarOpen } from '../hooks/use-sidebar-open';
 import { markLessonComplete } from '../lib/curriculum-progress';
 
@@ -55,6 +56,10 @@ export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonPro
 
             if (block.task.type === 'order') {
               return <Order key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
+
+            if (block.task.type === 'crossword') {
+              return <Crossword key={index} task={block.task} onCorrect={handleTaskPassed} />;
             }
 
             return <FillInTheBlank key={index} task={block.task} onCorrect={handleTaskPassed} />;

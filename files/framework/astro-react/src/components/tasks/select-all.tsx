@@ -1,6 +1,7 @@
 import './task.css';
 import './option-task.css';
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
+import type { KeyboardEvent } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
@@ -20,7 +21,13 @@ type SelectAllProps = {
 export function SelectAll({ task, onCorrect }: SelectAllProps) {
   const groupId = useId();
   const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
+  const optionRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  // Only one checkbox is ever a tab stop (roving tabindex), so Tab moves in/out of
+  // the whole group in a single step - arrow keys move within it, same as the crossword grid.
+  const tabStopIndex = focusedIndex ?? 0;
 
   function handleToggle(index: number) {
     setSelected((previous) => {
@@ -33,6 +40,21 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
       return next;
     });
     setResult(null);
+  }
+
+  function handleKeyDown(index: number, event: KeyboardEvent<HTMLInputElement>) {
+    const delta = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
+    if (delta === 0) {
+      return;
+    }
+
+    const next = index + delta;
+    if (next < 0 || next >= task.options.length) {
+      return;
+    }
+
+    event.preventDefault();
+    optionRefs.current[next]?.focus();
   }
 
   function handleCheck() {
@@ -67,8 +89,14 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
         {task.options.map((option, index) => (
           <label key={index} className="option">
             <input
+              ref={(node) => {
+                optionRefs.current[index] = node;
+              }}
               type="checkbox"
+              tabIndex={index === tabStopIndex ? 0 : -1}
               checked={selected.has(index)}
+              onFocus={() => setFocusedIndex(index)}
+              onKeyDown={(event) => handleKeyDown(index, event)}
               onChange={() => handleToggle(index)}
               disabled={result === 'correct'}
               aria-invalid={invalid || undefined}

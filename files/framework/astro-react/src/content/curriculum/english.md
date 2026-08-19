@@ -124,12 +124,35 @@ This lesson has an order task.
 
 Put these steps in the correct order.
 
-1. Preheat the oven.
-2. Mix the batter.
-3. Pour the batter into the pan.
-4. Bake for 30 minutes.
+1. Step 1
+2. Step 2
+3. Step 3
+4. Step 4
 
 --end-order--
+
+### Lesson 7
+
+This lesson has a crossword task.
+
+--crossword--
+
+Fill in the crossword using the clues below.
+
+```
+.S..
+GLAD
+.O..
+.W..
+```
+
+Across:
+- A word meaning happy (glad)
+
+Down:
+- Opposite of fast (slow)
+
+--end-crossword--
 
 ## Module 2.1
 
