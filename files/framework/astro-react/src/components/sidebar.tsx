@@ -11,9 +11,7 @@ export function Sidebar({ children }: SidebarProps) {
 
   return (
     <div className={open ? 'sidebar' : 'sidebar closed'}>
-      <div className="sidebar-inner">
-        {children}
-      </div>
+      <div className="sidebar-inner">{children}</div>
     </div>
   );
 }
