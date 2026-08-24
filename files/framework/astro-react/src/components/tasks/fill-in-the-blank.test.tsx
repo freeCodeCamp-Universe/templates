@@ -8,9 +8,9 @@ const task: Extract<Task, { type: "fill-in-the-blank" }> = {
   type: "fill-in-the-blank",
   segments: [
     { kind: "text", value: "The sky is " },
-    { kind: "blank", answer: "blue" },
+    { kind: "blank", answers: ["blue"] },
     { kind: "text", value: " and the grass is " },
-    { kind: "blank", answer: "green" },
+    { kind: "blank", answers: ["green"] },
   ],
 };
 

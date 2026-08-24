@@ -112,7 +112,7 @@ describe("FillInBlankTaskSchema", () => {
       type: "fill-in-the-blank",
       segments: [
         { kind: "text", value: "Hello " },
-        { kind: "blank", answer: "world" },
+        { kind: "blank", answers: ["world"] },
       ],
     };
 
@@ -266,7 +266,7 @@ describe("parseFillInBlankContent", () => {
 
   type FillInBlankResult = {
     segments: Array<
-      { kind: "text"; value: string } | { kind: "blank"; answer: string }
+      { kind: "text"; value: string } | { kind: "blank"; answers: string[] }
     >;
   };
 
@@ -277,7 +277,7 @@ describe("parseFillInBlankContent", () => {
 
     expect(result.segments).toEqual([
       { kind: "text", value: "The sky is " },
-      { kind: "blank", answer: "blue" },
+      { kind: "blank", answers: ["blue"] },
     ]);
   });
 
@@ -287,9 +287,9 @@ describe("parseFillInBlankContent", () => {
     const result = parse(nodes) as FillInBlankResult;
 
     expect(result.segments).toEqual([
-      { kind: "blank", answer: "one" },
+      { kind: "blank", answers: ["one"] },
       { kind: "text", value: " and " },
-      { kind: "blank", answer: "two" },
+      { kind: "blank", answers: ["two"] },
     ]);
   });
 
@@ -298,7 +298,9 @@ describe("parseFillInBlankContent", () => {
 
     const result = parse(nodes) as FillInBlankResult;
 
-    expect(result.segments).toEqual([{ kind: "blank", answer: "hello" }]);
+    expect(result.segments).toEqual([
+      { kind: "blank", answers: ["hello"] },
+    ]);
   });
 
   it("returns only text when there are no blanks", () => {
