@@ -6,14 +6,15 @@
     "node": "24"
   },
   "scripts": {
-    "dev": "astro dev --host --ignore-lock",
-    "build": "astro build",
-    "preview": "astro preview",
     "astro": "astro",
-    "typecheck": "astro check",
-    "lint": "eslint .",
+    "build": "astro build",
+    "dev": "astro dev --host --ignore-lock",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "preview": "astro preview",
+    "test": "vitest",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "@astrojs/react": "^6",
