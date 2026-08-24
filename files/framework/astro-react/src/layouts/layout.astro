@@ -26,14 +26,20 @@ const { title, brand, hasSidebar = false } = Astro.props;
     <ClientRouter />
   </head>
   <body class="dark-palette">
-    <!-- Load theme before paint -->
     <script is:inline>
       (function () {
-        const stored = localStorage.getItem('theme');
-        if (stored === 'light') {
-          document.body.classList.remove('dark-palette');
-          document.body.classList.add('light-palette');
+        function applyTheme() {
+          const stored = localStorage.getItem('theme');
+          if (stored === 'light') {
+            document.body.classList.remove('dark-palette');
+            document.body.classList.add('light-palette');
+          }
         }
+        // Inline scripts are not run during page transitions so the theme
+        // needs re-applying
+        document.addEventListener('astro:after-swap', applyTheme);
+
+        applyTheme();
       })();
     </script>
     <Nav brand={brand} showSidebarToggle={hasSidebar} client:load />
