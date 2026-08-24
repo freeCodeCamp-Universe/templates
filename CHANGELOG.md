@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.1.0...app-templates-v1.2.0) (2026-08-24)
+
+
+### Features
+
+* **astro-react:** accept alternative answers in fill-in-the-blank ([#71](https://github.com/freeCodeCamp-Universe/templates/issues/71)) ([4b49188](https://github.com/freeCodeCamp-Universe/templates/commit/4b49188d8badd31884c4453c01ac355358b368db))
+
+
+### Bug Fixes
+
+* keep theme during page transition (astro-react) ([#82](https://github.com/freeCodeCamp-Universe/templates/issues/82)) ([7b2aa51](https://github.com/freeCodeCamp-Universe/templates/commit/7b2aa512cae04e4c140abd45b782af4d58b18851))
+
 ## [1.1.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.0.0...app-templates-v1.1.0) (2026-08-18)
 
 
