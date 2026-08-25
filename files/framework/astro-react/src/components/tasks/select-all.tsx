@@ -25,8 +25,6 @@ export function SelectAll({ task, onCorrect }: SelectAllProps) {
   const [result, setResult] = useState<Result | null>(null);
   const optionRefs = useRef<Array<HTMLInputElement | null>>([]);
 
-  // Only one checkbox is ever a tab stop (roving tabindex), so Tab moves in/out of
-  // the whole group in a single step - arrow keys move within it, same as the crossword grid.
   const tabStopIndex = focusedIndex ?? 0;
 
   function handleToggle(index: number) {
