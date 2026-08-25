@@ -100,4 +100,35 @@ describe(SelectAll, () => {
       expect(checkbox).toBeDisabled();
     }
   });
+
+  it("only the first checkbox is a tab stop initially", () => {
+    render(<SelectAll task={task} onCorrect={() => {}} />);
+
+    expect(screen.getByRole("checkbox", { name: "A" }).tabIndex).toBe(0);
+    expect(screen.getByRole("checkbox", { name: "B" }).tabIndex).toBe(-1);
+    expect(screen.getByRole("checkbox", { name: "C" }).tabIndex).toBe(-1);
+  });
+
+  it("moves focus between checkboxes with arrow keys and stops at the edges", async () => {
+    const user = userEvent.setup();
+
+    render(<SelectAll task={task} onCorrect={() => {}} />);
+
+    const a = screen.getByRole("checkbox", { name: "A" });
+    const b = screen.getByRole("checkbox", { name: "B" });
+    const c = screen.getByRole("checkbox", { name: "C" });
+
+    await user.click(a);
+    await user.keyboard("{ArrowUp}");
+    expect(a).toHaveFocus();
+
+    await user.keyboard("{ArrowDown}");
+    expect(b).toHaveFocus();
+
+    await user.keyboard("{ArrowDown}");
+    expect(c).toHaveFocus();
+
+    await user.keyboard("{ArrowDown}");
+    expect(c).toHaveFocus();
+  });
 });
