@@ -1,6 +1,6 @@
 {
   "node": {
-    "baseImage": "node:22-alpine",
+    "baseImage": "node:24-alpine",
     "databases": [
       "postgresql",
       "redis"
@@ -17,7 +17,7 @@
     "services": []
   },
   "static_web": {
-    "baseImage": "node:22-alpine",
+    "baseImage": "node:24-alpine",
     "databases": [],
     "frameworks": [
       "html-css-js",
