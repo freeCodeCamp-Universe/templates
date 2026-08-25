@@ -96,6 +96,8 @@ while IFS= read -r file; do
   [[ -z "$file" ]] && continue
   should_ignore "$file" && continue
   src="$source_abs/$file"
+  # Skip directories (e.g. submodule entries)
+  [[ -d "$src" && ! -f "$src" ]] && continue
   dst="$dest_dir/$file"
   mkdir -p "$(dirname "$dst")"
   cp "$src" "$dst"

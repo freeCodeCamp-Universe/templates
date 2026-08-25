@@ -18,6 +18,7 @@ type OrderProps = {
   onCorrect: () => void;
 };
 
+// Fisher-Yates algorithm
 function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i--) {
