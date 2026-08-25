@@ -19,4 +19,33 @@ describe(Progress, () => {
 
     expect(continueLink.getAttribute('href')).toBe('/learn/next-lesson');
   });
+
+  it('shows Start learning when no lessons are complete', () => {
+    localStorage.setItem('progress', JSON.stringify([]));
+
+    render(<Progress lessons={lessons} />);
+
+    const startLink = screen.getByRole('link', { name: 'Start learning' });
+
+    expect(startLink.getAttribute('href')).toBe('/learn/completed-lesson');
+  });
+
+  it('shows Browse lessons instead of a lesson link once everything is complete', () => {
+    localStorage.setItem('progress', JSON.stringify(['completed-lesson', 'next-lesson']));
+
+    render(<Progress lessons={lessons} />);
+
+    const browseLink = screen.getByRole('link', { name: 'Browse lessons' });
+
+    expect(browseLink.getAttribute('href')).toBe('/learn');
+    expect(screen.queryByRole('link', { name: 'Continue learning' })).not.toBeInTheDocument();
+  });
+
+  it('links each section title to its next incomplete lesson', () => {
+    render(<Progress lessons={lessons} />);
+
+    const sectionLink = screen.getByRole('link', { name: 'Section one' });
+
+    expect(sectionLink.getAttribute('href')).toBe('/learn/next-lesson');
+  });
 });
