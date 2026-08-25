@@ -1,7 +1,11 @@
-import type { List, ListItem, Paragraph, Text } from "mdast";
+import type { Code, List, ListItem, Paragraph, Text } from "mdast";
 
 export function paragraph(text: string): Paragraph {
   return { type: "paragraph", children: [{ type: "text", value: text }] };
+}
+
+export function code(value: string): Code {
+  return { type: "code", value };
 }
 
 export function listItem(
