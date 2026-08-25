@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.2.0...app-templates-v1.3.0) (2026-08-25)
+
+
+### Features
+
+* bump all node versions to 24 and pin them ([#85](https://github.com/freeCodeCamp-Universe/templates/issues/85)) ([79d7d58](https://github.com/freeCodeCamp-Universe/templates/commit/79d7d589f0c390aa9ece6ba66762893bc2fa19f6))
+* refactor astro-react into a more standard structure ([#60](https://github.com/freeCodeCamp-Universe/templates/issues/60)) ([573a1c1](https://github.com/freeCodeCamp-Universe/templates/commit/573a1c17b0dfb636e13e26c1bc421d0f33f0799a))
+
+
+### Bug Fixes
+
+* remove old file ([#84](https://github.com/freeCodeCamp-Universe/templates/issues/84)) ([e9a1f33](https://github.com/freeCodeCamp-Universe/templates/commit/e9a1f33bd175697b2a8da3f0d29d0e337757d0c4))
+
 ## [1.2.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.1.0...app-templates-v1.2.0) (2026-08-24)
 
 
