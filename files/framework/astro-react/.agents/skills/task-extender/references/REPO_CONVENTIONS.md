@@ -2,9 +2,9 @@
 
 - **Shared client-side reactive logic goes in `src/hooks/` as a real custom hook** (function prefixed `use`, itself calling `useState`/`useEffect`), not a plain lib utility that each consuming component wraps in its own manual `useEffect`. Only applies once something is used by 2+ components - single-consumer client logic can just live inline in that one component (see `nav.tsx`'s theme handling).
 
-- **Page-level components (1:1 with a route) go in `src/views/`.** `src/components/` is for things actually reused across multiple places. Task-type components (multiple-choice, select-all, etc.) get their own `src/components/tasks/` subfolder.
+- **Components all live in `src/components/`** - there's no separate `views/` folder. Page-level components (1:1 with a route, e.g. `lesson.tsx`, `progress.tsx`) sit alongside genuinely-reused ones (e.g. `button.tsx`, `nav.tsx`). Task-type components (multiple-choice, select-all, etc.) get their own `src/components/tasks/` subfolder.
 
-- **`src/lib/` is framework-agnostic, non-component, non-hook logic only.** File names should self-identify their domain (e.g. `curriculum-tasks.ts`) unless the file is genuinely generic (e.g. `mdast-utils.ts`).
+- **`src/lib/` is framework-agnostic, non-component, non-hook logic only.** File names should self-identify their domain (e.g. `curriculum-progress.ts`) unless the file is genuinely generic (e.g. `mdast-utils.ts`). A domain with multiple related pieces gets its own subfolder instead of one large file (see `curriculum-tasks/`, one file per task type).
 
 - **Use `type` for object shapes, not `interface`.** Matches every prop-type definition in the codebase.
 
@@ -35,13 +35,11 @@
 ## Adding a new task type
 
 1. Decide the markdown syntax - what `--your-task-type--` looks like and what content follows it.
-2. In `src/lib/curriculum-tasks.ts`:
-   - Add a Zod schema (`type: z.literal('your-task-type')` + fields), with `.refine()` for any cross-field validation.
-   - Add it to the exported `Task` union.
-   - Write a `parseYourTypeContent(nodes)` function extracting structured data from the raw mdast nodes.
-   - Register both under a new key in `TASK_DEFINITIONS`.
+2. In `src/lib/curriculum-tasks/`:
+   - Add `your-task-type.ts` with a Zod schema (`type: z.literal('your-task-type')` + fields, with `.refine()` for any cross-field validation) and a `parseYourTypeContent(nodes)` function extracting structured data from the raw mdast nodes. Reuse `option-list.ts` if the shape is just a question plus a list of options.
+   - In `index.ts`: add the schema to the exported `Task` union, and register the schema + parseContent under a new key in `TASK_DEFINITIONS`.
    - Do not touch `parse-curriculum.ts` - the registry entry is the only thing that needs to change.
 3. Build the component in `src/components/tasks/your-task-type.tsx` (+ CSS - reuse `option-task.css` if it fits an options-list shape, otherwise a new co-located file). Follow the established pattern: never disable the check/submit button (inputs themselves may be disabled once the task is answered correctly), use `aria-live="polite"` for feedback, use `aria-labelledby` instead of `<legend>`/`<label>` if the prompt or options need rich markdown, and know that `role="radio"` doesn't support `aria-invalid` (jsx-a11y flags it) if the new type uses radio inputs.
-4. Wire it into `src/views/lesson.tsx` - add a `block.task.type === 'your-task-type'` branch inside the `lesson.content.map(...)` dispatch.
+4. Wire it into `src/components/lesson.tsx` - add a `block.task.type === 'your-task-type'` branch inside the `lesson.content.map(...)` dispatch.
 5. Add at least one real example to `english.md` to verify parsing.
 6. Verify: lint/format/typecheck/build, and deliberately break the example once to confirm the build actually fails with a clear message before restoring it.
