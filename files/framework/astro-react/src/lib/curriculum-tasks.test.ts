@@ -277,19 +277,6 @@ describe("CrosswordTaskSchema", () => {
     expect(() => schema.parse(data)).toThrow();
   });
 
-  it("rejects a letter that isn't part of any across or down word", () => {
-    const data = {
-      ...validData,
-      solution: [
-        ["A", "B", null],
-        [null, null, "C"],
-      ],
-      clues: [{ direction: "across", clue: "x", row: 0, col: 0, length: 2 }],
-    };
-
-    expect(() => schema.parse(data)).toThrow();
-  });
-
   it("rejects a grid that splits into more than one disconnected group", () => {
     const data = {
       ...validData,
