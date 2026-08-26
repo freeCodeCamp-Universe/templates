@@ -18,6 +18,8 @@
 
 - **Avoid FOUC for client-only state** (theme, progress, anything read from `localStorage`) with a synchronous `<script is:inline>` that runs before paint, co-located with the component whose visual state it affects, not in `layout.astro`. Build-time/SSR can't know a visitor's client state, so without this it flashes the wrong version before hydration corrects it. See the theme script and `curriculum-map.astro`'s completed-badge script.
 
+- **For a task's set of interactive options**, Tab should move into and out of the whole group in one step, with arrow keys moving within it. Use native semantics where they give you this for free, otherwise roving `tabindex` (see existing task files for the pattern). This is not a hard rule, prefer it unless it doesn't make sense. If the arrows are needed for something else within the task items for example.
+
 - **Match existing patterns before inventing new ones.** Before writing something new, check how a similar problem is already solved here (data fetching, error handling, hook shape, component composition) and follow that, unless there's a real reason not to. If you do introduce a genuinely new pattern, add a rule here so it's the one everyone follows next time, instead of an undocumented one-off.
 
 - **Update this file when the code moves out from under it.** If a change renames, deletes, or restructures something a rule here points to (a file, a function, a pattern), update or remove that rule in the same change - don't leave a stale reference for the next person to trip over.
