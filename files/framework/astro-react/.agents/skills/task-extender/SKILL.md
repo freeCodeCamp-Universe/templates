@@ -5,7 +5,7 @@ description: Guides adding a new curriculum task type (like multiple-choice or f
 
 # Task Extender
 
-Design and implement a new curriculum task type following `references/REPO_CONVENTIONS.md`. Read that document and `src/lib/curriculum-tasks.ts` before doing anything so the new task matches existing conventions.
+Design and implement a new curriculum task type following `references/REPO_CONVENTIONS.md`. Read that document and a couple of existing files in `src/lib/curriculum-tasks/` before doing anything to understand existing conventions.
 
 # Rules
 
