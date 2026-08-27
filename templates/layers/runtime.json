@@ -23,6 +23,7 @@
       "html-css-js",
       "react-vite",
       "tanstack-shadcn",
+      "astro-lite",
       "astro-react"
     ],
     "packageManagers": [
