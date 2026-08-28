@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.4.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.3.0...app-templates-v1.4.0) (2026-08-28)
+
+
+### Features
+
+* add a stripped-down astro-lite template ([#88](https://github.com/freeCodeCamp-Universe/templates/issues/88)) ([c8d211c](https://github.com/freeCodeCamp-Universe/templates/commit/c8d211c89bb729a9891a2fb5fe05139007b5ffb0))
+* add tests to astro-react template ([#42](https://github.com/freeCodeCamp-Universe/templates/issues/42)) ([3ec7675](https://github.com/freeCodeCamp-Universe/templates/commit/3ec76759dfffd9f5ba39ed564ab3b7a60d2fa6b0))
+* more astro react template ([#81](https://github.com/freeCodeCamp-Universe/templates/issues/81)) ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+
+
+### Bug Fixes
+
+* add note about new pattern in repo conventions ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* buttons on progress page ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* crossword better ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* crossword UI ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* focus next lesson when navigating between lessons ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* link to sections on progress page ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* make arrows navigate crossword - tab exits ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* progress bar on progress page ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+* use arrow to move around select all options ([7638e21](https://github.com/freeCodeCamp-Universe/templates/commit/7638e21e11ad03468d735778ac16236fe30ef5da))
+
 ## [1.3.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.2.0...app-templates-v1.3.0) (2026-08-25)
 
 
