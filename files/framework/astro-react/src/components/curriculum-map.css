@@ -5,14 +5,16 @@
 
 .section + .section {
   border-top: 1px solid var(--tertiary-background);
-  padding-top: var(--space-md);
+  padding-top: var(--space-lg);
 }
+
+/* Disclosure rows: section and module headers */
 
 .section summary,
 .module-block summary {
   display: flex;
   align-items: center;
-  gap: calc(var(--space-xs) + 3px);
+  gap: var(--space-sm);
   list-style: none;
   cursor: pointer;
 }
@@ -38,60 +40,68 @@
   transform: rotate(90deg);
 }
 
-.section summary {
-  margin-bottom: var(--space-sm);
-}
-
-.module-block summary {
-  margin-bottom: var(--space-xs);
-}
+/* Spacing below a header belongs to the content it opens, not to the header.
+   On a collapsed section the header has nothing below it, and a margin here
+   would push the section divider off-centre. */
 
 .section h2 {
   margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.75rem;
-  color: var(--quaternary-color);
-}
-
-.module-block + .module-block {
-  margin-top: var(--space-md);
-}
-
-.module-block {
-  padding-left: var(--space-sm);
+  font-size: var(--text-size-md);
+  font-weight: 700;
+  color: var(--primary-color);
 }
 
 .module-block h3 {
   margin: 0;
   font-size: var(--text-size-sm);
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* Counts: "3 modules", "1/6". Monospace so the digits align down the rail. */
+
+.count {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-size-xs);
+  font-weight: 400;
+  color: var(--quaternary-color);
+}
+
+/* Vertical rail joining the modules of one section */
+
+.modules {
+  margin-top: var(--space-md);
+  margin-bottom: calc(-1 * (var(--space-sm) + var(--space-xs)));
+  margin-left: var(--space-xs);
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--tertiary-background);
+}
+
+.module-block + .module-block {
+  margin-top: var(--space-lg);
 }
 
 .list {
   list-style: none;
-  margin: 0;
+  margin: var(--space-sm) 0 0;
   padding: 0;
 }
 
-.item + .item {
-  margin-top: var(--space-xs);
-}
+/* Lesson rows. The left margin pulls the row out of the rail's padding so its
+   border-left lands on the rail itself, and the matching left padding keeps the
+   row content where it would have sat without the pull. */
 
 .item-link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-xs);
-  font-size: var(--text-size-xs);
-  margin-left: calc(var(--space-md) * -2);
-  margin-right: calc(-1 * var(--space-md));
-  padding: var(--space-xs) var(--space-md) var(--space-xs) calc(var(--space-md) * 3);
-}
-
-.item-link.current {
-  background: var(--secondary-background);
-  border-left: 2px solid var(--highlight-color);
-  padding-left: calc(var(--space-md) * 3 - 2px);
+  gap: var(--space-sm);
+  font-size: var(--text-size-sm);
+  margin-left: calc(-1 * (var(--space-md) + 1px));
+  margin-right: calc(-1 * var(--space-sm));
+  padding: var(--space-sm) var(--space-sm) var(--space-sm) calc(2 * var(--space-md) + 1px);
+  border-left: 3px solid transparent;
 }
 
 .item-link:hover {
@@ -99,24 +109,47 @@
   text-decoration: none;
 }
 
-.completed-badge {
-  margin-left: var(--space-xs);
+.item-link.current {
+  background: var(--secondary-background);
+  border-left-color: var(--blue-mid);
   font-weight: 700;
 }
 
-.badge-pending {
-  color: var(--quaternary-color);
+/* Completion checkbox */
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  border: 2px solid var(--quaternary-background);
+  border-radius: calc(var(--radius-sm) / 3);
+  font-size: 0.85em;
+  line-height: 1;
+  color: transparent;
 }
 
-.badge-complete {
-  display: none;
+.check::before {
+  content: '✓';
+}
+
+.item-link.current .check {
+  border-color: var(--blue-mid);
+}
+
+.item-link.completed .check {
+  border-color: var(--success-color);
   color: var(--success-color);
 }
 
-.completed-badge.completed .badge-pending {
-  display: none;
+/* A finished lesson recedes; the unfinished ones are what you are looking for. */
+
+.item-link.completed .item-title {
+  color: var(--quaternary-color);
 }
 
-.completed-badge.completed .badge-complete {
-  display: inline;
+.item-link:not(.completed) .status-complete {
+  display: none;
 }
