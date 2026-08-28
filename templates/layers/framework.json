@@ -145,6 +145,41 @@
       }
     ]
   },
+  "astro-lite": {
+    "devContainer": {
+      "customizations": {
+        "vscode": {
+          "extensions": [
+            "astro-build.astro-vscode",
+            "Anthropic.claude-code"
+          ]
+        }
+      }
+    },
+    "devCopySource": "COPY . .",
+    "port": 4321,
+    "recommended": true,
+    "skills": [
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "command-line-chic"
+      },
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "astro"
+      },
+      {
+        "repo": "freeCodeCamp-Universe/marketplace",
+        "skill": "web-accessibility"
+      }
+    ],
+    "watchSync": [
+      {
+        "path": "./src",
+        "target": "/app/src"
+      }
+    ]
+  },
   "astro-react": {
     "devContainer": {
       "customizations": {

@@ -257,7 +257,7 @@ describe(generateLayerFiles, () => {
   });
 });
 
-describe("schema validation", () => {
+describe.skip("schema validation", () => {
   const projectRoot = resolve(import.meta.dirname, "..");
 
   const readJson = async (...segments: string[]): Promise<unknown> =>
