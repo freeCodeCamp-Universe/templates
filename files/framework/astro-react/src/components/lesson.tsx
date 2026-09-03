@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { navigate } from 'astro:transitions/client';
 import type { Lesson } from '../lib/curriculum-types';
 import { Markdown } from './markdown';
 import { Button } from './button';
@@ -30,6 +31,41 @@ export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonPro
   function handleTaskPassed() {
     setPassedCount((count) => count + 1);
   }
+
+ 
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (!(event.ctrlKey || event.metaKey) || event.key !== 'Enter') {
+        return;
+      }
+
+      const focusedTask = event.target instanceof Element ? event.target.closest('.task') : null;
+      const checkButton = focusedTask?.querySelector<HTMLButtonElement>('.task-actions .btn-primary');
+
+      if (checkButton) {
+        event.preventDefault();
+        checkButton.click();
+        return;
+      }
+
+      if (canProceed) {
+        event.preventDefault();
+        markLessonComplete(lessonSlug);
+        navigate(nextHref);
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [canProceed, lessonSlug, nextHref]);
+
+  const couldProceedRef = useRef(canProceed);
+  useEffect(() => {
+    if (canProceed && !couldProceedRef.current) {
+      document.querySelector<HTMLAnchorElement>('.lesson-next a')?.focus();
+    }
+    couldProceedRef.current = canProceed;
+  }, [canProceed]);
 
   return (
     <main id="main-content" className={sidebarOpen ? 'main sidebar-open' : 'main'} tabIndex={-1}>
