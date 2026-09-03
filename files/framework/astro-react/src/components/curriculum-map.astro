@@ -16,13 +16,15 @@ const { curriculum, currentLessonSlug } = Astro.props;
     curriculum.sections.map((section) => {
       const containsCurrentLesson = (moduleTitle: string, lessons: { title: string }[]) =>
         lessons.some(
-          (lesson) => buildLessonRouteSlug(section.title, moduleTitle, lesson.title) === currentLessonSlug,
+          (lesson) =>
+            buildLessonRouteSlug(section.title, moduleTitle, lesson.title) === currentLessonSlug,
         );
 
       // Learn page has no current lesson -> everything it expanded
       // Lesson page has current lesson -> expand that section
       const sectionOpen =
-        !currentLessonSlug || section.modules.some((module) => containsCurrentLesson(module.title, module.lessons));
+        !currentLessonSlug ||
+        section.modules.some((module) => containsCurrentLesson(module.title, module.lessons));
 
       return (
         <details class="section" open={sectionOpen}>
@@ -31,7 +33,8 @@ const { curriculum, currentLessonSlug } = Astro.props;
           </summary>
 
           {section.modules.map((module) => {
-            const moduleOpen = !currentLessonSlug || containsCurrentLesson(module.title, module.lessons);
+            const moduleOpen =
+              !currentLessonSlug || containsCurrentLesson(module.title, module.lessons);
 
             return (
               <details class="module-block" open={moduleOpen}>
@@ -76,18 +79,26 @@ const { curriculum, currentLessonSlug } = Astro.props;
 
 <script is:inline>
   (function () {
-    try {
-      const stored = localStorage.getItem('progress');
-      const completed = stored ? JSON.parse(stored) : [];
-      if (!Array.isArray(completed)) return;
+    function applyProgress() {
+      try {
+        const stored = localStorage.getItem('progress');
+        const completed = stored ? JSON.parse(stored) : [];
+        if (!Array.isArray(completed)) return;
 
-      for (const slug of completed) {
-        if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) continue;
-        const badge = document.querySelector('.completed-badge[data-lesson-slug="' + slug + '"]');
-        if (badge) badge.classList.add('completed');
+        for (const slug of completed) {
+          if (typeof slug !== 'string' || !/^[a-z0-9-]+$/.test(slug)) continue;
+          const badge = document.querySelector('.completed-badge[data-lesson-slug="' + slug + '"]');
+          if (badge) badge.classList.add('completed');
+        }
+      } catch {
+        // ignore malformed stored progress
       }
-    } catch {
-      // ignore malformed stored progress
     }
+
+    // Inline scripts are not run during page transitions so the progress
+    // needs re-applying
+    document.addEventListener('astro:after-swap', applyProgress);
+
+    applyProgress();
   })();
 </script>
