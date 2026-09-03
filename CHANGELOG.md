@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.4.0...app-templates-v1.5.0) (2026-09-03)
+
+
+### Features
+
+* add hotkeys ([#91](https://github.com/freeCodeCamp-Universe/templates/issues/91)) ([bcac656](https://github.com/freeCodeCamp-Universe/templates/commit/bcac65608ff7c57d7f2d032f51795d7f932e976d))
+
+
+### Bug Fixes
+
+* **astro-lite:** add .gitignore ([#89](https://github.com/freeCodeCamp-Universe/templates/issues/89)) ([ca9b06d](https://github.com/freeCodeCamp-Universe/templates/commit/ca9b06dc9f67240a0934fdb022e3c6cbbcff1959))
+* keep progress checkmarks visible on page transition ([#93](https://github.com/freeCodeCamp-Universe/templates/issues/93)) ([f536352](https://github.com/freeCodeCamp-Universe/templates/commit/f536352dac7e541f783575e643df0628f6924ed4))
+
 ## [1.4.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.3.0...app-templates-v1.4.0) (2026-08-28)
 
 
