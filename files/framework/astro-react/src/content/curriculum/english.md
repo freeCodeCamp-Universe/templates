@@ -172,6 +172,28 @@ The {{chef}} bought {{apples}} and {{flour.}}
 
 --end-text-select--
 
+### Lesson 9
+
+--image-select--
+
+Click the CPU in the diagram.
+
+![Computer components](/images/test-diagram.svg)
+
+Correct: cpu
+
+--end-image-select--
+
+--image-select--
+
+Click all the components that store data.
+
+![Computer components](/images/test-diagram.svg)
+
+Correct: ram, ssd
+
+--end-image-select--
+
 ## Module 2.1
 
 ### Lesson 1

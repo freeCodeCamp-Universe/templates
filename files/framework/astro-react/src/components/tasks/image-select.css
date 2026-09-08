@@ -1,0 +1,57 @@
+.image-select-prompt {
+  font-weight: 700;
+  padding: 0 var(--space-xs);
+}
+
+.image-select-loading {
+  width: 100%;
+  min-height: 200px;
+  background: var(--quaternary-background);
+  border-radius: var(--radius-md);
+  opacity: 0.3;
+}
+
+.image-select-container {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.image-select-container svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.image-select-container:focus-visible {
+  outline: var(--border-focus);
+  outline-offset: 2px;
+}
+
+.image-select-container [role='checkbox'] {
+  cursor: pointer;
+}
+
+.image-select-container [role='checkbox']:hover {
+  fill: var(--selection-color);
+}
+
+.image-select-container [aria-disabled='true'] {
+  cursor: default;
+  pointer-events: none;
+}
+
+.region-focused {
+  stroke: var(--blue-mid) !important;
+  stroke-width: 2px;
+}
+
+.region-selected {
+  fill: var(--highlight-color) !important;
+  fill-opacity: 0.4;
+}
+
+.region-correct {
+  fill: var(--success-color) !important;
+  fill-opacity: 0.4;
+}
