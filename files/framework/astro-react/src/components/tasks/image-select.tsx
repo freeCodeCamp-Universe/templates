@@ -151,6 +151,7 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
       ) : (
         // SVG files are authored by content authors and served from /public.
         // dangerouslySetInnerHTML is acceptable here since we control the source.
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           ref={containerRef}
           className="image-select-container"
@@ -159,7 +160,6 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
           aria-describedby={result ? feedbackId : undefined}
           aria-activedescendant={!isAnswered && tabStopId ? tabStopId : undefined}
           tabIndex={isAnswered ? -1 : 0}
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: svgMarkup }}
           onClick={handleContainerClick}
           onKeyDown={handleContainerKeyDown}

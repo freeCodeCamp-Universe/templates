@@ -194,6 +194,28 @@ Correct: ram, ssd
 
 --end-image-select--
 
+### Lesson 10
+
+--image-select--
+
+Click the resistor in the circuit.
+
+![A simple circuit diagram](/images/circuit-diagram.svg)
+
+Correct: resistor
+
+--end-image-select--
+
+--image-select--
+
+Click the components that store energy.
+
+![A simple circuit diagram](/images/circuit-diagram.svg)
+
+Correct: battery, capacitor
+
+--end-image-select--
+
 ## Module 2.1
 
 ### Lesson 1
