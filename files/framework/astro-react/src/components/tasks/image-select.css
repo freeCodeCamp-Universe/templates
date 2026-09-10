@@ -36,20 +36,16 @@
   cursor: pointer;
 }
 
-.image-select-container [role='checkbox']:hover {
-  fill: var(--selection-color) !important;
-  fill-opacity: 1 !important;
-  opacity: 1 !important;
-}
-
 .image-select-container [aria-disabled='true'] {
   cursor: default;
   pointer-events: none;
 }
 
-/* Only show the active-region outline while the group itself is actually
-   keyboard-focused - tabStopId always resolves to a region (it falls back to
-   the first one), so without this scoping it'd show on page load. */
+/* Hover and keyboard focus both mean "this is where you are" - same
+   treatment either way. Focus is scoped to :focus-visible on the container
+   so it doesn't show before any real interaction (tabStopId always resolves
+   to a region, even before focus happens). */
+.image-select-container [role='checkbox']:hover,
 .image-select-container:focus-visible .region-focused {
   stroke: var(--blue-mid) !important;
   stroke-opacity: 1 !important;

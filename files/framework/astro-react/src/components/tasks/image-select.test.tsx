@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ImageSelect } from "./image-select";
 import type { Task } from "../../lib/curriculum-tasks";
@@ -69,7 +69,7 @@ describe(ImageSelect, () => {
     const user = userEvent.setup();
     render(<ImageSelect task={task} onCorrect={() => {}} />);
 
-    await user.click(await screen.findByRole("checkbox", { name: "Region B" }));
+    fireEvent.click(await screen.findByRole("checkbox", { name: "Region B" }));
     await user.click(screen.getByRole("button", { name: /check answer/i }));
 
     expect(screen.getByText("Not quite. Try again.")).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe(ImageSelect, () => {
     const user = userEvent.setup();
     render(<ImageSelect task={task} onCorrect={onCorrect} />);
 
-    await user.click(await screen.findByRole("checkbox", { name: "Region A" }));
+    fireEvent.click(await screen.findByRole("checkbox", { name: "Region A" }));
     await user.click(screen.getByRole("button", { name: /check answer/i }));
 
     expect(screen.getByText("Correct!")).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe(ImageSelect, () => {
     const user = userEvent.setup();
     render(<ImageSelect task={task} onCorrect={() => {}} />);
 
-    await user.click(await screen.findByRole("checkbox", { name: "Region A" }));
+    fireEvent.click(await screen.findByRole("checkbox", { name: "Region A" }));
     await user.click(screen.getByRole("button", { name: /check answer/i }));
 
     for (const region of screen.getAllByRole("checkbox")) {
@@ -105,6 +105,17 @@ describe(ImageSelect, () => {
     const regionA = await screen.findByRole("checkbox", { name: "Region A" });
 
     expect(screen.getByRole("group")).toHaveAttribute("aria-activedescendant", regionA.id);
+  });
+
+  it("moves the active descendant on hover", async () => {
+    const user = userEvent.setup();
+    render(<ImageSelect task={task} onCorrect={() => {}} />);
+    const regionB = await screen.findByRole("checkbox", { name: "Region B" });
+    const regionBId = regionB.id;
+
+    await user.hover(regionB);
+
+    expect(screen.getByRole("group")).toHaveAttribute("aria-activedescendant", regionBId);
   });
 
   it("moves the active descendant with arrow keys and stops at the edge", async () => {
@@ -131,9 +142,6 @@ describe(ImageSelect, () => {
     group.focus();
     await user.keyboard(" ");
 
-    // Query fresh rather than reusing the element found above: React replaces
-    // the SVG's child nodes (via dangerouslySetInnerHTML) on this update, so
-    // a reference captured before the keypress would point at a detached node.
     expect(screen.getByRole("checkbox", { name: "Region A" })).toHaveAttribute(
       "aria-checked",
       "true",

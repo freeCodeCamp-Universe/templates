@@ -97,17 +97,28 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
     setResult(null);
   }
 
-  function handleContainerClick(event: React.MouseEvent) {
-    if (isAnswered) return;
-    let el: Element | null = event.target as Element;
+  function findRegionId(target: Element): string | null {
+    let el: Element | null = target;
     while (el && el !== containerRef.current) {
-      if (el.id && regionIds.includes(el.id)) {
-        toggleRegion(el.id);
-        setFocusedId(el.id);
-        return;
-      }
+      if (el.id && regionIds.includes(el.id)) return el.id;
       el = el.parentElement;
     }
+    return null;
+  }
+
+  function handleContainerClick(event: React.MouseEvent) {
+    if (isAnswered) return;
+    const id = findRegionId(event.target as Element);
+    if (id) {
+      toggleRegion(id);
+      setFocusedId(id);
+    }
+  }
+
+  function handleContainerMouseOver(event: React.MouseEvent) {
+    if (isAnswered) return;
+    const id = findRegionId(event.target as Element);
+    if (id) setFocusedId(id);
   }
 
   function handleContainerKeyDown(event: React.KeyboardEvent) {
@@ -166,6 +177,8 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
           tabIndex={isAnswered ? -1 : 0}
           dangerouslySetInnerHTML={{ __html: svgMarkup }}
           onClick={handleContainerClick}
+          // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+          onMouseOver={handleContainerMouseOver}
           onKeyDown={handleContainerKeyDown}
         />
       )}
