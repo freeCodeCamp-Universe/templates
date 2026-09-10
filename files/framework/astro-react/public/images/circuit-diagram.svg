@@ -11,7 +11,7 @@
   />
 
   <!-- resistor: top edge -->
-  <rect id="resistor" data-label="Resistor" x="130" y="42" width="80" height="36" fill="transparent"/>
+  <rect id="resistor" data-region="true" data-label="Resistor" x="130" y="42" width="80" height="36" fill="transparent"/>
   <path
     d="M130,60 L140,60 L150,48 L160,72 L170,48 L180,72 L190,48 L200,60 L210,60"
     fill="none"
@@ -21,7 +21,7 @@
   />
 
   <!-- capacitor: right edge -->
-  <rect id="capacitor" data-label="Capacitor" x="252" y="100" width="36" height="80" fill="transparent"/>
+  <rect id="capacitor" data-region="true" data-label="Capacitor" x="252" y="100" width="36" height="80" fill="transparent"/>
   <path
     d="M270,100 L270,135 M255,135 L285,135 M255,145 L285,145 M270,145 L270,180"
     fill="none"
@@ -31,7 +31,7 @@
   />
 
   <!-- switch: bottom edge (drawn open) -->
-  <rect id="switch" data-label="Switch" x="130" y="202" width="80" height="36" fill="transparent"/>
+  <rect id="switch" data-region="true" data-label="Switch" x="130" y="202" width="80" height="36" fill="transparent"/>
   <path
     d="M210,220 L190,220 M150,220 L130,220 M150,220 L185,205"
     fill="none"
@@ -43,7 +43,7 @@
   <circle cx="150" cy="220" r="4" fill="var(--tertiary-color, #dfdfe2)" pointer-events="none"/>
 
   <!-- battery: left edge -->
-  <rect id="battery" data-label="Battery" x="42" y="100" width="56" height="80" fill="transparent"/>
+  <rect id="battery" data-region="true" data-label="Battery" x="42" y="100" width="56" height="80" fill="transparent"/>
   <path
     d="M70,180 L70,155 M70,145 L70,100"
     fill="none"

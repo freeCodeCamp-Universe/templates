@@ -13,22 +13,10 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
   unanswered: 'Select at least one region first.',
 };
 
-const INTERACTIVE_TAGS = new Set([
-  'path',
-  'polygon',
-  'polyline',
-  'circle',
-  'ellipse',
-  'rect',
-  'line',
-  'g',
-]);
-
 function getRegionIds(svgText: string): string[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
-  return Array.from(doc.documentElement.querySelectorAll('[id]'))
-    .filter((el) => INTERACTIVE_TAGS.has(el.tagName.toLowerCase()))
+  return Array.from(doc.documentElement.querySelectorAll('[id][data-region]'))
     .map((el) => el.id)
     .filter(Boolean);
 }

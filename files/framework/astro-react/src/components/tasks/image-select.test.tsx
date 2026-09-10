@@ -5,8 +5,8 @@ import { ImageSelect } from "./image-select";
 import type { Task } from "../../lib/curriculum-tasks";
 
 const SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect id="a" data-label="Region A" x="0" y="0" width="40" height="40"/>
-  <rect id="b" data-label="Region B" x="60" y="60" width="40" height="40"/>
+  <rect id="a" data-region="true" data-label="Region A" x="0" y="0" width="40" height="40"/>
+  <rect id="b" data-region="true" data-label="Region B" x="60" y="60" width="40" height="40"/>
 </svg>`;
 
 const task: Extract<Task, { type: "image-select" }> = {
@@ -35,9 +35,9 @@ describe(ImageSelect, () => {
     expect(screen.getByRole("checkbox", { name: "Region B" })).toBeInTheDocument();
   });
 
-  it("treats a <line> element with an id as a selectable region", async () => {
+  it("treats any tagged element with data-region as a selectable region, regardless of tag", async () => {
     const lineSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-      <line id="wire" data-label="Wire" x1="0" y1="0" x2="100" y2="100"/>
+      <line id="wire" data-region="true" data-label="Wire" x1="0" y1="0" x2="100" y2="100"/>
     </svg>`;
     vi.stubGlobal(
       "fetch",
@@ -53,6 +53,23 @@ describe(ImageSelect, () => {
     render(<ImageSelect task={lineTask} onCorrect={() => {}} />);
 
     expect(await screen.findByRole("checkbox", { name: "Wire" })).toBeInTheDocument();
+  });
+
+  it("ignores an id'd element that has no data-region", async () => {
+    const svgWithStrayId = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <g id="layer1">
+        <rect id="a" data-region="true" data-label="Region A" x="0" y="0" width="40" height="40"/>
+      </g>
+    </svg>`;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ text: () => Promise.resolve(svgWithStrayId) }),
+    );
+
+    render(<ImageSelect task={task} onCorrect={() => {}} />);
+
+    await screen.findByRole("checkbox", { name: "Region A" });
+    expect(screen.getAllByRole("checkbox")).toHaveLength(1);
   });
 
   it("shows unanswered feedback when checking without a selection", async () => {
