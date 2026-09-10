@@ -61,9 +61,6 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
       });
   }, [task.imageSrc]);
 
-  // useLayoutEffect, not useEffect: the SVG's children get reset on some
-  // re-renders (dangerouslySetInnerHTML), and this reapplies role/aria/classes
-  // to them - useLayoutEffect runs before paint, so the reset never shows.
   useLayoutEffect(() => {
     if (!containerRef.current || !regionIds.length) return;
 
