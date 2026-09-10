@@ -35,6 +35,26 @@ describe(ImageSelect, () => {
     expect(screen.getByRole("checkbox", { name: "Region B" })).toBeInTheDocument();
   });
 
+  it("treats a <line> element with an id as a selectable region", async () => {
+    const lineSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <line id="wire" data-label="Wire" x1="0" y1="0" x2="100" y2="100"/>
+    </svg>`;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ text: () => Promise.resolve(lineSvg) }),
+    );
+    const lineTask: Extract<Task, { type: "image-select" }> = {
+      type: "image-select",
+      prompt: "Click the wire.",
+      imageSrc: "/images/line.svg",
+      correct: ["wire"],
+    };
+
+    render(<ImageSelect task={lineTask} onCorrect={() => {}} />);
+
+    expect(await screen.findByRole("checkbox", { name: "Wire" })).toBeInTheDocument();
+  });
+
   it("shows unanswered feedback when checking without a selection", async () => {
     const user = userEvent.setup();
     render(<ImageSelect task={task} onCorrect={() => {}} />);

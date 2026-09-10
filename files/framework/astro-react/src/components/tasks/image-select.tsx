@@ -13,7 +13,16 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
   unanswered: 'Select at least one region first.',
 };
 
-const INTERACTIVE_TAGS = new Set(['path', 'polygon', 'polyline', 'circle', 'ellipse', 'rect', 'g']);
+const INTERACTIVE_TAGS = new Set([
+  'path',
+  'polygon',
+  'polyline',
+  'circle',
+  'ellipse',
+  'rect',
+  'line',
+  'g',
+]);
 
 function getRegionIds(svgText: string): string[] {
   const parser = new DOMParser();
