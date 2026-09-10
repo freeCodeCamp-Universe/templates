@@ -15,6 +15,7 @@
   width: 100%;
   border-radius: var(--radius-md);
   overflow: hidden;
+  --region-halo: #ffffff;
 }
 
 .image-select-container svg {
@@ -36,7 +37,9 @@
 }
 
 .image-select-container [role='checkbox']:hover {
-  fill: var(--selection-color);
+  fill: var(--selection-color) !important;
+  fill-opacity: 1 !important;
+  opacity: 1 !important;
 }
 
 .image-select-container [aria-disabled='true'] {
@@ -53,16 +56,27 @@
   stroke-width: 2px;
   vector-effect: non-scaling-stroke;
   opacity: 1 !important;
+  filter: drop-shadow(0 0 1.5px var(--region-halo)) drop-shadow(0 0 1.5px var(--region-halo));
 }
 
 .region-selected {
   fill: var(--highlight-color) !important;
   fill-opacity: 0.4 !important;
+  stroke: var(--highlight-color) !important;
+  stroke-opacity: 1 !important;
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
   opacity: 1 !important;
+  filter: drop-shadow(0 0 1.5px var(--region-halo)) drop-shadow(0 0 1.5px var(--region-halo));
 }
 
 .region-correct {
   fill: var(--success-color) !important;
   fill-opacity: 0.4 !important;
+  stroke: var(--success-color) !important;
+  stroke-opacity: 1 !important;
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
   opacity: 1 !important;
+  filter: drop-shadow(0 0 1.5px var(--region-halo)) drop-shadow(0 0 1.5px var(--region-halo));
 }
