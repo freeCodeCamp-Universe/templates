@@ -154,6 +154,68 @@ Down:
 
 --end-crossword--
 
+### Lesson 8
+
+--text-select--
+
+Select the galaxy in the sentence below.
+
+I ate a {{milky way}} for breakfast.
+
+--end-text-select--
+
+--text-select--
+
+Select all the nouns in the sentence.
+
+The {{chef}} bought {{apples}} and {{flour.}}
+
+--end-text-select--
+
+### Lesson 9
+
+--image-select--
+
+Click the resistor in the circuit.
+
+![A simple circuit diagram](/images/circuit-diagram.svg)
+
+Correct: resistor
+
+--end-image-select--
+
+--image-select--
+
+Click the components that store energy.
+
+![A simple circuit diagram](/images/circuit-diagram.svg)
+
+Correct: battery, capacitor
+
+--end-image-select--
+
+### Lesson 10
+
+--image-select--
+
+Select the monitor.
+
+![A workstation image](/images/workstation.svg)
+
+Correct: monitor
+
+--end-image-select--
+
+--image-select--
+
+Select the speakers.
+
+![A workstation image](/images/workstation.svg)
+
+Correct: left-speaker, right-speaker
+
+--end-image-select--
+
 ## Module 2.1
 
 ### Lesson 1

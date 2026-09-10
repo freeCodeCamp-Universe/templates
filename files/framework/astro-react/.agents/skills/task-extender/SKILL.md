@@ -87,7 +87,19 @@ Do not continue until the user explicitly types `approve browser`.
 
 If the user requests changes, revise the mockup and continue iterating until the user explicitly types `approve browser`.
 
-## Step 6: Verify
+## Step 6: Write tests
+
+Add test files co-located with each new file that has testable logic, following the patterns in the existing test files. At minimum cover:
+
+- Schema validation: valid input passes, each `.refine()` rejection.
+- Parser: key tokenisation/extraction cases.
+- Component behaviour: renders all interactive elements, unanswered/incorrect/correct feedback, `onCorrect` is called, all inputs are disabled after a correct answer, secondary controls are hidden after a correct answer, roving tabindex initial state, and arrow-key navigation.
+
+Read the existing test files nearest to what you've added before writing, to match the import style, `describe`/`it` naming, and assertion patterns.
+
+Run `pnpm test your-task-type` and confirm all tests pass before moving on.
+
+## Step 7: Verify
 
 Run:
 
@@ -107,10 +119,11 @@ Self-review:
 Do not make further functional or visual changes after this point unless the
 user requests them.
 
-## Step 7: Report
+## Step 8: Report
 
 Summarize:
 
 - The markdown syntax that was added
 - The files that were changed
+- The test results
 - The verification results
