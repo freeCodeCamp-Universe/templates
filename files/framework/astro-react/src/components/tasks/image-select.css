@@ -49,15 +49,20 @@
    the first one), so without this scoping it'd show on page load. */
 .image-select-container:focus-visible .region-focused {
   stroke: var(--blue-mid) !important;
+  stroke-opacity: 1 !important;
   stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+  opacity: 1 !important;
 }
 
 .region-selected {
   fill: var(--highlight-color) !important;
-  fill-opacity: 0.4;
+  fill-opacity: 0.4 !important;
+  opacity: 1 !important;
 }
 
 .region-correct {
   fill: var(--success-color) !important;
-  fill-opacity: 0.4;
+  fill-opacity: 0.4 !important;
+  opacity: 1 !important;
 }

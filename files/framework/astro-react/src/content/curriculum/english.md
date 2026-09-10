@@ -194,6 +194,28 @@ Correct: battery, capacitor
 
 --end-image-select--
 
+### Lesson 10
+
+--image-select--
+
+Select the monitor.
+
+![A workstation image](/images/workstation.svg)
+
+Correct: monitor
+
+--end-image-select--
+
+--image-select--
+
+Select the speakers.
+
+![A workstation image](/images/workstation.svg)
+
+Correct: left-speaker, right-speaker
+
+--end-image-select--
+
 ## Module 2.1
 
 ### Lesson 1
