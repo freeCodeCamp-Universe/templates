@@ -47,14 +47,11 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
       .then((r) => r.text())
       .then((text) => {
         const markup = text.replace(/<\?xml[^?]*\?>\s*/g, '');
-        const ids = getRegionIds(markup);
         setSvgMarkup(markup);
-        setRegionIds(ids);
-        setFocusedId(ids[0] ?? null);
+        setRegionIds(getRegionIds(markup));
       });
   }, [task.imageSrc]);
 
-  // Sync accessibility attributes and visual state onto SVG elements
   useEffect(() => {
     if (!containerRef.current || !regionIds.length) return;
 
@@ -149,8 +146,6 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
       {svgMarkup === null ? (
         <div className="image-select-loading" aria-busy="true" />
       ) : (
-        // SVG files are authored by content authors and served from /public.
-        // dangerouslySetInnerHTML is acceptable here since we control the source.
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
         <div
           ref={containerRef}
