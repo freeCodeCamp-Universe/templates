@@ -19,7 +19,7 @@ const task: Extract<Task, { type: "image-select" }> = {
 beforeEach(() => {
   vi.stubGlobal(
     "fetch",
-    vi.fn().mockResolvedValue({ text: () => Promise.resolve(SVG) }),
+    vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve(SVG) }),
   );
 });
 
@@ -35,13 +35,34 @@ describe(ImageSelect, () => {
     expect(screen.getByRole("checkbox", { name: "Region B" })).toBeInTheDocument();
   });
 
+  it("shows an error message when the image fails to load", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
+
+    render(<ImageSelect task={task} onCorrect={() => {}} />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("This image couldn't be loaded.");
+  });
+
+  it("shows an error message when the SVG fails to parse", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve("not valid xml <<<") }),
+    );
+
+    render(<ImageSelect task={task} onCorrect={() => {}} />);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("This image couldn't be loaded.");
+  });
+
   it("treats any tagged element with data-region as a selectable region, regardless of tag", async () => {
     const lineSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
       <line id="wire" data-region="true" data-label="Wire" x1="0" y1="0" x2="100" y2="100"/>
     </svg>`;
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ text: () => Promise.resolve(lineSvg) }),
+      vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve(lineSvg) }),
     );
     const lineTask: Extract<Task, { type: "image-select" }> = {
       type: "image-select",
@@ -63,7 +84,7 @@ describe(ImageSelect, () => {
     </svg>`;
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ text: () => Promise.resolve(svgWithStrayId) }),
+      vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve(svgWithStrayId) }),
     );
 
     render(<ImageSelect task={task} onCorrect={() => {}} />);

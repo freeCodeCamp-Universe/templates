@@ -1,6 +1,6 @@
 import './task.css';
 import './image-select.css';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
 import { Button } from '../button';
@@ -16,6 +16,9 @@ const FEEDBACK_MESSAGES: Record<Result, string> = {
 function getRegionIds(svgText: string): string[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
+  if (doc.querySelector('parsererror')) {
+    throw new Error('Failed to parse SVG');
+  }
   return Array.from(doc.documentElement.querySelectorAll('[id][data-region]'))
     .map((el) => el.id)
     .filter(Boolean);
@@ -29,6 +32,7 @@ type ImageSelectProps = {
 export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
   const groupId = useId();
   const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
   const [regionIds, setRegionIds] = useState<string[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [focusedId, setFocusedId] = useState<string | null>(null);
@@ -40,16 +44,27 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
   const tabStopId = focusedId ?? regionIds[0] ?? null;
 
   useEffect(() => {
+    setLoadError(false);
     fetch(task.imageSrc)
-      .then((r) => r.text())
+      .then((r) => {
+        if (!r.ok) throw new Error(`Failed to load image: ${r.status}`);
+        return r.text();
+      })
       .then((text) => {
         const markup = text.replace(/<\?xml[^?]*\?>\s*/g, '');
         setSvgMarkup(markup);
         setRegionIds(getRegionIds(markup));
+      })
+      .catch((error: unknown) => {
+        console.error('Failed to load image-select image:', task.imageSrc, error);
+        setLoadError(true);
       });
   }, [task.imageSrc]);
 
-  useEffect(() => {
+  // useLayoutEffect, not useEffect: the SVG's children get reset on some
+  // re-renders (dangerouslySetInnerHTML), and this reapplies role/aria/classes
+  // to them - useLayoutEffect runs before paint, so the reset never shows.
+  useLayoutEffect(() => {
     if (!containerRef.current || !regionIds.length) return;
 
     for (const id of regionIds) {
@@ -151,7 +166,11 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
         <Markdown>{task.prompt}</Markdown>
       </div>
 
-      {svgMarkup === null ? (
+      {loadError ? (
+        <p className="image-select-error" role="alert">
+          This image couldn't be loaded.
+        </p>
+      ) : svgMarkup === null ? (
         <div className="image-select-loading" aria-busy="true" />
       ) : (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions

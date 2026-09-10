@@ -11,6 +11,10 @@
   opacity: 0.3;
 }
 
+.image-select-error {
+  color: var(--danger-color);
+}
+
 .image-select-container {
   width: 100%;
   border-radius: var(--radius-md);
@@ -49,30 +53,33 @@
 .image-select-container:focus-visible .region-focused {
   stroke: var(--blue-mid) !important;
   stroke-opacity: 1 !important;
-  stroke-width: 2px;
+  stroke-width: 2px !important;
   vector-effect: non-scaling-stroke;
   opacity: 1 !important;
-  filter: drop-shadow(0 0 1.5px var(--region-halo)) drop-shadow(0 0 1.5px var(--region-halo));
+  filter: drop-shadow(1.5px 0 0 var(--region-halo)) drop-shadow(-1.5px 0 0 var(--region-halo))
+    drop-shadow(0 1.5px 0 var(--region-halo)) drop-shadow(0 -1.5px 0 var(--region-halo));
 }
 
 .region-selected {
   fill: var(--highlight-color) !important;
-  fill-opacity: 0.4 !important;
+  fill-opacity: 0.06 !important;
   stroke: var(--highlight-color) !important;
   stroke-opacity: 1 !important;
-  stroke-width: 2px;
+  stroke-width: 2px !important;
   vector-effect: non-scaling-stroke;
   opacity: 1 !important;
-  filter: drop-shadow(0 0 1.5px var(--region-halo)) drop-shadow(0 0 1.5px var(--region-halo));
+  filter: drop-shadow(1.5px 0 0 var(--region-halo)) drop-shadow(-1.5px 0 0 var(--region-halo))
+    drop-shadow(0 1.5px 0 var(--region-halo)) drop-shadow(0 -1.5px 0 var(--region-halo));
 }
 
 .region-correct {
   fill: var(--success-color) !important;
-  fill-opacity: 0.4 !important;
+  fill-opacity: 0.06 !important;
   stroke: var(--success-color) !important;
   stroke-opacity: 1 !important;
-  stroke-width: 2px;
+  stroke-width: 2px !important;
   vector-effect: non-scaling-stroke;
   opacity: 1 !important;
-  filter: drop-shadow(0 0 1.5px var(--region-halo)) drop-shadow(0 0 1.5px var(--region-halo));
+  filter: drop-shadow(1.5px 0 0 var(--region-halo)) drop-shadow(-1.5px 0 0 var(--region-halo))
+    drop-shadow(0 1.5px 0 var(--region-halo)) drop-shadow(0 -1.5px 0 var(--region-halo));
 }
