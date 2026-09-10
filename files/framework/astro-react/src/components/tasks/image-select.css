@@ -23,9 +23,12 @@
   height: auto;
 }
 
+/* The container is what actually holds keyboard focus (aria-activedescendant
+   pattern), but we only want the active region itself to look focused - like
+   every other task type, where focus lands on the specific interactive
+   element, not a wrapper around it - so suppress the container's own ring. */
 .image-select-container:focus-visible {
-  outline: var(--border-focus);
-  outline-offset: 2px;
+  outline: none;
 }
 
 .image-select-container [role='checkbox'] {
@@ -41,7 +44,10 @@
   pointer-events: none;
 }
 
-.region-focused {
+/* Only show the active-region outline while the group itself is actually
+   keyboard-focused - tabStopId always resolves to a region (it falls back to
+   the first one), so without this scoping it'd show on page load. */
+.image-select-container:focus-visible .region-focused {
   stroke: var(--blue-mid) !important;
   stroke-width: 2px;
 }

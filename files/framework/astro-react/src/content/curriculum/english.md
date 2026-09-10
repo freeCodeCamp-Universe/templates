@@ -176,28 +176,6 @@ The {{chef}} bought {{apples}} and {{flour.}}
 
 --image-select--
 
-Click the CPU in the diagram.
-
-![Computer components](/images/test-diagram.svg)
-
-Correct: cpu
-
---end-image-select--
-
---image-select--
-
-Click all the components that store data.
-
-![Computer components](/images/test-diagram.svg)
-
-Correct: ram, ssd
-
---end-image-select--
-
-### Lesson 10
-
---image-select--
-
 Click the resistor in the circuit.
 
 ![A simple circuit diagram](/images/circuit-diagram.svg)
