@@ -11,6 +11,7 @@ import { Order } from './tasks/order';
 import { Crossword } from './tasks/crossword';
 import { TextSelect } from './tasks/text-select';
 import { ImageSelect } from './tasks/image-select';
+import { FlashCard } from './tasks/flash-card';
 import { useSidebarOpen } from '../hooks/use-sidebar-open';
 import { markLessonComplete } from '../lib/curriculum-progress';
 
@@ -106,6 +107,10 @@ export function Lesson({ lesson, lessonSlug, nextHref, isLastLesson }: LessonPro
 
             if (block.task.type === 'image-select') {
               return <ImageSelect key={index} task={block.task} onCorrect={handleTaskPassed} />;
+            }
+
+            if (block.task.type === 'flash-card') {
+              return <FlashCard key={index} task={block.task} onCorrect={handleTaskPassed} />;
             }
 
             return <FillInTheBlank key={index} task={block.task} onCorrect={handleTaskPassed} />;
