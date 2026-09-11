@@ -21,6 +21,7 @@ import { Markdown } from '../markdown';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
 import { TaskActions, type Result } from './task-actions';
 import { Button } from '../button';
+import { DragGrip } from './drag-grip';
 
 const UNPLACED = 'unplaced';
 
@@ -61,19 +62,6 @@ export function moveItem(
     [activeContainer]: containers[activeContainer].filter((item) => item !== activeId),
     [overContainer]: [...containers[overContainer], activeId],
   };
-}
-
-function DragGrip() {
-  return (
-    <svg className="item-grip" width="8" height="12" viewBox="0 0 8 12" aria-hidden="true" focusable="false">
-      <circle cx="1.5" cy="1.5" r="1.2" fill="currentColor" />
-      <circle cx="6.5" cy="1.5" r="1.2" fill="currentColor" />
-      <circle cx="1.5" cy="6" r="1.2" fill="currentColor" />
-      <circle cx="6.5" cy="6" r="1.2" fill="currentColor" />
-      <circle cx="1.5" cy="10.5" r="1.2" fill="currentColor" />
-      <circle cx="6.5" cy="10.5" r="1.2" fill="currentColor" />
-    </svg>
-  );
 }
 
 type ItemProps = {

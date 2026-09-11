@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Categorize, findContainer, moveItem } from "./categorize";
 import type { Task } from "../../lib/curriculum-tasks";
+import { dragPointerTo, waitOutDragClickGuard } from "../../test-utils/dnd";
 
 const task: Extract<Task, { type: "categorize" }> = {
   type: "categorize",
@@ -24,41 +25,16 @@ function getZoneItems(zoneName: string): string[] {
     .map((element) => element.textContent ?? "");
 }
 
-function mockRect(element: Element, rect: Partial<DOMRect>) {
-  vi.spyOn(element, "getBoundingClientRect").mockReturnValue({
-    x: 0,
-    y: 0,
-    width: 100,
-    height: 40,
-    top: 0,
-    left: 0,
-    right: 100,
-    bottom: 40,
-    toJSON: () => {},
-    ...rect,
-  });
-}
-
+// Each zone gets its own, non-overlapping vertical band so the pointer
+// coordinates land unambiguously in the intended target zone.
 const ZONE_TOP: Record<string, number> = { Items: 0, Fruit: 200, Vegetable: 400 };
 
 function dragItemToZone(itemText: string, zoneName: string) {
   const item = screen.getByText(itemText);
   const zone = screen.getByRole("group", { name: zoneName });
   const top = ZONE_TOP[zoneName];
-  const centerY = top + 75;
 
-  mockRect(item, { top: 0, left: 0, bottom: 40, right: 100 });
-  mockRect(zone, { top, left: 0, bottom: top + 150, right: 300 });
-
-  fireEvent.pointerDown(item, {
-    pointerId: 1,
-    isPrimary: true,
-    button: 0,
-    clientX: 50,
-    clientY: 20,
-  });
-  fireEvent.pointerMove(document, { pointerId: 1, clientX: 50, clientY: centerY });
-  fireEvent.pointerUp(document, { pointerId: 1, clientX: 50, clientY: centerY });
+  dragPointerTo(item, zone, { top, left: 0, bottom: top + 150, right: 300 });
 }
 
 describe("findContainer", () => {
@@ -144,6 +120,7 @@ describe(Categorize, () => {
     dragItemToZone("Banana", "Fruit");
     dragItemToZone("Carrot", "Vegetable");
 
+    await waitOutDragClickGuard();
     await user.click(screen.getByRole("button", { name: /check answer/i }));
 
     expect(screen.getByText("Correct!")).toBeInTheDocument();
@@ -158,6 +135,7 @@ describe(Categorize, () => {
     dragItemToZone("Banana", "Fruit");
     dragItemToZone("Carrot", "Fruit");
 
+    await waitOutDragClickGuard();
     await user.click(screen.getByRole("button", { name: /check answer/i }));
 
     expect(screen.getByText("Not quite. Try again.")).toBeInTheDocument();
@@ -168,6 +146,7 @@ describe(Categorize, () => {
     render(<Categorize task={task} onCorrect={() => {}} />);
 
     dragItemToZone("Apple", "Fruit");
+    await waitOutDragClickGuard();
     await user.click(screen.getByRole("button", { name: /reset/i }));
 
     expect(getZoneItems("Items")).toHaveLength(3);
