@@ -80,6 +80,19 @@ export function moveItem(
   };
 }
 
+function DragGrip() {
+  return (
+    <svg className="item-grip" width="8" height="12" viewBox="0 0 8 12" aria-hidden="true" focusable="false">
+      <circle cx="1.5" cy="1.5" r="1.2" fill="currentColor" />
+      <circle cx="6.5" cy="1.5" r="1.2" fill="currentColor" />
+      <circle cx="1.5" cy="6" r="1.2" fill="currentColor" />
+      <circle cx="6.5" cy="6" r="1.2" fill="currentColor" />
+      <circle cx="1.5" cy="10.5" r="1.2" fill="currentColor" />
+      <circle cx="6.5" cy="10.5" r="1.2" fill="currentColor" />
+    </svg>
+  );
+}
+
 type ItemProps = {
   id: string;
   disabled: boolean;
@@ -99,7 +112,8 @@ function Item({ id, disabled }: ItemProps) {
       {...attributes}
       {...listeners}
     >
-      {id}
+      <DragGrip />
+      <span>{id}</span>
     </div>
   );
 }
@@ -296,7 +310,12 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
         </div>
 
         <DragOverlay>
-          {activeId ? <div className="item-card item-overlay">{activeId}</div> : null}
+          {activeId ? (
+            <div className="item-card item-overlay">
+              <DragGrip />
+              <span>{activeId}</span>
+            </div>
+          ) : null}
         </DragOverlay>
       </DndContext>
 
