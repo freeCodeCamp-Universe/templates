@@ -16,79 +16,62 @@
 }
 
 .zone {
-  position: relative;
   border: 1px solid var(--quaternary-background);
   border-radius: var(--radius-md);
   padding: var(--space-md);
 }
 
 .zone-heading {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
   margin-bottom: var(--space-sm);
   font-size: var(--text-size-sm);
 }
 
 .zone-items {
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   min-height: 2.5rem;
-  margin-bottom: var(--space-sm);
 }
 
-.item-row {
-  pointer-events: auto;
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
+.zone-empty {
+  border-style: dashed;
+}
+
+.zone-over {
+  border-color: var(--highlight-color);
+  background: var(--selection-color);
+}
+
+.zone-placeholder {
+  margin: 0;
+  color: var(--quaternary-color);
+  font-size: var(--text-size-xs);
+  text-align: center;
+}
+
+.item-card {
+  background: var(--secondary-background);
   border: 1px solid var(--quaternary-background);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-sm);
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
 }
 
-.item-row:not(:disabled):hover {
-  background: var(--quaternary-background);
+.item-card:focus-visible {
+  outline: var(--border-focus);
+  outline-offset: 2px;
 }
 
-.item-row.selected {
-  background: var(--quaternary-background);
-  border-color: var(--highlight-color);
-  font-weight: 700;
+.item-dragging {
+  opacity: 0.4;
 }
 
-.item-row:disabled {
-  cursor: not-allowed;
+.item-overlay {
+  cursor: grabbing;
+  box-shadow: 0 4px 12px var(--primary-background-translucent);
 }
 
-.unshuffled .item-row {
+.unshuffled .item-card {
   visibility: hidden;
-}
-
-.zone-drop {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  background: none;
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-}
-
-.zone-drop.active:not(:disabled):hover {
-  background: var(--quaternary-background);
-}
-
-.zone-drop:disabled {
-  cursor: default;
 }
