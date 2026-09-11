@@ -15,10 +15,6 @@ import {
   type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-// Only its coordinate getter is used here - it jumps to the nearest
-// registered droppable in the pressed direction, which works fine for plain
-// (non-sortable) droppables too, since its sortable-specific offset logic
-// only kicks in when both sides actually have sortable data attached.
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
@@ -49,16 +45,11 @@ function zoneLabel(id: string): string {
   return id === UNPLACED ? 'Items' : id;
 }
 
-// Which container currently holds `id` - or, if `id` is itself a container
-// (e.g. an empty zone's own droppable), that container.
 export function findContainer(containers: Containers, id: string): string | undefined {
   if (id in containers) return id;
   return Object.keys(containers).find((key) => containers[key].includes(id));
 }
 
-// Moves `activeId` out of `activeContainer` and into `overContainer`. Order
-// within a container is never scored, so it's just appended - no insertion
-// position to work out.
 export function moveItem(
   containers: Containers,
   activeId: string,
@@ -91,10 +82,6 @@ type ItemProps = {
 };
 
 function Item({ id, disabled }: ItemProps) {
-  // No transform applied here: the DragOverlay is what visually follows the
-  // cursor. This card just sits at rest (wherever it's currently placed) and
-  // fades out while dragging - applying the raw pointer-delta transform on
-  // top of that produced a distorted, offset duplicate.
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id,
     disabled,
@@ -123,11 +110,6 @@ type ZoneProps = {
 function Zone({ id, items, activeId, disabled }: ZoneProps) {
   const { setNodeRef } = useDroppable({ id, disabled });
   const label = zoneLabel(id);
-
-  // Dragging over a zone eagerly relocates the item here as a live preview
-  // (see handleDragOver), so `items` briefly includes it before anything's
-  // actually dropped. Excluding the active item keeps the border reflecting
-  // what's actually settled, not the in-progress preview.
   const settledCount = items.filter((item) => item !== activeId).length;
 
   const classNames = ['zone'];
@@ -232,9 +214,6 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
   }
 
   function handleDragCancel() {
-    // handleDragOver already moved the item as a live preview while hovering
-    // - cancelling has to undo that, or the item would stay wherever it last
-    // hovered even though the user backed out of the move.
     if (activeId && dragStartContainer) {
       const currentContainer = findContainer(containers, activeId);
       if (currentContainer && currentContainer !== dragStartContainer) {

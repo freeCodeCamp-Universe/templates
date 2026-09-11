@@ -24,10 +24,6 @@ function getZoneItems(zoneName: string): string[] {
     .map((element) => element.textContent ?? "");
 }
 
-// dnd-kit measures real DOM rects to decide collisions, which jsdom doesn't
-// compute (everything is 0x0 by default). Stubbing getBoundingClientRect on
-// the specific elements involved lets a real pointer-driven drag resolve to
-// a specific drop target, the same way it would in a real layout.
 function mockRect(element: Element, rect: Partial<DOMRect>) {
   vi.spyOn(element, "getBoundingClientRect").mockReturnValue({
     x: 0,
@@ -43,8 +39,6 @@ function mockRect(element: Element, rect: Partial<DOMRect>) {
   });
 }
 
-// Each zone gets its own, non-overlapping vertical band so the pointer
-// coordinates land unambiguously in the intended target zone.
 const ZONE_TOP: Record<string, number> = { Items: 0, Fruit: 200, Vegetable: 400 };
 
 function dragItemToZone(itemText: string, zoneName: string) {
