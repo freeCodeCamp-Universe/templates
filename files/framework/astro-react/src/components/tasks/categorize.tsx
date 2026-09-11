@@ -1,4 +1,4 @@
-import './task.css';
+import './shared/task.css';
 import './categorize.css';
 import { useEffect, useId, useState } from 'react';
 import {
@@ -19,9 +19,9 @@ import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
-import { TaskActions, type Result } from './task-actions';
+import { TaskActions, type Result } from './shared/task-actions';
 import { Button } from '../button';
-import { DragGrip } from './drag-grip';
+import { DragGrip } from './shared/drag-grip';
 
 const UNPLACED = 'unplaced';
 

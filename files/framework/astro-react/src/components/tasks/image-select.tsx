@@ -1,11 +1,11 @@
-import './task.css';
+import './shared/task.css';
 import './image-select.css';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
 import { Button } from '../button';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
-import { TaskActions, type Result } from './task-actions';
+import { TaskActions, type Result } from './shared/task-actions';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',

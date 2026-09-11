@@ -1,6 +1,6 @@
 import './task.css';
 import type { ReactNode } from 'react';
-import { Button } from '../button';
+import { Button } from '../../button';
 
 export type Result = 'correct' | 'incorrect' | 'unanswered';
 

@@ -1,4 +1,4 @@
-import './task.css';
+import './shared/task.css';
 import './order.css';
 import { useEffect, useId, useState } from 'react';
 import {
@@ -25,8 +25,8 @@ import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
 import { Button } from '../button';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
-import { TaskActions, type Result } from './task-actions';
-import { DragGrip } from './drag-grip';
+import { TaskActions, type Result } from './shared/task-actions';
+import { DragGrip } from './shared/drag-grip';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',
