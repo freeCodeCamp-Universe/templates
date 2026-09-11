@@ -91,18 +91,18 @@ describe("moveItem", () => {
   it("moves an item from one container to another", () => {
     const containers = { unplaced: ["a", "b"], Fruit: [] };
 
-    const result = moveItem(containers, "a", "unplaced", "Fruit", "Fruit");
+    const result = moveItem(containers, "a", "unplaced", "Fruit");
 
     expect(result.unplaced).toEqual(["b"]);
     expect(result.Fruit).toEqual(["a"]);
   });
 
-  it("positions the item before overId, not just appended", () => {
+  it("appends the item, since order within a container is never scored", () => {
     const containers = { unplaced: ["a"], Fruit: ["b", "c"] };
 
-    const result = moveItem(containers, "a", "unplaced", "Fruit", "c");
+    const result = moveItem(containers, "a", "unplaced", "Fruit");
 
-    expect(result.Fruit).toEqual(["b", "a", "c"]);
+    expect(result.Fruit).toEqual(["b", "c", "a"]);
   });
 });
 

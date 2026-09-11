@@ -37,15 +37,11 @@
   border-style: dashed;
 }
 
-.zone-over {
-  border-color: var(--highlight-color);
-  background: var(--selection-color);
-}
-
 .zone-placeholder {
   margin: 0;
   color: var(--quaternary-color);
   font-size: var(--text-size-xs);
+  font-style: italic;
   text-align: center;
 }
 

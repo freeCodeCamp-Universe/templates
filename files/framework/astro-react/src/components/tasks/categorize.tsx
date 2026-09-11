@@ -7,22 +7,19 @@ import {
   KeyboardSensor,
   PointerSensor,
   closestCorners,
+  useDraggable,
   useDroppable,
   useSensor,
   useSensors,
   type Announcements,
-  type DragEndEvent,
   type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  arrayMove,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+// Only its coordinate getter is used here - it jumps to the nearest
+// registered droppable in the pressed direction, which works fine for plain
+// (non-sortable) droppables too, since its sortable-specific offset logic
+// only kicks in when both sides actually have sortable data attached.
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
@@ -59,24 +56,19 @@ export function findContainer(containers: Containers, id: string): string | unde
   return Object.keys(containers).find((key) => containers[key].includes(id));
 }
 
-// Moves `activeId` out of `activeContainer` and into `overContainer`,
-// positioned just before `overId` (or at the end, if `overId` is the
-// container itself - e.g. dropping into an empty zone).
+// Moves `activeId` out of `activeContainer` and into `overContainer`. Order
+// within a container is never scored, so it's just appended - no insertion
+// position to work out.
 export function moveItem(
   containers: Containers,
   activeId: string,
   activeContainer: string,
   overContainer: string,
-  overId: string,
 ): Containers {
-  const overItems = containers[overContainer];
-  const overIndex = overItems.indexOf(overId);
-  const newIndex = overIndex >= 0 ? overIndex : overItems.length;
-
   return {
     ...containers,
     [activeContainer]: containers[activeContainer].filter((item) => item !== activeId),
-    [overContainer]: [...overItems.slice(0, newIndex), activeId, ...overItems.slice(newIndex)],
+    [overContainer]: [...containers[overContainer], activeId],
   };
 }
 
@@ -99,7 +91,11 @@ type ItemProps = {
 };
 
 function Item({ id, disabled }: ItemProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  // No transform applied here: the DragOverlay is what visually follows the
+  // cursor. This card just sits at rest (wherever it's currently placed) and
+  // fades out while dragging - applying the raw pointer-delta transform on
+  // top of that produced a distorted, offset duplicate.
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id,
     disabled,
   });
@@ -107,7 +103,6 @@ function Item({ id, disabled }: ItemProps) {
   return (
     <div
       ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
       className={isDragging ? 'item-card item-dragging' : 'item-card'}
       {...attributes}
       {...listeners}
@@ -121,28 +116,32 @@ function Item({ id, disabled }: ItemProps) {
 type ZoneProps = {
   id: string;
   items: string[];
+  activeId: string | null;
   disabled: boolean;
 };
 
-function Zone({ id, items, disabled }: ZoneProps) {
-  const { setNodeRef, isOver } = useDroppable({ id, disabled });
+function Zone({ id, items, activeId, disabled }: ZoneProps) {
+  const { setNodeRef } = useDroppable({ id, disabled });
   const label = zoneLabel(id);
 
+  // Dragging over a zone eagerly relocates the item here as a live preview
+  // (see handleDragOver), so `items` briefly includes it before anything's
+  // actually dropped. Excluding the active item keeps the border reflecting
+  // what's actually settled, not the in-progress preview.
+  const settledCount = items.filter((item) => item !== activeId).length;
+
   const classNames = ['zone'];
-  if (isOver) classNames.push('zone-over');
-  if (items.length === 0) classNames.push('zone-empty');
+  if (settledCount === 0) classNames.push('zone-empty');
 
   return (
     <div ref={setNodeRef} className={classNames.join(' ')} role="group" aria-label={label}>
       <h4 className="zone-heading">{label}</h4>
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        <div className="zone-items">
-          {items.map((item) => (
-            <Item key={item} id={item} disabled={disabled} />
-          ))}
-          {items.length === 0 ? <p className="zone-placeholder">Drop here</p> : null}
-        </div>
-      </SortableContext>
+      <div className="zone-items">
+        {items.map((item) => (
+          <Item key={item} id={item} disabled={disabled} />
+        ))}
+        {items.length === 0 ? <p className="zone-placeholder">Drop here</p> : null}
+      </div>
     </div>
   );
 }
@@ -168,6 +167,7 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
   const [initialUnplaced, setInitialUnplaced] = useState<string[]>(allItems);
   const [shuffled, setShuffled] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [dragStartContainer, setDragStartContainer] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
 
   useEffect(() => {
@@ -207,7 +207,9 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
   };
 
   function handleDragStart(event: DragStartEvent) {
-    setActiveId(String(event.active.id));
+    const activeId = String(event.active.id);
+    setActiveId(activeId);
+    setDragStartContainer(findContainer(containers, activeId) ?? null);
   }
 
   function handleDragOver(event: DragOverEvent) {
@@ -215,45 +217,32 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
     if (!over) return;
 
     const activeId = String(active.id);
-    const overId = String(over.id);
+    const overContainer = findContainer(containers, String(over.id));
     const activeContainer = findContainer(containers, activeId);
-    const overContainer = findContainer(containers, overId);
 
     if (!activeContainer || !overContainer || activeContainer === overContainer) return;
 
-    setContainers((previous) => moveItem(previous, activeId, activeContainer, overContainer, overId));
+    setContainers((previous) => moveItem(previous, activeId, activeContainer, overContainer));
   }
 
-  function handleDragEnd(event: DragEndEvent) {
+  function handleDragEnd() {
     setActiveId(null);
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = String(active.id);
-    const overId = String(over.id);
-    const activeContainer = findContainer(containers, activeId);
-    const overContainer = findContainer(containers, overId);
-    if (!activeContainer || !overContainer || activeContainer !== overContainer) {
-      setResult(null);
-      return;
-    }
-
-    const items = containers[activeContainer];
-    const activeIndex = items.indexOf(activeId);
-    const overIndex = overId in containers ? items.length - 1 : items.indexOf(overId);
-
-    if (activeIndex !== overIndex && overIndex >= 0) {
-      setContainers((previous) => ({
-        ...previous,
-        [activeContainer]: arrayMove(previous[activeContainer], activeIndex, overIndex),
-      }));
-    }
-
+    setDragStartContainer(null);
     setResult(null);
   }
 
   function handleDragCancel() {
+    // handleDragOver already moved the item as a live preview while hovering
+    // - cancelling has to undo that, or the item would stay wherever it last
+    // hovered even though the user backed out of the move.
+    if (activeId && dragStartContainer) {
+      const currentContainer = findContainer(containers, activeId);
+      if (currentContainer && currentContainer !== dragStartContainer) {
+        setContainers((previous) => moveItem(previous, activeId, currentContainer, dragStartContainer));
+      }
+    }
     setActiveId(null);
+    setDragStartContainer(null);
   }
 
   function handleCheck() {
@@ -295,7 +284,12 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
         onDragCancel={handleDragCancel}
       >
         <div className={shuffled ? 'categorize' : 'categorize unshuffled'}>
-          <Zone id={UNPLACED} items={containers[UNPLACED]} disabled={isAnswered} />
+          <Zone
+            id={UNPLACED}
+            items={containers[UNPLACED]}
+            activeId={activeId}
+            disabled={isAnswered}
+          />
 
           <div className="categorize-categories">
             {task.categories.map((category) => (
@@ -303,6 +297,7 @@ export function Categorize({ task, onCorrect }: CategorizeProps) {
                 key={category.name}
                 id={category.name}
                 items={containers[category.name]}
+                activeId={activeId}
                 disabled={isAnswered}
               />
             ))}
