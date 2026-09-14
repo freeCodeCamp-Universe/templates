@@ -1,11 +1,32 @@
-import './task.css';
+import './shared/task.css';
 import './order.css';
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type Announcements,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Task } from '../../lib/curriculum-tasks';
 import { Markdown } from '../markdown';
 import { Button } from '../button';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
-import { TaskActions, type Result } from './task-actions';
+import { TaskActions, type Result } from './shared/task-actions';
+import { DragGrip } from './shared/drag-grip';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',
@@ -18,7 +39,6 @@ type OrderProps = {
   onCorrect: () => void;
 };
 
-// Fisher-Yates algorithm
 function shuffle<T>(items: T[]): T[] {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -26,6 +46,32 @@ function shuffle<T>(items: T[]): T[] {
     [copy[i], copy[j]] = [copy[j], copy[i]];
   }
   return copy;
+}
+
+type RowProps = {
+  id: string;
+  disabled: boolean;
+};
+
+function Row({ id, disabled }: RowProps) {
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging, index } =
+    useSortable({ id, disabled });
+  const style = { transform: CSS.Transform.toString(transform), transition };
+
+  return (
+    <div ref={setNodeRef} style={style} className="order-row">
+      <span className="order-position">{index + 1}.</span>
+      <div
+        ref={setActivatorNodeRef}
+        className={isDragging ? 'item-card item-dragging' : 'item-card'}
+        {...attributes}
+        {...listeners}
+      >
+        <DragGrip />
+        <span>{id}</span>
+      </div>
+    </div>
+  );
 }
 
 export function Order({ task, onCorrect }: OrderProps) {
@@ -36,52 +82,8 @@ export function Order({ task, onCorrect }: OrderProps) {
   const [items, setItems] = useState<string[]>(() => task.items);
   const [initialOrder, setInitialOrder] = useState<string[]>(() => task.items);
   const [shuffled, setShuffled] = useState(false);
-  const [announcement, setAnnouncement] = useState('');
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
-
-  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const previousRects = useRef<Record<string, DOMRect> | null>(null);
-
-  function captureRowPositions() {
-    const rects: Record<string, DOMRect> = {};
-    for (const item of items) {
-      const node = rowRefs.current[item];
-      if (node) {
-        rects[item] = node.getBoundingClientRect();
-      }
-    }
-    previousRects.current = rects;
-  }
-
-  useLayoutEffect(() => {
-    const previous = previousRects.current;
-    if (!previous) {
-      return;
-    }
-
-    for (const item of items) {
-      const node = rowRefs.current[item];
-      const previousRect = previous[item];
-      if (!node || !previousRect) {
-        continue;
-      }
-
-      const deltaY = previousRect.top - node.getBoundingClientRect().top;
-      if (deltaY === 0) {
-        continue;
-      }
-
-      node.style.transition = 'none';
-      node.style.transform = `translateY(${deltaY}px)`;
-
-      requestAnimationFrame(() => {
-        node.style.transition = 'transform 150ms ease';
-        node.style.transform = '';
-      });
-    }
-
-    previousRects.current = null;
-  }, [items]);
 
   useEffect(() => {
     const shuffledItems = shuffle(task.items);
@@ -90,38 +92,58 @@ export function Order({ task, onCorrect }: OrderProps) {
     setShuffled(true);
   }, []);
 
-  function handleMove(index: number, direction: -1 | 1) {
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= items.length) {
-      return;
-    }
+  const isAnswered = result === 'correct';
+  const taskRef = useFocusOnCorrect<HTMLDivElement>(result);
 
-    captureRowPositions();
-    const next = [...items];
-    [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
-    setItems(next);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const announcements: Announcements = {
+    onDragStart({ active }) {
+      return `Picked up ${active.id}.`;
+    },
+    onDragOver({ active, over }) {
+      if (!over) return undefined;
+      return `${active.id} is over position ${items.indexOf(String(over.id)) + 1} of ${items.length}.`;
+    },
+    onDragEnd({ active, over }) {
+      if (!over) return `${active.id} was dropped.`;
+      return `${active.id} was dropped at position ${items.indexOf(String(over.id)) + 1} of ${items.length}.`;
+    },
+    onDragCancel({ active }) {
+      return `Moving ${active.id} was cancelled.`;
+    },
+  };
+
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(String(event.active.id));
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    setActiveId(null);
+    if (!over || active.id === over.id) return;
+
+    setItems((previous) => arrayMove(previous, previous.indexOf(String(active.id)), previous.indexOf(String(over.id))));
     setResult(null);
-    setAnnouncement(
-      `${items[index]} moved ${direction === -1 ? 'up' : 'down'}. Now position ${targetIndex + 1} of ${items.length}.`,
-    );
+  }
+
+  function handleDragCancel() {
+    setActiveId(null);
   }
 
   function handleReset() {
-    captureRowPositions();
     setItems([...initialOrder]);
     setResult(null);
-    setAnnouncement('Order reset.');
   }
 
   function handleCheck() {
     const isCorrect = items.every((item, index) => item === task.items[index]);
     setResult(isCorrect ? 'correct' : 'incorrect');
-    if (isCorrect) {
-      onCorrect();
-    }
+    if (isCorrect) onCorrect();
   }
-
-  const taskRef = useFocusOnCorrect<HTMLDivElement>(result);
 
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
@@ -129,48 +151,35 @@ export function Order({ task, onCorrect }: OrderProps) {
         <Markdown>{task.question}</Markdown>
       </div>
 
-      <p aria-live="polite" className="sr-only">
-        {announcement}
-      </p>
-
-      <div
-        className={shuffled ? 'order-list' : 'order-list unshuffled'}
-        role="group"
-        aria-labelledby={questionId}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        accessibility={{ announcements }}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
       >
-        {items.map((item, index) => (
+        <SortableContext items={items} strategy={verticalListSortingStrategy}>
           <div
-            key={item}
-            className="order-row"
-            ref={(node) => {
-              rowRefs.current[item] = node;
-            }}
+            className={shuffled ? 'order-list' : 'order-list unshuffled'}
+            role="group"
+            aria-labelledby={questionId}
           >
-            <span className="order-position">{index + 1}.</span>
-            <span className="order-text">{item}</span>
-            <div className="order-controls">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                aria-label={`Move ${item} up`}
-                disabled={index === 0 || result === 'correct'}
-                onClick={() => handleMove(index, -1)}
-              >
-                Up
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                aria-label={`Move ${item} down`}
-                disabled={index === items.length - 1 || result === 'correct'}
-                onClick={() => handleMove(index, 1)}
-              >
-                Down
-              </button>
-            </div>
+            {items.map((item) => (
+              <Row key={item} id={item} disabled={isAnswered} />
+            ))}
           </div>
-        ))}
-      </div>
+        </SortableContext>
+
+        <DragOverlay>
+          {activeId ? (
+            <div className="item-card item-overlay">
+              <DragGrip />
+              <span>{activeId}</span>
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
 
       <TaskActions
         result={result}
@@ -178,7 +187,7 @@ export function Order({ task, onCorrect }: OrderProps) {
         onCheck={handleCheck}
         feedbackId={feedbackId}
         secondaryAction={
-          result !== 'correct' ? (
+          !isAnswered ? (
             <Button variant="secondary" onClick={handleReset}>
               Reset
             </Button>

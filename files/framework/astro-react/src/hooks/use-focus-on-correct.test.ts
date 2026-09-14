@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useFocusOnCorrect } from "./use-focus-on-correct";
-import type { Result } from "../components/tasks/task-actions";
+import type { Result } from "../components/tasks/shared/task-actions";
 
 describe(useFocusOnCorrect, () => {
   it("focuses the ref element when result becomes correct", () => {

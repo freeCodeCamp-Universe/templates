@@ -1,9 +1,9 @@
-import './task.css';
+import './shared/task.css';
 import './fill-in-the-blank.css';
 import { useId, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
-import { TaskActions, type Result } from './task-actions';
+import { TaskActions, type Result } from './shared/task-actions';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Correct!',
