@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.5.0...app-templates-v1.6.0) (2026-09-14)
+
+
+### Features
+
+* **astro-react:** text select and image select tasks ([#98](https://github.com/freeCodeCamp-Universe/templates/issues/98)) ([d1645be](https://github.com/freeCodeCamp-Universe/templates/commit/d1645bea0a1abbbf4109f36308247fa19abe0fa1))
+
+
+### Bug Fixes
+
+* **astro-react:** clean up task ui/ux ([#101](https://github.com/freeCodeCamp-Universe/templates/issues/101)) ([c9b9834](https://github.com/freeCodeCamp-Universe/templates/commit/c9b9834e368eeaeeaf6d949c649f4ea86dd63ded))
+
 ## [1.5.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.4.0...app-templates-v1.5.0) (2026-09-03)
 
 
