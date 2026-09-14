@@ -4,7 +4,23 @@
   gap: var(--space-xs);
 }
 
+.order-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.order-row .item-card {
+  flex: 1;
+  min-width: 0;
+}
+
 .order-position {
+  flex-shrink: 0;
   font-weight: 700;
   min-width: 1.5rem;
+}
+
+.unshuffled .order-position {
+  visibility: hidden;
 }

@@ -54,26 +54,22 @@ type RowProps = {
 };
 
 function Row({ id, disabled }: RowProps) {
-  // Unlike categorize's plain useDraggable, order's items need to visibly
-  // slide into their new slots as you drag past them - that's what applying
-  // transform/transition here does; DragOverlay only covers the one being held.
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging, index } = useSortable({
-    id,
-    disabled,
-  });
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging, index } =
+    useSortable({ id, disabled });
   const style = { transform: CSS.Transform.toString(transform), transition };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={isDragging ? 'item-card item-dragging' : 'item-card'}
-      {...attributes}
-      {...listeners}
-    >
-      <DragGrip />
+    <div ref={setNodeRef} style={style} className="order-row">
       <span className="order-position">{index + 1}.</span>
-      <span>{id}</span>
+      <div
+        ref={setActivatorNodeRef}
+        className={isDragging ? 'item-card item-dragging' : 'item-card'}
+        {...attributes}
+        {...listeners}
+      >
+        <DragGrip />
+        <span>{id}</span>
+      </div>
     </div>
   );
 }
@@ -125,9 +121,6 @@ export function Order({ task, onCorrect }: OrderProps) {
     setActiveId(String(event.active.id));
   }
 
-  // A single sortable list animates the reorder preview itself while
-  // dragging (each row's own transform), so the actual order only needs to
-  // be committed once, here - no live relocation or cancel-revert needed.
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     setActiveId(null);
