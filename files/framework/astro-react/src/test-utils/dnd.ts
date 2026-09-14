@@ -1,10 +1,6 @@
 import { vi } from "vitest";
 import { fireEvent } from "@testing-library/react";
 
-// dnd-kit measures real DOM rects to resolve collisions, which jsdom doesn't
-// compute (everything is 0x0 by default). Stubbing getBoundingClientRect on
-// the elements involved lets a real pointer-driven drag resolve to a
-// specific drop target, the same way it would in a real layout.
 export function mockRect(element: Element, rect: Partial<DOMRect>) {
   vi.spyOn(element, "getBoundingClientRect").mockReturnValue({
     x: 0,
@@ -20,9 +16,6 @@ export function mockRect(element: Element, rect: Partial<DOMRect>) {
   });
 }
 
-// Fires a real pointer-driven drag from `source` into `target`'s mocked
-// rect. isPrimary/button are required for PointerSensor's activator to pick
-// up the drag at all.
 export function dragPointerTo(
   source: Element,
   target: Element,
@@ -40,11 +33,6 @@ export function dragPointerTo(
   fireEvent.pointerUp(document, { pointerId: 1, clientX: centerX, clientY: centerY });
 }
 
-// dnd-kit's PointerSensor swallows the very next click anywhere in the
-// document for ~50ms after a drag ends (it stops propagation on one, to
-// suppress the ghost click a real pointerup-after-drag would otherwise
-// fire). A test that clicks something right after dragPointerTo needs to
-// wait that out first, or the click can be silently eaten.
 export async function waitOutDragClickGuard() {
   await new Promise((resolve) => setTimeout(resolve, 60));
 }

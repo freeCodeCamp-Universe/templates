@@ -34,7 +34,6 @@
   color: var(--danger-color);
 }
 
-/* Draggable item card, shared by task types that use dnd-kit (categorize, order). */
 .item-card {
   display: flex;
   align-items: center;
