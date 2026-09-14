@@ -8,6 +8,7 @@ import { OrderTaskSchema, parseOrderContent } from './order';
 import { CrosswordTaskSchema, parseCrosswordContent } from './crossword';
 import { TextSelectTaskSchema, parseTextSelectContent } from './text-select';
 import { ImageSelectTaskSchema, parseImageSelectContent } from './image-select';
+import { FlashCardTaskSchema, parseFlashCardContent } from './flash-card';
 import { parseOptionListContent } from './option-list';
 
 export type Task =
@@ -18,7 +19,8 @@ export type Task =
   | z.infer<typeof OrderTaskSchema>
   | z.infer<typeof CrosswordTaskSchema>
   | z.infer<typeof TextSelectTaskSchema>
-  | z.infer<typeof ImageSelectTaskSchema>;
+  | z.infer<typeof ImageSelectTaskSchema>
+  | z.infer<typeof FlashCardTaskSchema>;
 
 type TaskDefinition = {
   schema: { parse: (candidate: unknown) => Task };
@@ -57,5 +59,9 @@ export const TASK_DEFINITIONS: Record<string, TaskDefinition> = {
   'image-select': {
     schema: ImageSelectTaskSchema,
     parseContent: parseImageSelectContent,
+  },
+  'flash-card': {
+    schema: FlashCardTaskSchema,
+    parseContent: parseFlashCardContent,
   },
 };

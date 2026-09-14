@@ -216,6 +216,20 @@ Correct: left-speaker, right-speaker
 
 --end-image-select--
 
+### Lesson 11
+
+This lesson has a flash card task.
+
+--flash-card--
+
+I goed to the store yesterday.
+
+Back:
+
+I went to the store yesterday.
+
+--end-flash-card--
+
 ## Module 2.1
 
 ### Lesson 1
