@@ -18,6 +18,17 @@ type FlashCardProps = {
   onCorrect: () => void;
 };
 
+function FlipIcon() {
+  return (
+    <svg className="flash-card-flip-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+      <path d="M2.5 6 Q8 1.5 13 5.5" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      <path d="M13 5.5 L10.3 4.2 L11.3 7.3 Z" fill="currentColor" />
+      <path d="M13.5 10 Q8 14.5 3 10.5" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      <path d="M3 10.5 L5.7 11.8 L4.7 8.7 Z" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function FlashCard({ task, onCorrect }: FlashCardProps) {
   const cardId = useId();
   const [flipped, setFlipped] = useState(false);
@@ -84,14 +95,20 @@ export function FlashCard({ task, onCorrect }: FlashCardProps) {
               <div id={frontId} className="flash-card-content">
                 <Markdown>{task.front}</Markdown>
               </div>
-              <p className="flash-card-hint">Tap to reveal</p>
+              <p className="flash-card-hint" aria-hidden="true">
+                <FlipIcon />
+                Reveal answer
+              </p>
             </div>
 
             <div className="flash-card-face flash-card-back" aria-hidden={!flipped || undefined}>
               <div id={backId} className="flash-card-content">
                 <Markdown>{task.back}</Markdown>
               </div>
-              <p className="flash-card-hint">Tap to show front</p>
+              <p className="flash-card-hint" aria-hidden="true">
+                <FlipIcon />
+                Show front
+              </p>
             </div>
           </div>
         </div>
