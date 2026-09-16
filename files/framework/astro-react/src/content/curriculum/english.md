@@ -312,7 +312,7 @@ Correct: left-speaker, right-speaker
 
 --end-image-select--
 
-### Lesson 11
+### Lesson 10: Flash Card
 
 This lesson has a flash card task.
 

@@ -1,11 +1,11 @@
-import './task.css';
+import './shared/task.css';
 import './flash-card.css';
 import { type KeyboardEvent, useId, useState } from 'react';
 import type { Task } from '../../lib/curriculum-tasks';
 import { useFocusOnCorrect } from '../../hooks/use-focus-on-correct';
 import { Button } from '../button';
 import { Markdown } from '../markdown';
-import { TaskActions, type Result } from './task-actions';
+import { TaskActions, type Result } from './shared/task-actions';
 
 const FEEDBACK_MESSAGES: Record<Result, string> = {
   correct: 'Complete!',
