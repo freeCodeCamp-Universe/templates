@@ -316,19 +316,11 @@ Correct: left-speaker, right-speaker
 
 ### Lesson 1
 
---image-select--
-
-Select the stars in Orion's Belt.
-
-![An image of stars](/images/orion.svg)
-
-Correct: alnitak, alnilam, mintaka
-
---end-image-select--
+This is placeholder lesson text for section 2, module 2.1, lesson 1.
 
 ### Lesson 2
 
-This is placeholder lesson text for section 2, module 2.1.
+This is placeholder lesson text for section 2, module 2.1, lesson 2.
 
 # Section 2
 
