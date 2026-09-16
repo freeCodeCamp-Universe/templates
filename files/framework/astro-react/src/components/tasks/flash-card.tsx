@@ -25,12 +25,11 @@ export function FlashCard({ task, onCorrect }: FlashCardProps) {
   const taskRef = useFocusOnCorrect<HTMLDivElement>(result);
 
   function handleFlip() {
-    if (result === 'correct') {
-      return;
-    }
-
     setFlipped((current) => !current);
-    setResult(null);
+
+    if (result !== 'correct') {
+      setResult(null);
+    }
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -68,11 +67,10 @@ export function FlashCard({ task, onCorrect }: FlashCardProps) {
         <div
           className={flipped ? 'flash-card flipped' : 'flash-card'}
           role="button"
-          tabIndex={result === 'correct' ? -1 : 0}
+          tabIndex={0}
           aria-labelledby={activeFaceId}
           aria-describedby={feedbackId}
           aria-pressed={flipped}
-          aria-disabled={result === 'correct' || undefined}
           onClick={handleFlip}
           onKeyDown={handleKeyDown}
         >

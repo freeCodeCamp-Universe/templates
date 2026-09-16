@@ -19,10 +19,6 @@
   outline-offset: 4px;
 }
 
-.flash-card[aria-disabled='true'] {
-  cursor: default;
-}
-
 .flash-card-inner {
   display: grid;
   transform-style: preserve-3d;
