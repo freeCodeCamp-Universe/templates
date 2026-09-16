@@ -78,7 +78,7 @@ export function TextSelect({ task, onCorrect }: TextSelectProps) {
 
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
-      <div id={promptId} className="text-select-prompt">
+      <div id={promptId} className="question">
         <Markdown>{task.prompt}</Markdown>
       </div>
 

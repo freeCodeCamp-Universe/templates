@@ -4,11 +4,6 @@
   padding: 0;
 }
 
-.question {
-  font-weight: 700;
-  padding: 0 var(--space-xs);
-}
-
 .option {
   display: flex;
   align-items: center;

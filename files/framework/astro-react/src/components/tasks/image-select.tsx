@@ -159,7 +159,7 @@ export function ImageSelect({ task, onCorrect }: ImageSelectProps) {
 
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
-      <div id={promptId} className="image-select-prompt">
+      <div id={promptId} className="question">
         <Markdown>{task.prompt}</Markdown>
       </div>
 
