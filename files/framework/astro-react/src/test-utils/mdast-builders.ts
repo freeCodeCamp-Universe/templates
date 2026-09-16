@@ -9,6 +9,15 @@ export function imageParagraph(url: string, alt: string = ""): Paragraph {
   return { type: "paragraph", children: [image] };
 }
 
+export function paragraphWithEmphasis(before: string, emphasized: string, after: string = ""): Paragraph {
+  const children: Paragraph["children"] = [
+    { type: "text", value: before },
+    { type: "emphasis", children: [{ type: "text", value: emphasized }] },
+  ];
+  if (after) children.push({ type: "text", value: after });
+  return { type: "paragraph", children };
+}
+
 export function code(value: string): Code {
   return { type: "code", value };
 }
