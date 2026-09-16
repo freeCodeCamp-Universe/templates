@@ -12,6 +12,10 @@
   cursor: not-allowed;
 }
 
+.question {
+  padding: 0 var(--space-xs);
+}
+
 .task-actions {
   display: flex;
   align-items: center;

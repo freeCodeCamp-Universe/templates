@@ -1,8 +1,3 @@
-.text-select-prompt {
-  font-weight: 700;
-  padding: 0 var(--space-xs);
-}
-
 .text-select-body {
   margin: 0;
   font-size: var(--text-size-md);
