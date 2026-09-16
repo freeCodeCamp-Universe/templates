@@ -14,9 +14,10 @@ type Props = {
 
 const { title, brand, description, keywords } = Astro.props;
 
+const pageDescription = description ?? seoConfig.siteDescription;
 const pageKeywords = keywords ?? seoConfig.keywords;
 
-const jsonLd = seoConfig.siteUrl && seoConfig.siteName && description
+const jsonLd = seoConfig.siteUrl && seoConfig.siteName && pageDescription
   ? JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
@@ -42,7 +43,7 @@ const jsonLd = seoConfig.siteUrl && seoConfig.siteName && description
         '@type': 'WebPage',
         '@id': seoConfig.siteUrl,
       },
-      ...(description ? { description } : {}),
+      ...(pageDescription ? { description: pageDescription } : {}),
     })
   : null;
 ---
@@ -59,7 +60,7 @@ const jsonLd = seoConfig.siteUrl && seoConfig.siteName && description
     <title>{title}</title>
 
     <!-- SEO -->
-    {description && <meta name="description" content={description} />}
+    {pageDescription && <meta name="description" content={pageDescription} />}
     <meta name="keywords" content={pageKeywords} />
     <meta name="referrer" content={seoConfig.referrer} />
     {seoConfig.siteUrl && <link rel="canonical" href={seoConfig.siteUrl} />}
@@ -68,7 +69,7 @@ const jsonLd = seoConfig.siteUrl && seoConfig.siteName && description
     {seoConfig.siteName && <meta property="og:site_name" content={seoConfig.siteName} />}
     <meta property="og:type" content={seoConfig.ogType} />
     <meta property="og:title" content={title} />
-    {description && <meta property="og:description" content={description} />}
+    {pageDescription && <meta property="og:description" content={pageDescription} />}
     {seoConfig.siteUrl && <meta property="og:url" content={seoConfig.siteUrl} />}
     <meta property="og:image" content={seoConfig.ogImage} />
     <meta property="og:image:width" content={seoConfig.ogImageWidth} />
@@ -79,7 +80,7 @@ const jsonLd = seoConfig.siteUrl && seoConfig.siteName && description
     <meta name="twitter:card" content={seoConfig.twitterCard} />
     <meta name="twitter:site" content={seoConfig.twitterHandle} />
     <meta name="twitter:title" content={title} />
-    {description && <meta name="twitter:description" content={description} />}
+    {pageDescription && <meta name="twitter:description" content={pageDescription} />}
     {seoConfig.siteUrl && <meta name="twitter:url" content={seoConfig.siteUrl} />}
     <meta name="twitter:image" content={seoConfig.ogImage} />
 

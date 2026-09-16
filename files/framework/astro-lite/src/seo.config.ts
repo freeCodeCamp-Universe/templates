@@ -1,8 +1,10 @@
 export const seoConfig = {
   /** The deployed URL of your site, e.g. "https://www.my-course.com" */
-  siteUrl: undefined,
+  siteUrl: "",
   /** The display name of your site, e.g. "My Course Name" */
-  siteName: undefined,
+  siteName: "",
+  /** A short description used for the home page and as a fallback for lesson pages that don't set their own description */
+  siteDescription: "",
   /**
    * Comma-separated keywords describing your site's content.
    * e.g. "freeCodeCamp, JavaScript, web development, beginner"
