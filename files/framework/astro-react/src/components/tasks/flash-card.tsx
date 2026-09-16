@@ -57,18 +57,23 @@ export function FlashCard({ task, onCorrect }: FlashCardProps) {
   }
 
   const feedbackId = `${cardId}-feedback`;
+  const promptId = `${cardId}-prompt`;
   const frontId = `${cardId}-front`;
   const backId = `${cardId}-back`;
   const activeFaceId = flipped ? backId : frontId;
 
   return (
     <div className="task" ref={taskRef} tabIndex={-1}>
+      <div id={promptId} className="question">
+        <Markdown>{task.prompt}</Markdown>
+      </div>
+
       <div className="flash-card-scene">
         <div
           className={flipped ? 'flash-card flipped' : 'flash-card'}
           role="button"
           tabIndex={0}
-          aria-labelledby={activeFaceId}
+          aria-labelledby={`${promptId} ${activeFaceId}`}
           aria-describedby={feedbackId}
           aria-pressed={flipped}
           onClick={handleFlip}

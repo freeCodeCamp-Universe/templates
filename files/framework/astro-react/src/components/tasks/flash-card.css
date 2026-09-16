@@ -5,7 +5,9 @@
 .flash-card {
   display: grid;
   width: 100%;
-  min-height: 14rem;
+  max-width: 28rem;
+  min-height: 9rem;
+  margin-inline: auto;
   padding: 0;
   color: var(--primary-color);
   background: transparent;
@@ -30,12 +32,13 @@
 }
 
 .flash-card-face {
+  position: relative;
   grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: var(--space-md);
-  min-height: 14rem;
+  min-height: 9rem;
   padding: var(--space-lg);
   background: var(--secondary-background);
   border: 2px solid var(--quaternary-background);
@@ -56,9 +59,13 @@
 }
 
 .flash-card-hint {
+  position: absolute;
+  right: var(--space-md);
+  bottom: var(--space-sm);
   margin: 0;
-  color: var(--secondary-color);
-  font-weight: 700;
+  color: var(--quaternary-color);
+  font-size: var(--text-size-xs);
+  font-style: italic;
 }
 
 @media (prefers-reduced-motion: reduce) {

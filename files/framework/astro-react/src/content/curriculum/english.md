@@ -318,11 +318,11 @@ This lesson has a flash card task.
 
 --flash-card--
 
-I goed to the store yesterday.
+There's a mistake in the sentence below, can you find it?
 
-Back:
+Front: I goed to the store yesterday.
 
-I went to the store yesterday.
+Back: I went to the store yesterday.
 
 --end-flash-card--
 
