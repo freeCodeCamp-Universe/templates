@@ -2,11 +2,9 @@
 import { defineConfig, fontProviders } from "astro/config";
 
 import react from "@astrojs/react";
-import { seoConfig } from "./src/seo.config.ts";
 
 // https://astro.build/config
 export default defineConfig({
-  site: seoConfig.siteUrl,
   integrations: [react()],
   fonts: [
     {
