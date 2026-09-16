@@ -232,7 +232,33 @@ Down:
 
 --end-crossword--
 
-### Lesson 7: Text Select
+### Lesson 7: Flash Card
+
+This lesson has a flash card task. Its syntax looks like this:
+
+```
+--flash-card--
+
+There's a mistake in the sentence below, can you find _it?_
+
+Front: I goed to the store yesterday.
+
+Back: I went to the store _yesterday._
+
+--end-flash-card--
+```
+
+--flash-card--
+
+There's a mistake in the sentence below, can you find _it?_
+
+Front: I goed to the store yesterday.
+
+Back: I went to the store _yesterday._
+
+--end-flash-card--
+
+### Lesson 8: Text Select
 
 This lesson has a text select task. Its syntax looks like this:
 
@@ -254,7 +280,7 @@ I have {{two}} or {{three}} _things._
 
 --end-text-select--
 
-### Lesson 8: Image Select 1
+### Lesson 9: Image Select 1
 
 This lesson has an image select task. Its syntax looks like this:
 
@@ -284,7 +310,7 @@ Correct: battery, capacitor
 
 The correct answers are the items on the left and right.
 
-### Lesson 9: Image Select 2
+### Lesson 10: Image Select 2
 
 This is an image select task with a real image used as the backdrop. Its syntax looks like this:
 
@@ -311,20 +337,6 @@ Select the speakers.
 Correct: left-speaker, right-speaker
 
 --end-image-select--
-
-### Lesson 10: Flash Card
-
-This lesson has a flash card task.
-
---flash-card--
-
-There's a mistake in the sentence below, can you find it?
-
-Front: I goed to the store yesterday.
-
-Back: I went to the store yesterday.
-
---end-flash-card--
 
 ## Module 2.1
 
