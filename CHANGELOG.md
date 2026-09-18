@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.5.0...app-templates-v1.6.0) (2026-09-17)
+
+
+### Features
+
+* **astro-react:** add flashcard tasks ([#100](https://github.com/freeCodeCamp-Universe/templates/issues/100)) ([d1cedfa](https://github.com/freeCodeCamp-Universe/templates/commit/d1cedfadea7dff27fb6e94da1e0ce3d2d06d7b35))
+* **astro-react:** text select and image select tasks ([#98](https://github.com/freeCodeCamp-Universe/templates/issues/98)) ([d1645be](https://github.com/freeCodeCamp-Universe/templates/commit/d1645bea0a1abbbf4109f36308247fa19abe0fa1))
+
+
+### Bug Fixes
+
+* **astro-react:** clean up task ui/ux ([#101](https://github.com/freeCodeCamp-Universe/templates/issues/101)) ([c9b9834](https://github.com/freeCodeCamp-Universe/templates/commit/c9b9834e368eeaeeaf6d949c649f4ea86dd63ded))
+* **astro-react:** improve sample curriculum lessons ([#102](https://github.com/freeCodeCamp-Universe/templates/issues/102)) ([82fbd7d](https://github.com/freeCodeCamp-Universe/templates/commit/82fbd7d823dbb8bcf277532b3f23b3c0b9cc0d1c))
+
 ## [1.5.0](https://github.com/freeCodeCamp-Universe/templates/compare/app-templates-v1.4.0...app-templates-v1.5.0) (2026-09-03)
 
 
